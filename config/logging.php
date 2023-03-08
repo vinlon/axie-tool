@@ -62,6 +62,12 @@ return [
             'level' => 'debug',
             'days' => 14,
         ],
+        \App\Constant::LOG_CHANNEL_RONIN => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/ronin.log'),
+            'level' => 'debug',
+            'days' => 14,
+        ],
 
         'syslog' => [
             'driver' => 'syslog',

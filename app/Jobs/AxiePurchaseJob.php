@@ -50,7 +50,8 @@ class AxiePurchaseJob implements ShouldQueue
         $record->auto_purchase_id = $this->autoPurchase->id;
         $record->axie_id = Arr::get($axie, 'id');
         $record->owner = Arr::get($axie, 'owner', '');
-        $record->price = Arr::get($axie, 'order.basePrice', 0);
+        $record->price = Arr::get($axie, 'order.currentPrice', 0);
+        $record->trans_hash = '';
 
         try {
             $walletPublicKey = config('services.wallet.public_key');
@@ -69,13 +70,11 @@ class AxiePurchaseJob implements ShouldQueue
             $tx = new Transaction($txData);
             $walletPrivateKey = config('services.wallet.private_key');
             $signedTx = $tx->sign($walletPrivateKey);
-//            $hash = $roninService->sendSignedTransaction($signedTx);
-            $hash = 'test';
+            $hash = $roninService->sendSignedTransaction($signedTx);
             $record->trans_hash = $hash;
             $record->status = PurchaseStatus::WAITING;
             $record->save();
         } catch (Exception $e) {
-            $record->trans_hash = '';
             $record->status = PurchaseStatus::FAIL;
             $record->remark = $e->getMessage();
             $record->save();

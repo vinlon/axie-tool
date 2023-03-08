@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Constant;
 use Elliptic\EC;
 use kornrunner\Keccak;
 
@@ -46,6 +47,7 @@ class RoninService
 
     private function request($method, $params)
     {
+        \Log::channel(Constant::LOG_CHANNEL_RONIN)->info($method . '_req', $params);
         $body = [
             'id' => time(),
             'jsonrpc' => '2.0',
@@ -65,8 +67,8 @@ class RoninService
         ];
         $resp = \Http::withHeaders($headers)->post($this->gateway, $body);
         $result = $resp->json();
+        \Log::channel(Constant::LOG_CHANNEL_RONIN)->info($method . '_resp', $result);
         if (\Arr::has($result, 'error')) {
-            dump($resp->body());
             throw new \Exception(\Arr::get($result, 'error.message'));
         }
 

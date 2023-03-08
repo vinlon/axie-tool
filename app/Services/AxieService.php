@@ -89,7 +89,7 @@ class AxieService
 
     private function graphql($operationName, $query, $variables)
     {
-        $token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFlZDY0OGYzLTZkYmQtNjkyOC05ZmNmLWM4OWY1NjIwNDg1NiIsInNpZCI6MTE5OTU0MTMyLCJyb2xlcyI6WyJ1c2VyIl0sInNjcCI6WyJhbGwiXSwiYWN0aXZhdGVkIjp0cnVlLCJhY3QiOnRydWUsInJvbmluQWRkcmVzcyI6IjB4OGZhZjJiM2YzNzhkMWNjYjc5NmIxZTNhZGIxYWRmMGExYTVlNjc5ZCIsImV4cCI6MTY3OTAwNjYxNCwiaWF0IjoxNjc3Nzk3MDE0LCJpc3MiOiJBeGllSW5maW5pdHkiLCJzdWIiOiIxZWQ2NDhmMy02ZGJkLTY5MjgtOWZjZi1jODlmNTYyMDQ4NTYifQ.N7qHNcAXWDXJP5zgZbUusYLrErbCb9QbKAmuHefEMW0';
+        $token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFlZGFjYzgxLWUyN2YtNmNhMC04MjMxLTI1NThkNDhkMDk0MyIsInNpZCI6MTI0Njk1MTU0LCJyb2xlcyI6WyJ1c2VyIl0sInNjcCI6WyJhbGwiXSwiYWN0aXZhdGVkIjp0cnVlLCJhY3QiOnRydWUsInJvbmluQWRkcmVzcyI6IjB4MWYxOTE5NzhiYWM1YmYwN2JlNzcxYWIxOGIxY2MyMGQ0Zjk0ZWE4NCIsImV4cCI6MTY3OTQ4MzI2OSwiaWF0IjoxNjc4MjczNjY5LCJpc3MiOiJBeGllSW5maW5pdHkiLCJzdWIiOiIxZWRhY2M4MS1lMjdmLTZjYTAtODIzMS0yNTU4ZDQ4ZDA5NDMifQ.yPF6z-Ushb6Pemqp0-vqkaEJetpXtbDey9dpElq-tSQ';
         $gateway = 'https://graphql-gateway.axieinfinity.com/graphql';
         $headers = [
             'authority' => 'graphql-gateway.axieinfinity.com',

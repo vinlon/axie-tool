@@ -20,7 +20,7 @@ class CreateAutoPurchaseRecordsTable extends Migration
             $table->integer('axie_id')->comment('AxieID');
             $table->string('owner', 64)->comment('Axie持有人');
             $table->bigInteger('price')->comment('购买价格');
-            $table->string('trans_hash', 64)->comment('交易HASH');
+            $table->string('trans_hash', 128)->comment('交易HASH');
             $table->string('status', 16)->comment('购买状态');
             $table->text('remark')->nullable()->comment('备注信息');
         });

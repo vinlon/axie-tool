@@ -67,7 +67,7 @@ class QueryMonitorCommand extends Command
 
             $autoPurchase = $monitor->auto_purchase;
             if ($total > 0 && $autoPurchase) {
-                if ($floorPrice < $autoPurchase->max_purchase_price) {
+                if ($floorPrice <= $autoPurchase->max_purchase_price) {
                     $purchaseCount = $autoPurchase->records()
                         ->whereIn('status', [PurchaseStatus::DONE, PurchaseStatus::WAITING])->count();
                     //自动购买

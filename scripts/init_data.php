@@ -25,6 +25,6 @@ foreach ($arr as $name => $url) {
 \App\Models\AutoPurchase::query()->truncate();
 $autoPurchase = new \App\Models\AutoPurchase();
 $autoPurchase->query_monitor_id = 1;
-$autoPurchase->max_purchase_count = 5;
+$autoPurchase->max_purchase_count = 10;
 $autoPurchase->max_purchase_price = 900000000000000;
 $autoPurchase->save();
