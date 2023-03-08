@@ -1,0 +1,22 @@
+<script type="text/html" template lay-done="layui.data.done(d)">
+  <form class="layui-form" lay-filter="form_content" style="padding-left: 30px">
+    <input type="hidden" name="key" value="{{d.params.key}}">
+    <div class="layui-form-item">
+      <div class="layui-input-inline" style="width: 700px">
+        <textarea id="content" name="content"></textarea>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-footer">
+        <div class="layui-input-block">
+          <input type="button" lay-submit lay-filter="submit_content" value="保存" class="layui-btn">
+        </div>
+      </div>
+    </div>
+  </form>
+</script>
+<script>
+  layui.data.done = function () {
+
+  }
+</script>

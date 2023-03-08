@@ -1,0 +1,80 @@
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a><cite>资源管理</cite></a>
+    <a><cite>图片管理</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-card">
+    <div class="layui-card-body">
+      <form class="layui-form">
+        <div id="container"></div>
+        <div class="layui-form-item">
+          <div class="layui-input-block">
+            <input type="button" lay-submit lay-filter="submit_images" value="保存" class="layui-btn">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script type="text/html" id="tpl_image_upload">
+  <div class="layui-form-item">
+    <label class="layui-form-label">{{d.key}}</label>
+    <div class="layui-form-mid layui-word-aux">{{d.label}}</div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label"></label>
+    <div class="layui-inline">
+      <div id="{{d.id}}"></div>
+    </div>
+  </div>
+</script>
+
+<script>
+  layui.use(['fox_upload'], function () {
+    let $ = layui.$
+      , admin = layui.admin
+      , form = layui.form
+      , fox_upload = layui.fox_upload
+      , laytpl = layui.laytpl
+
+    let resourceUrl = 'admin/image_resources'
+
+    //设置当前页面的通用参数
+    fox_upload.set({
+      url: 'admin/image_resources/upload'
+      , headers: {
+        Authorization: admin.getAccessToken('Bearer'),
+      }
+    })
+
+    admin.get(resourceUrl, function (res) {
+      layui.each(res.data, function (index, item) {
+        let id = 'image_' + item.key
+        let html = laytpl($('#tpl_image_upload').html()).render({
+          id: id
+          , label: item.description
+          , key: item.key
+        })
+        $('#container').append(html)
+        //初始化上传控件
+        fox_upload.render({
+          elem: '#' + id
+          , name: item.key
+          , value: item.image_url
+          , text: '点击上传'
+        })
+      })
+    })
+
+    form.on('submit(submit_images)', function (d) {
+      admin.post(resourceUrl, d.field, function (res) {
+        layer.msg('保存成功');
+      })
+    })
+
+  })
+</script>
+
