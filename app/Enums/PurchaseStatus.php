@@ -8,6 +8,7 @@ use BenSampo\Enum\Enum;
 /**
  * @method static static DONE()
  * @method static static FAIL()
+ * @method static static WAITING()
  * @method static static CONFIRMING()
  */
 final class PurchaseStatus extends Enum implements LocalizedEnum

@@ -41,12 +41,31 @@ namespace App\Models{
  * @property int $price 购买价格
  * @property string $trans_hash 交易HASH
  * @property string $status 购买状态
- * @property string $remark 备注信息
+ * @property string|null $remark 备注信息
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AutoPurchaseRecord newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AutoPurchaseRecord newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AutoPurchaseRecord query()
  */
 	class IdeHelperAutoPurchaseRecord {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\LandMonitorRecord
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $land_type 土地类型
+ * @property int $on_sale 在售数量
+ * @property int $floor_price_eth 地板价ETH
+ * @property float $floor_price_usd 地板价USD
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LandMonitorRecord newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LandMonitorRecord newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LandMonitorRecord query()
+ * @mixin \Eloquent
+ */
+	class IdeHelperLandMonitorRecord {}
 }
 
 namespace App\Models{

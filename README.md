@@ -1,26 +1,13 @@
 # AXIE-TOOL
 
 ```
-query_monitor
-- query_name
-- query_url
-- duration
-- metric_group_name (monitor_{id})
-- status
+selling_rune
+- season
+- type: charm/rune
 
-monitor_records
-- query_monitor_id
-
-auto_purchase
-- query_monitor_id
-- max_purchase_price
-- max_purchase_count
-
-auto_purchase_record
-- auto_purchase_id
-- axie_id
-- price
-- balance_before
-- balance_after
-- status
+land_monitor_record
+- type
+- onsale_count
+- floor_price
+- floor_price_usd
 ```

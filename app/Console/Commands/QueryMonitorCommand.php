@@ -25,7 +25,7 @@ class QueryMonitorCommand extends Command
      *
      * @var string
      */
-    protected $description = '查询监测';
+    protected $description = 'Axie查询监测';
 
     /**
      * Create a new command instance.

@@ -49,18 +49,25 @@ class AxieService
                 'txHash' => $hash,
             ],
         ];
-        $result = $this->graphql($operationName, $query, $variables);
-        return Arr::get($result, 'data');
+        $this->graphql($operationName, $query, $variables);
     }
 
-    public function getAxiePurchaseOrderData($axieId)
+    /** 查询在售的Land */
+    public function getOnSaleLands($from, $size, $landType = null)
     {
-        $padding = '000000000000000000000000';
-        $paddingEnd = '00000000000000000000000000000000000000000000000000000000';
-        $uintZero = '0000000000000000000000000000000000000000';
-        $preSig = '000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000001200000000000000000000000000000000000000000000000000000000000000041';
-        $postSig = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
-        $orderSig = 'c54c66d3';
+        $operationName = 'GetLandsGrid';
+        $query = 'query GetLandsGrid($from: Int!, $size: Int!, $sort: SortBy!, $owner: String, $criteria: LandSearchCriteria, $auctionType: AuctionType) { lands( criteria: $criteria from: $from size: $size sort: $sort owner: $owner auctionType: $auctionType ) { total results { ...LandBriefV2 __typename } __typename }}fragment LandBriefV2 on LandPlot { tokenId owner landType row col order { id currentPrice startedAt currentPriceUsd __typename } ownerProfile { name __typename } __typename}';
+        $variables = [
+            'auctionType' => 'Sale',
+            'from' => $from,
+            'size' => $size,
+            'sort' => 'PriceAsc',
+        ];
+        if ($landType) {
+            $variables['criteria']['landType'] = [$landType];
+        }
+        $result = $this->graphql($operationName, $query, $variables);
+        return Arr::get($result, 'lands');
     }
 
     public function parseParamsFromUrl($url)
@@ -111,7 +118,7 @@ class AxieService
         ];
         $resp = Http::withHeaders($headers)->post($gateway, $data);
         $result = $resp->json();
-        if (Arr::has($result, 'errors')) {
+        if (Arr::has($result, 'errors') && !Arr::has($result, 'data')) {
             throw new \Exception(Arr::get($result, 'errors.0.message'));
         }
         return Arr::get($result, 'data');
