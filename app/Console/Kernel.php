@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
         $schedule->command('query:monitor')->everyFiveMinutes();
+        $schedule->command('purchase:confirm')->everyMinute(); //确认Axie购买结果
     }
 
     /**

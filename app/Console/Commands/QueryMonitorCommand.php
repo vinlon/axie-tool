@@ -52,9 +52,16 @@ class QueryMonitorCommand extends Command
             $floorAxieId = 0;
             $averagePrice = 0;
             if ($total > 0) {
-                $floorPrice = Arr::get($result, 'axies.results.0.order.currentPrice');
-                $floorAxieId = Arr::get($result, 'axies.results.0.id');
-                $priceArr = Arr::pluck(Arr::get($result, 'axies.results'), 'order.currentPrice');
+                $axies = Arr::get($result, 'axies.results', []);
+                foreach ($axies as $axie) {
+                    if (!Arr::get($axie, 'order')) {
+                        continue;
+                    }
+                    $floorPrice = Arr::get($axie, 'order.currentPrice');
+                    $floorAxieId = Arr::get($result, 'axies.results.0.id');
+                    break;
+                }
+                $priceArr = array_filter(Arr::pluck(Arr::get($result, 'axies.results'), 'order.currentPrice'));
                 $averagePrice = intval(array_sum($priceArr) / count($priceArr));
             }
             $record = new QueryMonitorRecord();
