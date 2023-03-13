@@ -21,9 +21,13 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
-        $schedule->command('query:monitor')->everyFiveMinutes(); //监测axie市场走向
+        $schedule->command('query:monitor')->everyFiveMinutes(); //监测axie价格及数量
         $schedule->command('land:monitor')->everyThirtyMinutes(); //监测Land价格
+        $schedule->command('query:purchase')->everyMinute(); //自动购买Axie
         $schedule->command('purchase:confirm')->everyMinute(); //确认Axie购买结果
+
+        $schedule->command('sold_history:rune')->everyMinute(); //Rune销售记录
+        $schedule->command('sold_history:charm')->everyMinute(); //Charm销售记录
     }
 
     /**

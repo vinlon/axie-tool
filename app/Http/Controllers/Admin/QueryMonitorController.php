@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\QueryMonitor;
+use App\Models\QueryMonitorRecord;
 use Illuminate\Http\Request;
 
 class QueryMonitorController extends Controller
@@ -30,6 +31,16 @@ class QueryMonitorController extends Controller
         $monitor = get_entity(QueryMonitor::class);
         $monitor->fill($params);
         $monitor->save();
+    }
+
+    public function listRecords()
+    {
+        $queryId = request()->get('query_id', 0);
+        $query = QueryMonitorRecord::query()
+            ->where('query_id', $queryId)
+            ->orderByDesc('id');
+
+        return paginate_result($query);
     }
 
     public function destroy()

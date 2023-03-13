@@ -27,6 +27,6 @@ class AutoPurchaseRecord extends BaseModel
 
     public function getDisplayEthPriceAttribute()
     {
-        return $this->price / pow(10, 18);
+        return toEth($this->price);
     }
 }

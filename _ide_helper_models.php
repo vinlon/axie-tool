@@ -54,6 +54,26 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\CharmSoldHistory
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $token_id Charm ID
+ * @property string $from 出售人
+ * @property string $to 购买人
+ * @property string $trans_hash 交易Hash
+ * @property string $trans_time 交易时间
+ * @property int $price 成交价格
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CharmSoldHistory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CharmSoldHistory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CharmSoldHistory query()
+ */
+	class IdeHelperCharmSoldHistory {}
+}
+
+namespace App\Models{
+/**
  * App\Models\LandMonitorRecord
  *
  * @property int $id
@@ -79,7 +99,6 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $query_name 查询名称
  * @property string $mp_query_url MarketPlace查询地址
- * @property int $duration 监测间隔，分钟
  * @property mixed $status 状态
  * @property-read \App\Models\AutoPurchase|null $auto_purchase
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QueryMonitor newModelQuery()
@@ -106,6 +125,26 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QueryMonitorRecord query()
  */
 	class IdeHelperQueryMonitorRecord {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\RuneSoldHistory
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $token_id Rune ID
+ * @property string $from 出售人
+ * @property string $to 购买人
+ * @property string $trans_hash 交易Hash
+ * @property string $trans_time 交易时间
+ * @property int $price 成交价格
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\RuneSoldHistory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\RuneSoldHistory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\RuneSoldHistory query()
+ */
+	class IdeHelperRuneSoldHistory {}
 }
 
 namespace App{

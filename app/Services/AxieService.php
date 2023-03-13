@@ -38,6 +38,29 @@ class AxieService
         return Arr::get($result, 'axie');
     }
 
+    public function listRecentlySoldCharms($from = 0, $size = 10)
+    {
+        return $this->getRecentlyErc1155Sold('Charm', $from, $size);
+    }
+
+    public function listRecentlySoldRune($from = 0, $size = 10)
+    {
+        return $this->getRecentlyErc1155Sold('Rune', $from, $size);
+    }
+
+    private function getRecentlyErc1155Sold($type, $from, $size)
+    {
+        $operationName = 'GetRecentlyErc1155Sold';
+        $query = 'query GetRecentlyErc1155Sold($from: Int, $size: Int, $tokenType: Erc1155Type!) { settledAuctions { erc1155Tokens(from: $from, size: $size, tokenType: $tokenType) { total results { total id: tokenId tokenId tokenAddress tokenType transferHistory {  ...TransferHistoryInSettledAuction  __typename } __typename } __typename } __typename }}fragment TransferHistoryInSettledAuction on TransferRecords { total results { ...TransferRecordInSettledAuction __typename } __typename}fragment TransferRecordInSettledAuction on TransferRecord { from to txHash timestamp withPrice withPriceUsd fromProfile { name __typename } toProfile { name __typename } __typename}';
+        $variables = [
+            'from' => $from,
+            'size' => $size,
+            'tokenType' => $type,
+        ];
+        $result = $this->graphql($operationName, $query, $variables);
+        return Arr::get($result, 'settledAuctions.erc1155Tokens');
+    }
+
     /** 添加购买记录 */
     public function addBuyAxieActivity($axie, $hash)
     {

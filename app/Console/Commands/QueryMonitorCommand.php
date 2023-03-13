@@ -60,7 +60,7 @@ class QueryMonitorCommand extends Command
                         continue;
                     }
                     $floorPrice = Arr::get($axie, 'order.currentPrice');
-                    $floorAxieId = Arr::get($result, 'axies.results.0.id');
+                    $floorAxieId = Arr::get($axie, 'id');
                     break;
                 }
                 $priceArr = array_filter(Arr::pluck(Arr::get($result, 'axies.results'), 'order.currentPrice'));
@@ -73,25 +73,6 @@ class QueryMonitorCommand extends Command
             $record->floor_axie_id = $floorAxieId;
             $record->average_price = $averagePrice;
             $record->save();
-
-            $autoPurchase = $monitor->auto_purchase;
-            if ($total > 0 && $autoPurchase) {
-                if ($floorPrice <= $autoPurchase->max_purchase_price) {
-                    $purchaseCount = $autoPurchase->records()
-                        ->whereIn('status', [PurchaseStatus::DONE, PurchaseStatus::WAITING])->count();
-                    //自动购买
-                    $axies = Arr::get($result, 'axies.results');
-                    foreach ($axies as $axie) {
-                        $price = Arr::get($axie, 'order.currentPrice');
-                        if ($price <= $autoPurchase->max_purchase_price && $purchaseCount < $autoPurchase->max_purchase_count) {
-                            AxiePurchaseJob::dispatch(Arr::get($axie, 'id'), $autoPurchase);
-                            $purchaseCount++;
-                        } else {
-                            break;
-                        }
-                    }
-                }
-            }
         }
         return Command::SUCCESS;
     }

@@ -30,9 +30,9 @@ function toFen($yuan)
     return intval($yuan * 100);
 }
 
-function to_eth($price)
+function toEth($price)
 {
-    return $price / bcpow(10, 18);
+    return strval($price / bcpow(10, 18));
 }
 
 /**

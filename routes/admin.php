@@ -13,6 +13,7 @@ Route::middleware(['auth:lay-admin', AdminResponse::class])->group(function () {
 
     # QueryMonitor
     Route::resource('query_monitors', 'QueryMonitorController')->only(['index', 'store', 'destroy']);
+    Route::get('query_monitor_records', 'QueryMonitorController@listRecords');
 
     # AutoPurchase
     Route::resource('auto_purchases', 'AutoPurchaseController')->only(['index']);
