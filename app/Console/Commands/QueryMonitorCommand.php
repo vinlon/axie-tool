@@ -44,7 +44,6 @@ class QueryMonitorCommand extends Command
     {
         $monitors = QueryMonitor::query()
             ->where('status', AvailableStatus::ENABLED)
-            ->where('id', 5)
             ->get();
         /** @var QueryMonitor $monitor */
         foreach ($monitors as $monitor) {
