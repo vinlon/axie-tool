@@ -10,4 +10,10 @@ Route::middleware(['auth:lay-admin', AdminResponse::class])->group(function () {
     Route::post('image_resources/upload', 'ResourceController@uploadImage');
     Route::get('text_resources', 'ResourceController@listTextResources');
     Route::post('text_resources', 'ResourceController@saveTextResource');
+
+    # QueryMonitor
+    Route::resource('query_monitors', 'QueryMonitorController')->only(['index', 'store', 'destroy']);
+
+    # AutoPurchase
+    Route::resource('auto_purchases', 'AutoPurchaseController')->only(['index']);
 });

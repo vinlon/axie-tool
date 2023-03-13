@@ -8,17 +8,20 @@ use Http;
 class AxieService
 {
     /** 获取Axie列表 */
-    public function getAxieBriefList($url)
+    public function listAxiesByMarketPlaceUrl($url, $from, $size)
     {
         $operationName = 'GetAxieBriefList';
         $query = 'query GetAxieBriefList($auctionType: AuctionType, $criteria: AxieSearchCriteria, $from: Int, $sort: SortBy, $size: Int, $owner: String) {  axies(    auctionType: $auctionType    criteria: $criteria    from: $from    sort: $sort    size: $size    owner: $owner  ) {    total    results {      ...AxieBrief      __typename    }    __typename  }}fragment AxieBrief on Axie {  id  name  stage  class  breedCount  image  title  genes  newGenes  battleInfo {    banned    __typename  }  order {    id    currentPrice    currentPriceUsd    __typename  }  parts {    id    name    class    type    specialGenes    __typename  }  __typename}';
         $variables = [
-            'from' => 0,
+            'from' => $from,
+            'size' => $size,
             'sort' => 'PriceAsc',
             'auctionType' => 'Sale',
-            'criteria' => $this->parseCriteria($url),
         ];
-
+        $criteria = $this->parseCriteriaFromUrl($url);
+        if (!empty($criteria)) {
+            $variables['criteria'] = $criteria;
+        }
         return $this->graphql($operationName, $query, $variables);
     }
 
@@ -70,24 +73,25 @@ class AxieService
         return Arr::get($result, 'lands');
     }
 
-    public function parseParamsFromUrl($url)
+    public function parseCriteriaFromUrl($url)
     {
         $queryString = parse_url($url, PHP_URL_QUERY);
-        if (empty($queryString)) {
-            return [];
-        }
+        $availableKeys = ['classes', 'parts', 'pureness', 'breedCount', 'title'];
         $queryPairs = explode('&', $queryString);
         $params = [];
         foreach ($queryPairs as $pair) {
+            if (empty($pair) || strpos($pair, '=') === false) {
+                continue;
+            }
             list($key, $value) = explode('=', $pair, 2);
+            if (!in_array($key, $availableKeys)) {
+                continue;
+            }
+            $value = urldecode($value);
             if (Arr::has($params, $key)) {
-                if (is_array($params[$key])) {
-                    $params[$key][] = $value;
-                } else {
-                    $params[$key] = [$params[$key], $value];
-                }
+                $params[$key][] = $value;
             } else {
-                $params[$key] = $value;
+                $params[$key] = [$value];
             }
         }
 
@@ -118,18 +122,9 @@ class AxieService
         ];
         $resp = Http::withHeaders($headers)->post($gateway, $data);
         $result = $resp->json();
-        if (Arr::has($result, 'errors') && !Arr::has($result, 'data')) {
+        if (Arr::has($result, 'errors') && !Arr::get($result, 'data')) {
             throw new \Exception(Arr::get($result, 'errors.0.message'));
         }
         return Arr::get($result, 'data');
-    }
-
-    private function parseCriteria($url)
-    {
-        $params = $this->parseParamsFromUrl($url);
-        $criteria = [];
-        $criteria['parts'] = Arr::get($params, 'parts');
-
-        return $criteria;
     }
 }

@@ -16,6 +16,7 @@
     "laravel/horizon": "^515.0",
     "laravel/tinker": "^2.5",
     "simplito/elliptic-php": "^1.0",
+    "vinlon/laravel-lay-admin": "1.0",
     "vinlon/laravel-options": "^0.1.2",
     "vinlon/laravel-sql-logger": "^0.2",
     "web3p/ethereum-tx": "^0.4.3"

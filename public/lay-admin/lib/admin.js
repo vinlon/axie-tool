@@ -51,13 +51,18 @@ layui.define('view', function (exports) {
         options.method = 'POST';
         options.headers = options.headers || {};
         options.headers['Accept'] = 'application/json';
-        if (setter.debug) {
-          options.data = data;
-        } else {
-          options.data = {
-            _encrypted_data: window.btoa(unescape(encodeURIComponent(JSON.stringify(data))))
-          }
-        }
+        options.data = data;
+        options.url = url;
+        options.done = doneCallback;
+        view.req(options)
+      }
+      , postJson: function (url, data, doneCallback, options) {
+        options = options || {};
+        options.method = 'POST';
+        options.headers = options.headers || {};
+        options.headers['Content-type'] = 'application/json';
+        options.headers['Accept'] = 'application/json';
+        options.data = JSON.stringify(data);
         options.url = url;
         options.done = doneCallback;
         view.req(options)

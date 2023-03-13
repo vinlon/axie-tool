@@ -20,6 +20,7 @@ namespace App\Models{
  * @property int $query_monitor_id
  * @property int $max_purchase_price 最高购买价格
  * @property int $max_purchase_count 最大购买数量
+ * @property-read \App\Models\QueryMonitor|null $query_monitor
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\AutoPurchaseRecord[] $records
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AutoPurchase newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AutoPurchase newQuery()
@@ -40,8 +41,10 @@ namespace App\Models{
  * @property string $owner Axie持有人
  * @property int $price 购买价格
  * @property string $trans_hash 交易HASH
- * @property string $status 购买状态
+ * @property mixed $status 购买状态
  * @property string|null $remark 备注信息
+ * @property-read \App\Models\AutoPurchase|null $auto_purchase
+ * @property-read mixed $display_eth_price
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AutoPurchaseRecord newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AutoPurchaseRecord newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AutoPurchaseRecord query()
@@ -63,7 +66,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LandMonitorRecord newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LandMonitorRecord newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LandMonitorRecord query()
- * @mixin \Eloquent
  */
 	class IdeHelperLandMonitorRecord {}
 }
@@ -78,7 +80,7 @@ namespace App\Models{
  * @property string $query_name 查询名称
  * @property string $mp_query_url MarketPlace查询地址
  * @property int $duration 监测间隔，分钟
- * @property string $status 状态
+ * @property mixed $status 状态
  * @property-read \App\Models\AutoPurchase|null $auto_purchase
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QueryMonitor newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QueryMonitor newQuery()

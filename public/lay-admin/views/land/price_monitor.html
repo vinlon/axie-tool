@@ -1,7 +1,7 @@
 <div class="layui-card layadmin-header">
   <div class="layui-breadcrumb" lay-filter="breadcrumb">
-    <a><cite>上级菜单</cite></a>
-    <a><cite>列表-编辑弹窗</cite></a>
+    <a><cite>AxieLand</cite></a>
+    <a><cite>土地价格监控</cite></a>
   </div>
 </div>
 
@@ -24,9 +24,6 @@
             <button type="submit" lay-submit class="layui-btn layui-btn-warm"
                     lay-filter="reset_xxxx_search">
               <i class="layui-icon layui-icon-close"></i>重置
-            </button>
-            <button id="btn_add_xxxx" class="layui-btn layui-btn-normal">
-              <i class="layui-icon layui-icon-add-1"></i>添加
             </button>
           </div>
         </script>
@@ -53,7 +50,6 @@
       , fox_table = layui.fox_table
       , admin = layui.admin
       , form = layui.form
-      , view = layui.view
 
     let resourceUrl = 'admin/xxxxs'
 
@@ -74,7 +70,7 @@
     fox_table.toolbar(function (obj) {
       let data = obj.data;
       if (obj.event === 'edit') {
-        showForm(data)
+        layer.msg('Working In Process')
       }
       if (obj.event === 'del') {
         layer.confirm('确认删除该数据?', function (index) {
@@ -97,34 +93,6 @@
       fox_table.reload({});
       return false;
     });
-    //添加
-    $('#btn_add_xxxx').click(function () {
-      showForm();
-      return false;
-    });
-
-    //显示弹窗
-    function showForm(data) {
-      data = data || {};
-      let minWidth = '500px';
-      let minHeight = '300px';
-      admin.popup({
-        title: (data.id ? '修改' : '添加') + 'xxxx'
-        , area: [minWidth, minHeight]
-        , id: 'popup_xxxx'
-        , success: function (layero, index) {
-          view(this.id).render('_base/template/form_popup', data).done(function () {
-            form.on('submit(submit_xxxx)', function (d) {
-              let field = d.field;
-              admin.post(resourceUrl, field, function (res) {
-                layer.close(index);
-                fox_table.reload();
-              })
-            })
-          })
-        }
-      })
-    }
   })
 </script>
 

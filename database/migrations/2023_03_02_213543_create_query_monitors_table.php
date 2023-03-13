@@ -18,7 +18,6 @@ class CreateQueryMonitorsTable extends Migration
             $table->timestamps();
             $table->string('query_name', 64)->comment('查询名称');
             $table->string('mp_query_url', 256)->comment('MarketPlace查询地址');
-            $table->integer('duration')->comment('监测间隔，分钟');
             $table->string('status', 16)->default(\App\Enums\AvailableStatus::ENABLED)->comment('状态');
         });
     }

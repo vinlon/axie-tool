@@ -1,0 +1,88 @@
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a><cite>AxieOrigin</cite></a>
+    <a lay-href="axie/price_monitor">返回所有查询</a>
+    <a><cite>查询看板</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <script type="text/html" template lay-done="layui.data.done()">
+    <div class="layui-card">
+      <div class="layui-card-header">48小时价格监测(每五分钟一次）</div>
+      <div class="layui-card-body">
+        <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade"
+             lay-filter="LAY-index-heapline">
+          <div carousel-item id="LAY-index-heapline">
+            <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </script>
+</div>
+<script>
+  layui.data.done = function () {
+    //折线图
+    layui.use(['echarts'], function () {
+      var $ = layui.$
+        , echarts = layui.echarts;
+
+      //标准折线图
+      let chartOptions = {
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎']},
+        calculable: true,
+        xAxis: [
+          {
+            type: 'category',
+            boundaryGap: false,
+            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value'
+          }
+        ],
+        series: [
+          {
+            name: '邮件营销',
+            type: 'line',
+            stack: '总量',
+            data: [120, 132, 101, 134, 90, 230, 210]
+          },
+          {
+            name: '联盟广告',
+            type: 'line',
+            stack: '总量',
+            data: [220, 182, 191, 234, 290, 330, 310]
+          },
+          {
+            name: '视频广告',
+            type: 'line',
+            stack: '总量',
+            data: [150, 232, 201, 154, 190, 330, 410]
+          },
+          {
+            name: '直接访问',
+            type: 'line',
+            stack: '总量',
+            data: [320, 332, 301, 334, 390, 330, 320]
+          },
+          {
+            name: '搜索引擎',
+            type: 'line',
+            stack: '总量',
+            data: [820, 932, 901, 934, 1290, 1330, 1320]
+          }
+        ]
+      }
+      let chart = echarts.init($('#LAY-index-heapline').children('div')[0], layui.echartsTheme)
+      chart.setOption(chartOptions)
+      window.onresize = chart.resize;
+    });
+  }
+</script>

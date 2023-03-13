@@ -42,11 +42,14 @@ class QueryMonitorCommand extends Command
      */
     public function handle(AxieService $axieService)
     {
-        $monitors = QueryMonitor::query()->where('status', AvailableStatus::ENABLED)->get();
+        $monitors = QueryMonitor::query()
+            ->where('status', AvailableStatus::ENABLED)
+            ->where('id', 5)
+            ->get();
         /** @var QueryMonitor $monitor */
         foreach ($monitors as $monitor) {
             $this->output->writeln('query_monitor:' . $monitor->id);
-            $result = $axieService->getAxieBriefList($monitor->mp_query_url);
+            $result = $axieService->listAxiesByMarketPlaceUrl($monitor->mp_query_url, 0, 50);
             $total = Arr::get($result, 'axies.total');
             $floorPrice = 0;
             $floorAxieId = 0;
