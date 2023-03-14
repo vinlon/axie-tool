@@ -1,0 +1,63 @@
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a><cite>Axie</cite></a>
+    <a><cite>Rune&Charm</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-card">
+    <div class="layui-card-body">
+      <div class="layui-tab" lay-filter="rune_and_charm">
+        <ul class="layui-tab-title">
+          <li class="layui-this" lay-id="rune">Rune</li>
+          <li lay-id="charm">Charm</li>
+        </ul>
+        <div class="layui-tab-content">
+          <div class="layui-tab-item layui-show">
+            <div id="table_sold_summary_rune"></div>
+          </div>
+          <div class="layui-tab-item">
+            <div id="table_sold_summary_charm"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/html" id="tpl_token">
+  <a class="layui-table-link" href="https://app.axieinfinity.com/marketplace/{{d.type}}s/{{d.token_id}}/all-listing/"
+     target="_blank">{{d.token_id}}</a>
+</script>
+<script>
+  layui.use(['element', 'fox_table'], function () {
+    var element = layui.element
+      , fox_table = layui.fox_table
+      , type = localStorage.getItem('erc1155_type') || 'rune'
+
+    element.tabChange('rune_and_charm', type);
+    loadSoldHistories()
+
+    // Tab 切换，以改变地址 hash 值
+    element.on('tab(rune_and_charm)', function () {
+      localStorage.setItem('erc1155_type', this.getAttribute('lay-id'))
+      loadSoldHistories()
+    });
+
+    function loadSoldHistories() {
+      let type = localStorage.getItem('erc1155_type') || 'rune'
+      let id = 'table_sold_summary_' + type
+        , url = 'admin/sold_summary/' + type
+      fox_table.render({
+        id: id
+        , url: url
+        , width: 800
+        , cols: [[
+          {title: type.toUpperCase() + '_ID', templet: '#tpl_token', minWidth: 200}
+          , {title: '销量', field: 'count', width: 200, sort: true}
+          , {title: '平均价格', field: 'avg_price', width: 200, sort: true}
+        ]]
+      });
+    }
+  });
+</script>

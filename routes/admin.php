@@ -17,4 +17,8 @@ Route::middleware(['auth:lay-admin', AdminResponse::class])->group(function () {
 
     # AutoPurchase
     Route::resource('auto_purchases', 'AutoPurchaseController')->only(['index']);
+
+    # SoldHistory
+    Route::get('sold_summary/rune', 'SoldHistoryController@getRuneSummary');
+    Route::get('sold_summary/charm', 'SoldHistoryController@getCharmSummary');
 });

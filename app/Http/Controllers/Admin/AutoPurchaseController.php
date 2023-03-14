@@ -11,6 +11,9 @@ class AutoPurchaseController extends Controller
     public function index()
     {
         $query = AutoPurchaseRecord::query()
+            ->when(request()->status, function ($q) {
+                return $q->where('status', request()->status);
+            })
             ->with(['auto_purchase.query_monitor'])
             ->orderByDesc('id');
 
