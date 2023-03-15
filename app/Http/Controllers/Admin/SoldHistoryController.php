@@ -35,7 +35,13 @@ class SoldHistoryController extends Controller
     {
         $page = request()->get('page', 1);
         $limit = request()->get('limit', 10);
-        return $query->select(['token_id', \DB::raw('count(*) as count'), \DB::raw('AVG(price) as avg_price')])
+        return $query
+            ->select([
+                'token_id',
+                \DB::raw('count(*) as count'),
+                \DB::raw('AVG(price) as avg_price'),
+                \DB::raw('MIN(price) as min_price')
+            ])
             ->when(request()->order_by_desc, function ($q) {
                 return $q->orderByDesc(request()->order_by_desc);
             })
@@ -50,7 +56,8 @@ class SoldHistoryController extends Controller
                     'type' => $type,
                     'token_id' => $history->token_id,
                     'count' => $history->count,
-                    'avg_price' => toEth($history->avg_price)
+                    'avg_price' => toEth($history->avg_price),
+                    'min_price' => toEth($history->min_price)
                 ];
             });
     }

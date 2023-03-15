@@ -9,6 +9,46 @@
 <script type="text/html" template lay-done="layui.data.done()">
   <div class="layui-fluid">
     <div class="layui-card">
+      <div class="layui-row layui-col-space15">
+        <div class="layui-col-sm6 layui-col-md3">
+          <div class="layui-card">
+            <div class="layui-card-header">
+              今日地板价区间
+              <span class="layui-badge layui-bg-blue layuiadmin-badge">今日</span>
+            </div>
+            <div class="layui-card-body layuiadmin-card-list">
+              <p id="today_min_floor">最低 : </p>
+              <p id="today_max_floor">最高 : </p>
+            </div>
+          </div>
+        </div>
+        <div class="layui-col-sm6 layui-col-md3">
+          <div class="layui-card">
+            <div class="layui-card-header">
+              昨日地板价区间
+              <span class="layui-badge layui-bg-orange layuiadmin-badge">昨日</span>
+            </div>
+            <div class="layui-card-body layuiadmin-card-list">
+              <p id="yesterday_min_floor">最低 : </p>
+              <p id="yesterday_max_floor">最高 : </p>
+            </div>
+          </div>
+        </div>
+        <div class="layui-col-sm6 layui-col-md3">
+          <div class="layui-card">
+            <div class="layui-card-header">
+              自动抢购 : <span id="max_purchase_count"></span>
+              <span class="layui-badge layui-bg-cyan layuiadmin-badge">抢购</span>
+            </div>
+            <div class="layui-card-body layuiadmin-card-list">
+              <p id="purchase_submit_count">交易请求数 : </p>
+              <p id="purchase_success_count">交易成功数 : </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="layui-card">
       <div class="layui-card-body">
         <div id="table_query_monitor_records"></div>
       </div>
@@ -24,7 +64,19 @@
     //折线图
     layui.use(['fox_table'], function () {
       var $ = layui.$
+        , admin = layui.admin
         , fox_table = layui.fox_table
+
+
+      admin.get('admin/query_monitor_summary?query_id=' + layui.router().search.query_id, function (res) {
+        $('#today_min_floor').append(res.data.today_min_floor);
+        $('#today_max_floor').append(res.data.today_max_floor);
+        $('#yesterday_min_floor').append(res.data.yesterday_min_floor);
+        $('#yesterday_max_floor').append(res.data.yesterday_max_floor);
+        $('#max_purchase_count').append(res.data.max_purchase_count);
+        $('#purchase_submit_count').append(res.data.purchase_submit_count);
+        $('#purchase_success_count').append(res.data.purchase_success_count);
+      })
 
       // 列表查询
       fox_table.render({

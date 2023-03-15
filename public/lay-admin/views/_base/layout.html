@@ -75,7 +75,7 @@
           ,url = (item.jump && typeof item.jump === 'string') ? item.jump : item.name;
           }}
           <li data-name="{{ item.name || '' }}" data-jump="{{ item.jump || '' }}"
-              class="layui-nav-item {{ classSelected() }}">
+              class="layui-nav-item layui-nav-itemed {{ classSelected() }}">
             <a href="javascript:;" {{ hasChildren ? '' : 'lay-href="'+ url +'"' }} lay-tips="{{ item.title }}"
             lay-direction="2">
             <i class="layui-icon {{ item.icon }}"></i>
