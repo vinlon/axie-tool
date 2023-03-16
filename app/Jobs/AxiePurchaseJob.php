@@ -56,15 +56,14 @@ class AxiePurchaseJob implements ShouldQueue
         try {
             $walletPublicKey = config('services.wallet.public_key');
             $orderData = $this->buildOrderData($axie);
-            $gas = $roninService->estimateGas($orderData, $walletPublicKey, $this->marketAddress);
             $txData = [
                 'from' => $walletPublicKey,
-                'gasPrice' => 20 * 1000000000,
-                'gasLimit' => hexdec($gas),
+                'gasPrice' => 50 * 1000000000,
+                'gasLimit' => 400000,  //
                 'to' => $this->marketAddress,
                 'data' => $orderData,
                 'nonce' => $this->getTransactionCount($roninService, $walletPublicKey),
-                'chainId' => hexdec($roninService->getChainId()),
+                'chainId' => $this->getChainId($roninService),
             ];
             $tx = new Transaction($txData);
             $walletPrivateKey = config('services.wallet.private_key');
@@ -136,6 +135,13 @@ class AxiePurchaseJob implements ShouldQueue
                 return hexdec($transCount);
             }
         );
+    }
+
+    private function getChainId(RoninService $roninService)
+    {
+        return \Cache::remember('ronin_chain_id', 60 * 60 * 24, function () use ($roninService) {
+            return hexdec($roninService->getChainId());
+        });
     }
 
     private function getTransCountCacheKey($walletPublicKey)

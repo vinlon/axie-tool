@@ -74,6 +74,51 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Erc1155SoldHistory
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $type Token Type
+ * @property string $token_id Token ID
+ * @property string $from 出售人
+ * @property string $to 购买人
+ * @property string $trans_hash 交易Hash
+ * @property string $trans_time 交易时间
+ * @property int $price 成交价格
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Erc1155SoldHistory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Erc1155SoldHistory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Erc1155SoldHistory query()
+ * @mixin \Eloquent
+ */
+	class IdeHelperErc1155SoldHistory {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Erc1155Token
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $token_id TokenId
+ * @property string $type 装备类型: rune/charm
+ * @property int $season_id SeasonId
+ * @property string $season_name Season名称
+ * @property string $name 装备名称
+ * @property string $class 适用种族
+ * @property string $rarity 稀有度
+ * @property string $logo_url LOGO图片链接
+ * @property string $description 装备描述
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Erc1155Token newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Erc1155Token newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Erc1155Token query()
+ */
+	class IdeHelperErc1155Token {}
+}
+
+namespace App\Models{
+/**
  * App\Models\LandMonitorRecord
  *
  * @property int $id

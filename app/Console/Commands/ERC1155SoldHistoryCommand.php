@@ -2,27 +2,26 @@
 
 namespace App\Console\Commands;
 
-use App\Models\CharmSoldHistory;
-use App\Models\RuneSoldHistory;
+use App\Models\Erc1155SoldHistory;
 use App\Services\AxieService;
 use Arr;
 use Illuminate\Console\Command;
 
-class RuneSoldHistoryCommand extends Command
+class ERC1155SoldHistoryCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'sold_history:rune';
+    protected $signature = 'erc1155:sync_sold_history';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = '同步Rune销售数据';
+    protected $description = '同步Charm和Rune销售数据';
 
     /**
      * Create a new command instance.
@@ -41,15 +40,28 @@ class RuneSoldHistoryCommand extends Command
      */
     public function handle(AxieService $axieService)
     {
-        $result = $axieService->listRecentlySoldRune(0, 200);
-        $list = Arr::get($result, 'results');
+        $charmResult = $axieService->listRecentlySoldCharms(0, 200);
+        $charmHistory = Arr::get($charmResult, 'results');
+        $insertCount = $this->batchInsertValues($charmHistory, 'charm');
+        $this->output->writeln(sprintf('同步Charm销售数据 %s 条', $insertCount));
+
+        $runeResult = $axieService->listRecentlySoldRune(0, 200);
+        $runeHistory = Arr::get($runeResult, 'results');
+        $insertCount = $this->batchInsertValues($runeHistory, 'rune');
+        $this->output->writeln(sprintf('同步Rune销售数据 %s 条', $insertCount));
+        return 0;
+    }
+
+    private function batchInsertValues($rows, $type)
+    {
         $batchValues = [];
-        foreach ($list as $row) {
+        foreach ($rows as $row) {
             $transHash = Arr::get($row, 'transferHistory.results.0.txHash');
-            if (RuneSoldHistory::query()->where('trans_hash', $transHash)->count() > 0) {
+            if (Erc1155SoldHistory::query()->where('trans_hash', $transHash)->count() > 0) {
                 break;
             }
             $batchValues[] = [
+                'type' => $type,
                 'token_id' => Arr::get($row, 'tokenId'),
                 'from' => Arr::get($row, 'transferHistory.results.0.from'),
                 'to' => Arr::get($row, 'transferHistory.results.0.to'),
@@ -60,8 +72,7 @@ class RuneSoldHistoryCommand extends Command
                 'updated_at' => now(),
             ];
         }
-        RuneSoldHistory::query()->insert($batchValues);
-        $this->output->writeln(sprintf('同步Rune销售数据 %s 条', count($batchValues)));
-        return 0;
+        Erc1155SoldHistory::query()->insert($batchValues);
+        return count($batchValues);
     }
 }

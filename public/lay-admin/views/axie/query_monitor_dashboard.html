@@ -34,15 +34,15 @@
             </div>
           </div>
         </div>
-        <div class="layui-col-sm6 layui-col-md3">
+        <div class="layui-col-sm6 layui-col-md3 layui-hide" id="auto_purchase_summary">
           <div class="layui-card">
             <div class="layui-card-header">
               自动抢购 : <span id="max_purchase_count"></span>
               <span class="layui-badge layui-bg-cyan layuiadmin-badge">抢购</span>
             </div>
             <div class="layui-card-body layuiadmin-card-list">
-              <p id="purchase_submit_count">交易请求数 : </p>
-              <p id="purchase_success_count">交易成功数 : </p>
+              <p id="purchase_submit_count">抢单次数 : </p>
+              <p id="purchase_success_count">成功次数 : </p>
             </div>
           </div>
         </div>
@@ -73,9 +73,12 @@
         $('#today_max_floor').append(res.data.today_max_floor);
         $('#yesterday_min_floor').append(res.data.yesterday_min_floor);
         $('#yesterday_max_floor').append(res.data.yesterday_max_floor);
-        $('#max_purchase_count').append(res.data.max_purchase_count);
-        $('#purchase_submit_count').append(res.data.purchase_submit_count);
-        $('#purchase_success_count').append(res.data.purchase_success_count);
+        if (res.data.auto_purchase) {
+          $('#auto_purchase_summary').removeClass('layui-hide')
+          $('#max_purchase_count').append(res.data.max_purchase_count);
+          $('#purchase_submit_count').append(res.data.purchase_submit_count);
+          $('#purchase_success_count').append(res.data.purchase_success_count);
+        }
       })
 
       // 列表查询

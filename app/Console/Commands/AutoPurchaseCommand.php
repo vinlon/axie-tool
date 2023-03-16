@@ -71,10 +71,16 @@ class AutoPurchaseCommand extends Command
                 $tryTimes = 0;
                 foreach ($axies as $axie) {
                     $price = Arr::get($axie, 'order.currentPrice');
+                    $axieId = Arr::get($axie, 'id');
                     if ($price <= $autoPurchase->max_purchase_price) {
                         if ($purchaseCount < $autoPurchase->max_purchase_count) {
+                            $cacheKey = 'axie_is_purchasing:' . $axieId;
+                            if (\Cache::get($cacheKey)) {
+                                continue;
+                            }
                             $tryTimes++;
-                            AxiePurchaseJob::dispatch(Arr::get($axie, 'id'), $autoPurchase);
+                            \Cache::set($cacheKey, true, 60);
+                            AxiePurchaseJob::dispatch($axieId, $autoPurchase);
                             $purchaseCount++;
                         }
                     }

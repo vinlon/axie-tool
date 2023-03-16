@@ -15,7 +15,7 @@
             <div class="layui-input-inline">
               <select name="status" lay-filter="opt_status">
                 <option value="">全部</option>
-                <option value="done" selected>购买成功</option>
+                <option value="done">购买成功</option>
                 <option value="fail">购买失败</option>
               </select>
             </div>
@@ -79,13 +79,14 @@
         , fox_table = layui.fox_table
         , form = layui.form
 
+      $('select[name="status"]').val(layui.router().search.status);
       form.render()
       let resourceUrl = 'admin/auto_purchases'
 
       // 列表查询
       fox_table.render({
         id: 'table_auto_purchase'
-        , url: resourceUrl + '?status=done'
+        , url: resourceUrl
         , cols: [[
           {title: 'ID', field: 'id', width: 80, align: "center", sort: true}
           , {title: '查询名称', templet: '#tpl_query_name', minWidth: 200}
