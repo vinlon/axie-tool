@@ -30,9 +30,10 @@ function toFen($yuan)
     return intval($yuan * 100);
 }
 
-function toEth($price)
+function toEth($price, $decimals = 5)
 {
-    return $price / bcpow(10, 18);
+    $ethPrice = $price / bcpow(10, 18);
+    return number_format($ethPrice, $decimals, '.', null);
 }
 
 /**

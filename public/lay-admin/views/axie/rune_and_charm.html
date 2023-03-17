@@ -27,7 +27,32 @@
 </div>
 <script type="text/html" id="tpl_token">
   <a class="layui-table-link" href="https://app.axieinfinity.com/marketplace/{{d.type}}s/{{d.token_id}}/all-listing/"
-     target="_blank">{{d.token_id}}</a>
+     target="_blank">
+    <img style="height:20px" src="{{d.logo_url}}"/>
+    {{d.token_name}}
+    {{# let badge_color = d.rarity==='Rare'?'#2dc661': (d.rarity ==='Epic'?'#27c0ca':'#b04dff') }}
+    <span class="layui-badge" style="background-color:{{badge_color}}">{{d.rarity}}</span>
+  </a>
+</script>
+<script type="text/html" id="tpl_count">
+  <span class="{{d.today.count > d.yesterday.count ? 'layui-font-green' : ''}}">
+  {{d.today.count}} / {{d.yesterday.count}}
+  </span>
+</script>
+<script type="text/html" id="tpl_avg_price">
+  <span class="{{d.today.avg_price > d.yesterday.avg_price ? 'layui-font-green' : 'layui-font-red'}}">
+  {{d.today.avg_price}} / {{d.yesterday.avg_price}}
+  </span>
+</script>
+<script type="text/html" id="tpl_max_price">
+  <span class="{{d.today.max_price > d.yesterday.max_price ? 'layui-font-green' : 'layui-font-red'}}">
+  {{d.today.max_price}} / {{d.yesterday.max_price}}
+  </span>
+</script>
+<script type="text/html" id="tpl_min_price">
+  <span class="{{d.today.min_price > d.yesterday.min_price ? 'layui-font-green' : 'layui-font-red'}}">
+  {{d.today.min_price}} / {{d.yesterday.min_price}}
+  </span>
 </script>
 <script>
   layui.use(['element', 'fox_table'], function () {
@@ -47,16 +72,17 @@
     function loadSoldHistories() {
       let type = localStorage.getItem('erc1155_type') || 'rune'
       let id = 'table_sold_summary_' + type
-        , url = 'admin/sold_summary/' + type
+        , url = 'admin/erc1155_sold_summary?type=' + type
       fox_table.render({
         id: id
         , url: url
-        , width: 800
+        , page: false
         , cols: [[
           {title: type.toUpperCase() + '_ID', templet: '#tpl_token', minWidth: 200}
-          , {title: '销量', field: 'count', width: 200, sort: true}
-          , {title: '平均价格', field: 'avg_price', width: 200, sort: true}
-          , {title: '最低价格', field: 'min_price', width: 200}
+          , {title: '销量(今日/昨日)', templet: '#tpl_count', width: 200}
+          , {title: '均价(今日/昨日)', templet: '#tpl_avg_price', width: 200}
+          , {title: '最高价(今日/昨日)', templet: '#tpl_max_price', width: 200}
+          , {title: '最低价(今日/昨日)', templet: '#tpl_min_price', width: 200}
         ]]
       });
     }
