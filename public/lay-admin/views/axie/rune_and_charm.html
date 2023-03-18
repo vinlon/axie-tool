@@ -6,6 +6,34 @@
 </div>
 
 <div class="layui-fluid">
+  <div class="layadmin-search">
+    <form class="layui-form" method="post" lay-filter="form_auto_purchase_search">
+      <script type="text/html" template lay-done="layui.data.done()">
+        <div class="layui-inline">
+          <div class="layui-form-label">稀有度</div>
+          <div class="layui-input-inline">
+            <select name="rarity" lay-filter="opt_rarity">
+              <option value="">全部</option>
+              <option value="Rare">Rare</option>
+              <option value="Epic">Epic</option>
+              <option value="Mystic">Mystic</option>
+            </select>
+          </div>
+        </div>
+        <div class="layui-inline">
+          <div class="layui-form-label">排序</div>
+          <div class="layui-input-inline">
+            <select name="sort" lay-filter="opt_sort">
+              <option value="count" selected>按销量</option>
+              <option value="avg_price">按均价</option>
+              <option value="min_price">按最低价</option>
+              <option value="max_price">按最高价</option>
+            </select>
+          </div>
+        </div>
+      </script>
+    </form>
+  </div>
   <div class="layui-card">
     <div class="layui-card-body">
       <div class="layui-tab" lay-filter="rune_and_charm">
@@ -55,36 +83,57 @@
   </span>
 </script>
 <script>
-  layui.use(['element', 'fox_table'], function () {
-    var element = layui.element
-      , fox_table = layui.fox_table
-      , type = localStorage.getItem('erc1155_type') || 'rune'
+  layui.data.done = function () {
+    layui.use(['element', 'fox_table'], function () {
+      var $ = layui.$
+        , element = layui.element
+        , form = layui.form
+        , fox_table = layui.fox_table
+        , type = localStorage.getItem('erc1155_type') || 'rune'
 
-    element.tabChange('rune_and_charm', type);
-    loadSoldHistories()
-
-    // Tab 切换，以改变地址 hash 值
-    element.on('tab(rune_and_charm)', function () {
-      localStorage.setItem('erc1155_type', this.getAttribute('lay-id'))
+      $('select[name="rarity"]').val(layui.router().search.rarity || '');
+      $('select[name="sort"]').val(layui.router().search.sort || 'count');
+      form.render()
+      element.tabChange('rune_and_charm', type);
       loadSoldHistories()
-    });
 
-    function loadSoldHistories() {
-      let type = localStorage.getItem('erc1155_type') || 'rune'
-      let id = 'table_sold_summary_' + type
-        , url = 'admin/erc1155_sold_summary?type=' + type
-      fox_table.render({
-        id: id
-        , url: url
-        , page: false
-        , cols: [[
-          {title: type.toUpperCase() + '_ID', templet: '#tpl_token', minWidth: 200}
-          , {title: '销量(今日/昨日)', templet: '#tpl_count', width: 200}
-          , {title: '均价(今日/昨日)', templet: '#tpl_avg_price', width: 200}
-          , {title: '最高价(今日/昨日)', templet: '#tpl_max_price', width: 200}
-          , {title: '最低价(今日/昨日)', templet: '#tpl_min_price', width: 200}
-        ]]
+      // Tab 切换，以改变地址 hash 值
+      element.on('tab(rune_and_charm)', function () {
+        localStorage.setItem('erc1155_type', this.getAttribute('lay-id'))
+        loadSoldHistories()
       });
-    }
-  });
+
+      form.on('select(opt_rarity)', function (d) {
+        reloadTable()
+      })
+      form.on('select(opt_sort)', function (d) {
+        reloadTable()
+      })
+
+      function loadSoldHistories() {
+        let type = localStorage.getItem('erc1155_type') || 'rune'
+        let id = 'table_sold_summary_' + type
+          , url = 'admin/erc1155_sold_summary?type=' + type
+
+        fox_table.render({
+          id: id
+          , url: url
+          , page: false
+          , cols: [[
+            {title: type.toUpperCase() + '_ID', templet: '#tpl_token', minWidth: 200}
+            , {title: '销量(今日/昨日)', templet: '#tpl_count', width: 200}
+            , {title: '均价(今日/昨日)', templet: '#tpl_avg_price', width: 200}
+            , {title: '最高价(今日/昨日)', templet: '#tpl_max_price', width: 200}
+            , {title: '最低价(今日/昨日)', templet: '#tpl_min_price', width: 200}
+          ]]
+        });
+      }
+
+      function reloadTable() {
+        let rarity = $('select[name="rarity"]').val()
+          , sort = $('select[name="sort"]').val()
+        fox_table.reload({rarity, sort})
+      }
+    });
+  }
 </script>

@@ -16,11 +16,15 @@ class SoldHistoryController extends Controller
         $tokens = Erc1155Token::query()
             ->where('type', $type)
             ->where('season_id', 4)
+            ->when(request()->rarity, function ($q) {
+                return $q->where('rarity', request()->rarity);
+            })
             ->get()->mapWithKeys(function (Erc1155Token $token) {
                 return [$token->token_id => $token];
             });
         $summaryResult = Erc1155SoldHistory::query()
             ->where('trans_time', '>=', now()->subDay()->startOfDay())
+            ->whereIn('token_id', $tokens->keys())
             ->select([
                 'token_id',
                 \DB::raw('DATE(trans_time) as day'),
@@ -47,7 +51,7 @@ class SoldHistoryController extends Controller
             if (!\Arr::has($dailySummary, $today) && !\Arr::has($dailySummary, $yesterday)) {
                 continue;
             }
-            $sortCol[] = \Arr::get($dailySummary, $today . '.count', 0);
+            $sortCol[] = \Arr::get($dailySummary, $today . '.' . request()->sort, 0);
             $result[] = [
                 'type' => $token->type,
                 'rarity' => $token->rarity,

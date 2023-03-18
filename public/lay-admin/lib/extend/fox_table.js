@@ -44,7 +44,7 @@ layui.define([], function (exports) {
 
     //触发排序事件
     table.on('sort(' + config.id + ')', function (obj) {
-      console.log(obj.field); //当前排序的字段名
+      console.log(obj); //当前排序的字段名
       console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
 
       delete st.where.order_by_asc

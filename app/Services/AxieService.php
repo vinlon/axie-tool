@@ -48,6 +48,17 @@ class AxieService
         return $this->getRecentlyErc1155Sold('Rune', $from, $size);
     }
 
+    public function listRuneOrders($tokenId, $from = 0, $size = 10)
+    {
+        return $this->getErc1155TokenOrders('Rune', $tokenId, $from, $size);
+    }
+
+    public function listCharmOrders($tokenId, $from = 0, $size = 10)
+    {
+        return $this->getErc1155TokenOrders('Charm', $tokenId, $from, $size);
+    }
+
+
     private function getRecentlyErc1155Sold($type, $from, $size)
     {
         $operationName = 'GetRecentlyErc1155Sold';
@@ -59,6 +70,21 @@ class AxieService
         ];
         $result = $this->graphql($operationName, $query, $variables);
         return Arr::get($result, 'settledAuctions.erc1155Tokens');
+    }
+
+    private function getErc1155TokenOrders($type, $tokenId, $from, $size)
+    {
+        $operationName = 'GetErc1155TokenOrders';
+        $query = 'query GetErc1155TokenOrders($tokenId: String!, $tokenType: Erc1155Type!, $maker: String, $from: Int!, $size: Int!, $sort: SortBy!, $owner: String) { erc1155Token(tokenType: $tokenType, tokenId: $tokenId, owner: $owner) { id: tokenId tokenId orders(maker: $maker, from: $from, size: $size, sort: $sort) { ...OrdersInfo __typename } __typename }}fragment OrdersInfo on Orders { total quantity data { ...OrderInfo __typename } __typename}fragment OrderInfo on Order { id maker kind assets { ...AssetInfo __typename } expiredAt paymentToken startedAt basePrice endedAt endedPrice expectedState nonce marketFeePercentage signature hash duration timeLeft currentPrice suggestedPrice currentPriceUsd __typename}fragment AssetInfo on Asset { erc address id quantity orderId __typename}';
+        $variables = [
+            'from' => $from,
+            'size' => $size,
+            'tokenType' => $type,
+            'tokenId' => strval($tokenId),
+            'sort' => 'PriceAsc',
+        ];
+        $result = $this->graphql($operationName, $query, $variables);
+        return Arr::get($result, 'erc1155Token.orders');
     }
 
     /** 添加购买记录 */
@@ -111,6 +137,9 @@ class AxieService
                 continue;
             }
             $value = urldecode($value);
+            if (is_numeric($value)) {
+                $value = intval($value);
+            }
             if (Arr::has($params, $key)) {
                 $params[$key][] = $value;
             } else {
