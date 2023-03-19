@@ -21,7 +21,9 @@ class AxiePurchaseJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $axieId;
+    /** @var array $axie */
+    private $axie;
+
     /** @var AutoPurchase */
     private $autoPurchase;
     private $marketAddress = '0xfff9ce5f71ca6178d3beecedb61e7eff1602950e';
@@ -32,9 +34,9 @@ class AxiePurchaseJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($axieId, AutoPurchase $autoPurchase)
+    public function __construct(array $axie, AutoPurchase $autoPurchase)
     {
-        $this->axieId = $axieId;
+        $this->axie = $axie;
         $this->autoPurchase = $autoPurchase;
     }
 
@@ -43,19 +45,18 @@ class AxiePurchaseJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle(AxieService $axieService, RoninService $roninService)
+    public function handle(RoninService $roninService)
     {
-        $axie = $axieService->getAxie($this->axieId);
         $record = new AutoPurchaseRecord();
         $record->auto_purchase_id = $this->autoPurchase->id;
-        $record->axie_id = Arr::get($axie, 'id');
-        $record->owner = Arr::get($axie, 'owner', '');
-        $record->price = Arr::get($axie, 'order.currentPrice', 0);
+        $record->axie_id = Arr::get($this->axie, 'id');
+        $record->owner = Arr::get($this->axie, 'owner', '');
+        $record->price = Arr::get($this->axie, 'order.currentPrice', 0);
         $record->trans_hash = '';
 
         try {
             $walletPublicKey = config('services.wallet.public_key');
-            $orderData = $this->buildOrderData($axie);
+            $orderData = $this->buildOrderData($this->axie);
             $txData = [
                 'from' => $walletPublicKey,
                 'gasPrice' => 50 * 1000000000,
@@ -90,7 +91,7 @@ class AxiePurchaseJob implements ShouldQueue
         if (!$order) {
             throw new Exception('商品不是在售状态');
         }
-        $basePrice = $this->getUnitField($order, 'basePrice');
+        $currentPrice = $this->getUnitField($order, 'currentPrice');
         $signature = $this->getAddressField($order, 'signature');
         $divider = Str::repeat('0', 24);
         $dataField = [
@@ -99,7 +100,7 @@ class AxiePurchaseJob implements ShouldQueue
             'expiredAt' => $this->getUnitField($order, 'expiredAt'),
             'paymentToken' => $this->getAddressField($order, 'paymentToken'),
             'startedAt' => $this->getUnitField($order, 'startedAt'),
-            'basePrice' => $basePrice,
+            'basePrice' => $currentPrice,
             'endedAt' => $this->getUnitField($order, 'endedAt'),
             'endedPrice' => $this->getUnitField($order, 'endedPrice'),
             'exprectedState' => $this->paduint(0),
@@ -115,7 +116,7 @@ class AxiePurchaseJob implements ShouldQueue
 
         $result .= $orderSig;
         $result .= Str::repeat('0', 88);
-        $result .= $basePrice;
+        $result .= $currentPrice;
         $result .= $preSig;
         $result .= $signature;
         $result .= $postSig;

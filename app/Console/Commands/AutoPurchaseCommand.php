@@ -80,7 +80,7 @@ class AutoPurchaseCommand extends Command
                             }
                             $tryTimes++;
                             \Cache::set($cacheKey, true, 60);
-                            AxiePurchaseJob::dispatch($axieId, $autoPurchase);
+                            AxiePurchaseJob::dispatch($axie, $autoPurchase);
                             $purchaseCount++;
                         }
                     }

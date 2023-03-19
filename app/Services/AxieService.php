@@ -11,7 +11,7 @@ class AxieService
     public function listAxiesByMarketPlaceUrl($url, $from, $size)
     {
         $operationName = 'GetAxieBriefList';
-        $query = 'query GetAxieBriefList($auctionType: AuctionType, $criteria: AxieSearchCriteria, $from: Int, $sort: SortBy, $size: Int, $owner: String) {  axies(    auctionType: $auctionType    criteria: $criteria    from: $from    sort: $sort    size: $size    owner: $owner  ) {    total    results {      ...AxieBrief      __typename    }    __typename  }}fragment AxieBrief on Axie {  id  name  stage  class  breedCount  image  title  genes  newGenes  battleInfo {    banned    __typename  }  order {    id    currentPrice    currentPriceUsd    __typename  }  parts {    id    name    class    type    specialGenes    __typename  }  __typename}';
+        $query = 'query GetAxieBriefList($auctionType: AuctionType, $criteria: AxieSearchCriteria, $from: Int, $sort: SortBy, $size: Int, $owner: String) { axies( auctionType: $auctionType criteria: $criteria from: $from sort: $sort size: $size owner: $owner ) { total results { ...AxieBrief __typename } __typename }}fragment AxieBrief on Axie { id name owner stage class breedCount image title genes newGenes battleInfo { banned __typename } order { id basePrice currentPrice currentPriceUsd maker startedAt endedAt expiredAt endedPrice nonce paymentToken marketFeePercentage signature __typename }  __typename}';
         $variables = [
             'from' => $from,
             'size' => $size,
