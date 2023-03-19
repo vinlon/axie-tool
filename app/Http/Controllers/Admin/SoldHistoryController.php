@@ -97,6 +97,7 @@ class SoldHistoryController extends Controller
             $list[] = [
                 'current_price' => toEth(Arr::get($row, 'currentPrice')),
                 'current_price_usd' => Arr::get($row, 'currentPriceUsd'),
+                'seller' => Arr::get($row, 'maker'),
                 'ended_price' => $endPrice > 0 ? toEth($endPrice) : '-',
                 'started_at' => \Carbon\Carbon::createFromTimestamp(Arr::get($row, 'startedAt'))->toDateTimeString(),
             ];
