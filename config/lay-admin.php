@@ -10,7 +10,7 @@ $sidebars->add(
     SideBar::create('axie_origin', 'AxieOrigin')->iconClass('layui-icon-app')
         ->add(SideBar::create('axie_origin.price_monitor', '价格监控')->jumpTo('axie/price_monitor'))
         ->add(SideBar::create('axie_origin.auto_purchase', '自动购买')->jumpTo('axie/auto_purchase'))
-        ->add(SideBar::create('axie_origin.rune_and_charm', 'Rune&Charm')->jumpTo('axie/rune_and_charm'))
+        ->add(SideBar::create('axie_origin.tokens', 'Rune&Charm')->jumpTo('axie/tokens'))
 );
 $sidebars->add(
     SideBar::create('axie_land', 'AxieLand')->iconClass('layui-icon-app')

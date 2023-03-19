@@ -1,0 +1,69 @@
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a><cite>Axie</cite></a>
+    <a><cite>Run&Charm</cite></a>
+    <a><cite>订单详情</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-card">
+    <div class="layui-card-header">
+      成交记录
+    </div>
+    <div class="layui-card-body">
+      <div id="table_token_sold" lay-filter="table_token_sold"></div>
+    </div>
+  </div>
+  <div class="layui-card">
+    <div class="layui-card-header">
+      在售记录
+    </div>
+    <div class="layui-card-body">
+      <div id="table_token_orders" lay-filter="table_token_orders"></div>
+    </div>
+  </div>
+</div>
+<script type="text/html" template lay-done="layui.data.done()"></script>
+
+<script>
+  layui.data.done = function () {
+    layui.use([], function () {
+      let $ = layui.$
+        , table = layui.table
+        , admin = layui.admin
+        , type = layui.router().search.type
+        , token_id = layui.router().search.token_id
+
+      // 已售订单加载
+      table.render({
+        elem: '#table_token_sold'
+        , url: 'admin/erc1155_sold_histories'
+        , size: 'sm'
+        , where: {type, token_id}
+        , page: true
+        , cols: [[
+          {title: '交易时间', field: 'trans_time', width: 180, align: "center"}
+          , {title: '成交价格(WETH)', field: 'price', minWidth: 200}
+          , {title: '购买人', field: 'to', minWidth: 200}
+        ]]
+      })
+
+      // 在售订单加载
+      table.render({
+        elem: '#table_token_orders'
+        , url: 'admin/erc1155_orders'
+        , size: 'sm'
+        , where: {type, token_id}
+        , page: true
+        , cols: [[
+          {title: '挂单时间', field: 'started_at', width: 180, align: "center"}
+          , {title: '当前价格(WETH)', field: 'current_price', minWidth: 200}
+          , {title: '当前价格(USD)', field: 'current_price_usd', minWidth: 200}
+          , {title: '最低价格(WETH)', field: 'ended_price', minWidth: 200}
+        ]]
+      });
+    })
+  }
+</script>
+

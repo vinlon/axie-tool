@@ -21,4 +21,6 @@ Route::middleware(['auth:lay-admin', AdminResponse::class])->group(function () {
 
     # SoldHistory
     Route::get('erc1155_sold_summary', 'SoldHistoryController@getSoldSummary');
+    Route::get('erc1155_orders', 'SoldHistoryController@getTokenOrders');
+    Route::get('erc1155_sold_histories', 'SoldHistoryController@getTokenSoldHistories');
 });

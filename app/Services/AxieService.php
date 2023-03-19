@@ -64,8 +64,8 @@ class AxieService
         $operationName = 'GetRecentlyErc1155Sold';
         $query = 'query GetRecentlyErc1155Sold($from: Int, $size: Int, $tokenType: Erc1155Type!) { settledAuctions { erc1155Tokens(from: $from, size: $size, tokenType: $tokenType) { total results { total id: tokenId tokenId tokenAddress tokenType transferHistory {  ...TransferHistoryInSettledAuction  __typename } __typename } __typename } __typename }}fragment TransferHistoryInSettledAuction on TransferRecords { total results { ...TransferRecordInSettledAuction __typename } __typename}fragment TransferRecordInSettledAuction on TransferRecord { from to txHash timestamp withPrice withPriceUsd fromProfile { name __typename } toProfile { name __typename } __typename}';
         $variables = [
-            'from' => $from,
-            'size' => $size,
+            'from' => intval($from),
+            'size' => intval($size),
             'tokenType' => $type,
         ];
         $result = $this->graphql($operationName, $query, $variables);
@@ -77,8 +77,8 @@ class AxieService
         $operationName = 'GetErc1155TokenOrders';
         $query = 'query GetErc1155TokenOrders($tokenId: String!, $tokenType: Erc1155Type!, $maker: String, $from: Int!, $size: Int!, $sort: SortBy!, $owner: String) { erc1155Token(tokenType: $tokenType, tokenId: $tokenId, owner: $owner) { id: tokenId tokenId orders(maker: $maker, from: $from, size: $size, sort: $sort) { ...OrdersInfo __typename } __typename }}fragment OrdersInfo on Orders { total quantity data { ...OrderInfo __typename } __typename}fragment OrderInfo on Order { id maker kind assets { ...AssetInfo __typename } expiredAt paymentToken startedAt basePrice endedAt endedPrice expectedState nonce marketFeePercentage signature hash duration timeLeft currentPrice suggestedPrice currentPriceUsd __typename}fragment AssetInfo on Asset { erc address id quantity orderId __typename}';
         $variables = [
-            'from' => $from,
-            'size' => $size,
+            'from' => intval($from),
+            'size' => intval($size),
             'tokenType' => $type,
             'tokenId' => strval($tokenId),
             'sort' => 'PriceAsc',
@@ -111,8 +111,8 @@ class AxieService
         $query = 'query GetLandsGrid($from: Int!, $size: Int!, $sort: SortBy!, $owner: String, $criteria: LandSearchCriteria, $auctionType: AuctionType) { lands( criteria: $criteria from: $from size: $size sort: $sort owner: $owner auctionType: $auctionType ) { total results { ...LandBriefV2 __typename } __typename }}fragment LandBriefV2 on LandPlot { tokenId owner landType row col order { id currentPrice startedAt currentPriceUsd __typename } ownerProfile { name __typename } __typename}';
         $variables = [
             'auctionType' => 'Sale',
-            'from' => $from,
-            'size' => $size,
+            'from' => intval($from),
+            'size' => intval($size),
             'sort' => 'PriceAsc',
         ];
         if ($landType) {
