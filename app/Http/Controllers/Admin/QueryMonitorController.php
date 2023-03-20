@@ -85,8 +85,11 @@ class QueryMonitorController extends Controller
 
     }
 
-    public function destroy()
+    public function destroy($id)
     {
-
+        //删除QueryMonitorRecord
+        QueryMonitorRecord::query()->where('query_id', $id)->delete();
+        //删除QueryMonitor
+        QueryMonitor::destroy($id);
     }
 }
