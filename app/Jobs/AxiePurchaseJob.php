@@ -57,10 +57,11 @@ class AxiePurchaseJob implements ShouldQueue
         try {
             $walletPublicKey = config('services.wallet.public_key');
             $orderData = $this->buildOrderData($this->axie);
+            $gasLimit = $roninService->estimateGas($orderData, $walletPublicKey, $this->marketAddress);
             $txData = [
                 'from' => $walletPublicKey,
-                'gasPrice' => 50 * 1000000000,
-                'gasLimit' => 400000,  //
+                'gasPrice' => 20 * 1000000000,
+                'gasLimit' => hexdec($gasLimit),
                 'to' => $this->marketAddress,
                 'data' => $orderData,
                 'nonce' => $this->getTransactionCount($roninService, $walletPublicKey),
@@ -84,7 +85,7 @@ class AxiePurchaseJob implements ShouldQueue
     function buildOrderData($axie)
     {
         $paddingEnd = Str::repeat('0', 56);
-        $preSig = '0000000000000000000000002fbf0d836ec2015c7b8bb64d3167949e3ac1d5c' . Str::repeat('0', 63) . 'a' . Str::repeat('0', 62) . '12' . Str::repeat('0', 63) . '41';
+        $preSig = Str::repeat('0', 24) . '8faf2b3f378d1ccb796b1e3adb1adf0a1a5e679d' . Str::repeat('0', 62) . 'a' . Str::repeat('0', 62) . '12' . Str::repeat('0', 63) . '41';
         $postSig = Str::repeat('0', 86);
         $orderSig = '344c54c66d3'; //使用WETH支付
         $order = Arr::get($axie, 'order');
@@ -92,6 +93,7 @@ class AxiePurchaseJob implements ShouldQueue
             throw new Exception('商品不是在售状态');
         }
         $currentPrice = $this->getUnitField($order, 'currentPrice');
+        $basePrice = $this->getUnitField($order, 'basePrice');
         $signature = $this->getAddressField($order, 'signature');
         $divider = Str::repeat('0', 24);
         $dataField = [
@@ -100,7 +102,7 @@ class AxiePurchaseJob implements ShouldQueue
             'expiredAt' => $this->getUnitField($order, 'expiredAt'),
             'paymentToken' => $this->getAddressField($order, 'paymentToken'),
             'startedAt' => $this->getUnitField($order, 'startedAt'),
-            'basePrice' => $currentPrice,
+            'basePrice' => $basePrice,
             'endedAt' => $this->getUnitField($order, 'endedAt'),
             'endedPrice' => $this->getUnitField($order, 'endedPrice'),
             'exprectedState' => $this->paduint(0),
@@ -122,7 +124,6 @@ class AxiePurchaseJob implements ShouldQueue
         $result .= $postSig;
         $result .= implode($divider, array_values($dataField));
         $result .= $paddingEnd;
-
         return $result;
     }
 
