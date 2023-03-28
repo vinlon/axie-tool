@@ -126,10 +126,10 @@
     //显示弹窗
     function showForm(data) {
       data = data || {};
-      let minWidth = '500px';
-      let minHeight = '300px';
+      let minWidth = '600px';
+      let minHeight = '500px';
       admin.popup({
-        title: (data.id ? '修改' : '添加') + 'query_monitor'
+        title: (data.id ? '修改' : '添加') + '价格监控'
         , area: [minWidth, minHeight]
         , id: 'popup_query_monitor'
         , success: function (layero, index) {

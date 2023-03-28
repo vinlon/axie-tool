@@ -48,7 +48,7 @@ class AutoPurchaseCommand extends Command
             if ($current - $start >= 50) {
                 break;
             }
-            sleep(5);
+            sleep(2);
             $monitors = QueryMonitor::query()
                 ->with(['auto_purchase'])
                 ->whereHas('auto_purchase')

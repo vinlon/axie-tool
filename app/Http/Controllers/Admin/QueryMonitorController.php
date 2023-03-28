@@ -8,6 +8,7 @@ use App\Models\AutoPurchase;
 use App\Models\QueryMonitor;
 use App\Models\QueryMonitorRecord;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Http\Parser\RouteParams;
 
 class QueryMonitorController extends Controller
 {
@@ -33,6 +34,22 @@ class QueryMonitorController extends Controller
         $monitor = get_entity(QueryMonitor::class);
         $monitor->fill($params);
         $monitor->save();
+
+        $maxPurchaseCount = request()->get('max_purchase_count', 0);
+        $maxPurchasePrice = request()->get('max_purchase_price', 0);
+        /** @var AutoPurchase $autoPurchase */
+        $autoPurchase = AutoPurchase::query()->where('query_monitor_id', $monitor->id)->first();
+        if ($maxPurchasePrice && $maxPurchaseCount) {
+            if (!$autoPurchase) {
+                $autoPurchase = new AutoPurchase();
+                $autoPurchase->query_monitor_id = $monitor->id;
+            }
+            $autoPurchase->max_purchase_count = $maxPurchaseCount;
+            $autoPurchase->max_purchase_price = $maxPurchasePrice;
+            $autoPurchase->save();
+        } else if ($autoPurchase) {
+            $autoPurchase->delete();
+        }
     }
 
     public function listRecords()

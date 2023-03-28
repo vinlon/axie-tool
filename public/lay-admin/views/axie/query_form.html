@@ -1,25 +1,49 @@
 <script type="text/html" template lay-done="layui.data.sendParams(d.params)">
   <div class="layui-form" lay-filter="form_query_form">
-    <input type="hidden" name="id" value="{{d.params.id || ''}}"/>
-    <div class="layui-form-item">
-      <label class="layui-form-label">查询名称</label>
-      <div class="layui-input-inline">
-        <input type="text" name="query_name" value="{{d.params.query_name || ''}}" lay-verify="required"
-               autocomplete="off" class="layui-input">
-      </div>
-    </div>
-    <div class="layui-form-item">
-      <label class="layui-form-label">市场链接</label>
-      <div class="layui-input-block">
-        <input type="text" name="mp_query_url" value="{{d.params.mp_query_url || ''}}" lay-verify="required"
-               autocomplete="off" class="layui-input">
-      </div>
-    </div>
-    <div class="layui-form-item">
-      <div class="layui-footer">
-        <label class="layui-form-label"></label>
+    <div class="layui-card-header">查询设置</div>
+    <div class="layui-card-body">
+
+      <input type="hidden" name="id" value="{{d.params.id || ''}}"/>
+      <div class="layui-form-item">
+        <label class="layui-form-label">查询名称</label>
         <div class="layui-input-inline">
-          <input type="button" lay-submit lay-filter="submit_query_form" value="确认" class="layui-btn">
+          <input type="text" name="query_name" value="{{d.params.query_name || ''}}" lay-verify="required"
+                 autocomplete="off" class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">市场链接</label>
+        <div class="layui-input-block">
+          <input type="text" name="mp_query_url" value="{{d.params.mp_query_url || ''}}" lay-verify="required"
+                 autocomplete="off" class="layui-input">
+        </div>
+      </div>
+    </div>
+    <div class="layui-card-header">自动购买</div>
+    {{# let auto_purchase = d.params.auto_purchase || {} }}
+    <div class="layui-card-body">
+      <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 100px">购买数量</label>
+        <div class="layui-input-inline">
+          <input type="text" name="max_purchase_count" value="{{auto_purchase.max_purchase_count || ''}}"
+                 autocomplete="off"
+                 class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 100px">最高购买价格</label>
+        <div class="layui-input-inline">
+          <input type="text" name="max_purchase_price" value="{{auto_purchase.max_purchase_price || ''}}"
+                 autocomplete="off"
+                 class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-footer">
+          <label class="layui-form-label"></label>
+          <div class="layui-input-inline">
+            <input type="button" lay-submit lay-filter="submit_query_form" value="确认" class="layui-btn">
+          </div>
         </div>
       </div>
     </div>

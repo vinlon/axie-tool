@@ -3,7 +3,7 @@
   "type": "project",
   "description": "axie-tool",
   "require": {
-    "php": "8.1",
+    "php": "8.1.*",
     "ext-bcmath": "*",
     "ext-json": "*",
     "bensampo/laravel-enum": "^4.2",
@@ -19,7 +19,8 @@
     "vinlon/laravel-lay-admin": "1.0",
     "vinlon/laravel-options": "^0.1.2",
     "vinlon/laravel-sql-logger": "^0.2",
-    "web3p/ethereum-tx": "^0.4.3"
+    "web3p/ethereum-tx": "^0.4.3",
+    "web3p/web3.php": "dev-master"
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "^2.8",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3b146a014708f880b77983b32a2f4c98",
+    "content-hash": "15c5a054a54d4b0a25cadfc4e2e44948",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -7588,6 +7588,60 @@
             "time": "2021-08-30T10:22:03+00:00"
         },
         {
+            "name": "web3p/web3.php",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/web3p/web3.php.git",
+                "reference": "cede0cc410363ec6182a732e98bb017e421352f4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/web3p/web3.php/zipball/cede0cc410363ec6182a732e98bb017e421352f4",
+                "reference": "cede0cc410363ec6182a732e98bb017e421352f4",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "guzzlehttp/guzzle": "^6.3|^7.0",
+                "kornrunner/keccak": "~1.0",
+                "php": "^7.2|^8.0",
+                "phpseclib/phpseclib": "~2.0.30"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~8.0|~9.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Web3\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "sc0Vu",
+                    "email": "alk03073135@gmail.com"
+                }
+            ],
+            "description": "Ethereum web3 interface.",
+            "support": {
+                "issues": "https://github.com/web3p/web3.php/issues",
+                "source": "https://github.com/web3p/web3.php/tree/master"
+            },
+            "time": "2022-03-07T04:41:49+00:00"
+        },
+        {
             "name": "webmozart/assert",
             "version": "1.11.0",
             "source": {
@@ -11287,11 +11341,13 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "web3p/web3.php": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.3|^8.0",
+        "php": "8.1.*",
         "ext-bcmath": "*",
         "ext-json": "*"
     },
