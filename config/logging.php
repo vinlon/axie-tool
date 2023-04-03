@@ -68,6 +68,12 @@ return [
             'level' => 'debug',
             'days' => 14,
         ],
+        \App\Constant::LOG_CHANNEL_AXIE => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/axie.log'),
+            'level' => 'debug',
+            'days' => 14,
+        ],
 
         'syslog' => [
             'driver' => 'syslog',

@@ -35,7 +35,11 @@
     <div class="layui-card-body">
       <div id="table_auto_purchase"></div>
       <script type="text/html" id="tpl_query_name">
+        {{# if (d.auto_purchase) { }}
         {{d.auto_purchase.query_monitor.query_name}}
+        {{# } else { }}
+        ---
+        {{# } }}
       </script>
       <script type="text/html" id="tpl_axie">
         <a class="layui-table-link" href="https://app.axieinfinity.com/marketplace/axies/{{d.axie_id}}/"

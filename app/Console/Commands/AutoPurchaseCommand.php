@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Constant;
 use App\Enums\AvailableStatus;
 use App\Enums\PurchaseStatus;
 use App\Jobs\AxiePurchaseJob;
@@ -48,13 +49,13 @@ class AutoPurchaseCommand extends Command
             if ($current - $start >= 50) {
                 break;
             }
-            sleep(2);
+            sleep(1);
             $monitors = QueryMonitor::query()
                 ->with(['auto_purchase'])
                 ->whereHas('auto_purchase')
                 ->where('status', AvailableStatus::ENABLED)
                 ->get();
-            $this->writeln('开始执行自动购买脚本, 购买任务数量:' . count($monitors));
+            $this->writeln('开始执行自动购买脚本, 任务数量:' . count($monitors));
             /** @var QueryMonitor $monitor */
             foreach ($monitors as $monitor) {
                 $autoPurchase = $monitor->auto_purchase;
@@ -66,8 +67,14 @@ class AutoPurchaseCommand extends Command
                     continue;
                 }
                 $result = $axieService->listAxiesByMarketPlaceUrl($monitor->mp_query_url, 0, min($leftCount, 20));
+
                 //自动购买
                 $axies = Arr::get($result, 'axies.results', []);
+                if (count($axies) == 0) {
+                    continue;
+                }
+                $floorPrice = Arr::get($axies, '0.order.currentPrice');
+                $this->writeln($monitor->query_name . ':floor_price=' . $floorPrice);
                 $tryTimes = 0;
                 foreach ($axies as $axie) {
                     $price = Arr::get($axie, 'order.currentPrice');

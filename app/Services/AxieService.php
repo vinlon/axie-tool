@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Constant;
 use Arr;
 use Http;
 
@@ -152,13 +153,11 @@ class AxieService
 
     private function graphql($operationName, $query, $variables)
     {
-        $token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFlZGFjYzgxLWUyN2YtNmNhMC04MjMxLTI1NThkNDhkMDk0MyIsInNpZCI6MTI0Njk1MTU0LCJyb2xlcyI6WyJ1c2VyIl0sInNjcCI6WyJhbGwiXSwiYWN0aXZhdGVkIjp0cnVlLCJhY3QiOnRydWUsInJvbmluQWRkcmVzcyI6IjB4MWYxOTE5NzhiYWM1YmYwN2JlNzcxYWIxOGIxY2MyMGQ0Zjk0ZWE4NCIsImV4cCI6MTY3OTQ4MzI2OSwiaWF0IjoxNjc4MjczNjY5LCJpc3MiOiJBeGllSW5maW5pdHkiLCJzdWIiOiIxZWRhY2M4MS1lMjdmLTZjYTAtODIzMS0yNTU4ZDQ4ZDA5NDMifQ.yPF6z-Ushb6Pemqp0-vqkaEJetpXtbDey9dpElq-tSQ';
         $gateway = 'https://graphql-gateway.axieinfinity.com/graphql';
         $headers = [
             'authority' => 'graphql-gateway.axieinfinity.com',
             'accept' => '*/*',
             'accept-language' => 'zh,en-US;q=0.9,en;q=0.8,ja;q=0.7,zh-CN;q=0.6,zh-TW;q=0.5',
-            'authorization' => 'Bearer ' . $token,
             'cache-control' => 'no-cache',
             'content-type' => 'application/json',
             'cookie' => 'AF_DEFAULT_MEASUREMENT_STATUS=true; afUserId=4b80213f-f2b8-4706-a76b-d3ed02aa0055-p; __cuid=bec52dd9a7774d9fa0db6d7b60e9fe6c; amp_fef1e8=2d8ece93-09de-490e-a5be-55d6a9585266R...1gi5c9ppr.1gi5c9pq2.2.1.3; _gid=GA1.2.904165382.1674375992; _gsid=4ef23d2538b54b55bbbe7301d34b0d8b; cf_clearance=LYDRuQOlwxuEXB_OewBfa.Op2gvLZdPeo4O6_FbQ2Fg-1675780498-0-150; _ga_YGEWKD0HZL=GS1.1.1677113948.1.1.1677115600.0.0.0; AF_SYNC=1677370465791; _gat_gtag_UA_150383258_1=1; _ga=GA1.1.23810327.1668479617; _ga_VCXVN683YE=GS1.1.1677681660.471.1.1677682898.0.0.0',

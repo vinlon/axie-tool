@@ -26,7 +26,7 @@ class AxiePurchaseJob implements ShouldQueue
 
     /** @var AutoPurchase */
     private $autoPurchase;
-    private $marketAddress = '0xfff9ce5f71ca6178d3beecedb61e7eff1602950e';
+    private $marketContractAddress = '0xfff9ce5f71ca6178d3beecedb61e7eff1602950e';
     private $axieAddress = '32950db2a7164ae833121501c797d79e7b79d74c';
 
     /**
@@ -57,12 +57,12 @@ class AxiePurchaseJob implements ShouldQueue
         try {
             $walletPublicKey = config('services.wallet.public_key');
             $orderData = $this->buildOrderData($this->axie);
-            $gasLimit = $roninService->estimateGas($orderData, $walletPublicKey, $this->marketAddress);
+            $gasLimit = $roninService->estimateGas($orderData, $walletPublicKey, $this->marketContractAddress);
             $txData = [
                 'from' => $walletPublicKey,
-                'gasPrice' => 20 * 1000000000,
+                'gasPrice' => 100 * 1000000000,
                 'gasLimit' => hexdec($gasLimit),
-                'to' => $this->marketAddress,
+                'to' => $this->marketContractAddress,
                 'data' => $orderData,
                 'nonce' => $this->getTransactionCount($roninService, $walletPublicKey),
                 'chainId' => $this->getChainId($roninService),

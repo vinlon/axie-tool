@@ -110,7 +110,7 @@ class SoldHistoryController extends Controller
         $tokenId = request()->get('token_id');
         $query = Erc1155SoldHistory::query()
             ->where('token_id', $tokenId)
-            ->orderByDesc('id');
+            ->orderByDesc('trans_time');
 
         return paginate_result($query, function (Erc1155SoldHistory $history) {
             $history->price = toEth($history->price);
