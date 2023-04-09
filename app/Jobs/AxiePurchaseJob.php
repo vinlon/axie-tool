@@ -5,7 +5,6 @@ namespace App\Jobs;
 use App\Enums\PurchaseStatus;
 use App\Models\AutoPurchase;
 use App\Models\AutoPurchaseRecord;
-use App\Services\AxieService;
 use App\Services\RoninService;
 use Arr;
 use Exception;

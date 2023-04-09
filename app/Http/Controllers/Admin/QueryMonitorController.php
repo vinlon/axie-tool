@@ -106,6 +106,8 @@ class QueryMonitorController extends Controller
     {
         //删除QueryMonitorRecord
         QueryMonitorRecord::query()->where('query_id', $id)->delete();
+        //删除AutoPurchase
+        AutoPurchase::query()->where('query_monitor_id', $id)->delete();
         //删除QueryMonitor
         QueryMonitor::destroy($id);
     }
