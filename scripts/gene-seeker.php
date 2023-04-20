@@ -20,16 +20,19 @@ $roninService = app()->get(\App\Services\RoninService::class);
 $gameService = app()->get(\App\Services\GameService::class);
 
 $requirement = [
-    'tail.d' => 'tail-shrimp',
-    'back.d' => 'back-garish-worm',
+//    'back.d' => 'back-garish-worm',
     'back.r1' => 'back-garish-worm',
 //    'back.r2' => 'back-garish-worm',
-    'mouth.r1' => 'mouth-square-teeth',
-//    'mouth.r2' => 'mouth-square-teeth',
+    'tail.d' => 'tail-cottontail',
+    'ears.d' => 'ears-innocent-lamb',
 ];
 $maxBreedCount = 1;
 $maxMatchCount = 10;
+$classes = ['Beast', 'Dawn'];
 $url = "https://app.axieinfinity.com/marketplace/axies/?auctionTypes=Sale&breedCount=0&breedCount=" . $maxBreedCount;
+foreach ($classes as $class) {
+    $url .= '&classes=' . $class;
+}
 foreach ($requirement as $key => $value) {
     if (Str::endsWith($key, '.d')) {
         $url .= '&parts=' . $value;
@@ -70,6 +73,7 @@ while (true) {
                 break;
             }
             $matchResult[] = [
+                Arr::get($row, 'class'),
                 Arr::get($row, 'id'),
                 toEth(Arr::get($row, 'order.currentPrice'), 6),
             ];
