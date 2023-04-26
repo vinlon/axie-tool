@@ -66,7 +66,7 @@ class AutoPurchaseCommand extends Command
                     $this->writeln($monitor->query_name . ':已完成购买任务');
                     continue;
                 }
-                $result = $axieService->listAxiesByMarketPlaceUrl($monitor->mp_query_url, 0, min($leftCount, 20));
+                $result = $axieService->listAxiesByMarketPlaceUrl($monitor->mp_query_url, 0, 10);
 
                 //自动购买
                 $axies = Arr::get($result, 'axies.results', []);

@@ -48,7 +48,7 @@ class QueryMonitorCommand extends Command
         /** @var QueryMonitor $monitor */
         foreach ($monitors as $monitor) {
             $this->output->writeln('query_monitor:' . $monitor->id);
-            $result = $axieService->listAxiesByMarketPlaceUrl($monitor->mp_query_url, 0, 50);
+            $result = $axieService->listAxiesByMarketPlaceUrl($monitor->mp_query_url, 0, 10);
             $total = Arr::get($result, 'axies.total');
             $floorPrice = 0;
             $floorAxieId = 0;
