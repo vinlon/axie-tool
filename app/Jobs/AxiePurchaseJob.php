@@ -27,6 +27,7 @@ class AxiePurchaseJob implements ShouldQueue
     private $autoPurchase;
     private $marketContractAddress = '0xfff9ce5f71ca6178d3beecedb61e7eff1602950e';
     private $axieAddress = '32950db2a7164ae833121501c797d79e7b79d74c';
+    private $invitor = '8faf2b3f378d1ccb796b1e3adb1adf0a1a5e679d';
 
     /**
      * Create a new job instance.
@@ -52,15 +53,14 @@ class AxiePurchaseJob implements ShouldQueue
         $record->owner = Arr::get($this->axie, 'owner', '');
         $record->price = Arr::get($this->axie, 'order.currentPrice', 0);
         $record->trans_hash = '';
-
         try {
             $walletPublicKey = config('services.wallet.public_key');
             $orderData = $this->buildOrderData($this->axie);
             $gasLimit = $roninService->estimateGas($orderData, $walletPublicKey, $this->marketContractAddress);
             $txData = [
                 'from' => $walletPublicKey,
-                'gasPrice' => 100 * 1000000000,
-                'gasLimit' => hexdec($gasLimit),
+                'gasPrice' => 20 * 1000000000,
+                'gasLimit' => hexdec($gasLimit) * 2,
                 'to' => $this->marketContractAddress,
                 'data' => $orderData,
                 'nonce' => $this->getTransactionCount($roninService, $walletPublicKey),
@@ -83,25 +83,26 @@ class AxiePurchaseJob implements ShouldQueue
 
     function buildOrderData($axie)
     {
-        $paddingEnd = Str::repeat('0', 56);
-        $preSig = Str::repeat('0', 24) . '8faf2b3f378d1ccb796b1e3adb1adf0a1a5e679d' . Str::repeat('0', 62) . 'a' . Str::repeat('0', 62) . '12' . Str::repeat('0', 63) . '41';
-        $postSig = Str::repeat('0', 86);
-        $orderSig = '344c54c66d3'; //使用WETH支付
+
         $order = Arr::get($axie, 'order');
         if (!$order) {
             throw new Exception('商品不是在售状态');
         }
-        $currentPrice = $this->getUnitField($order, 'currentPrice');
-        $basePrice = $this->getUnitField($order, 'basePrice');
-        $signature = $this->getAddressField($order, 'signature');
+
         $divider = Str::repeat('0', 24);
         $dataField = [
+            'x_1' => '00000000000000000000000000000000000000a0',
+            'x_2' => '00000000000000000000000000000000000002c0',
+            'current_price' => $this->getUnitField($order, 'currentPrice'),
+            'invitor' => $this->invitor,
+            'x_3' => '0000000000000000000000000000000000000000',
             'maker' => $this->getAddressField($order, 'maker'),
-            'kind' => $this->paduint(1) . $divider . '0000000000000000000000000000000000000180',
+            'kind' => $this->paduint(1),
+            'x_4' => '0000000000000000000000000000000000000180', //hexdec=384
             'expiredAt' => $this->getUnitField($order, 'expiredAt'),
             'paymentToken' => $this->getAddressField($order, 'paymentToken'),
             'startedAt' => $this->getUnitField($order, 'startedAt'),
-            'basePrice' => $basePrice,
+            'basePrice' => $this->getUnitField($order, 'basePrice'),
             'endedAt' => $this->getUnitField($order, 'endedAt'),
             'endedPrice' => $this->getUnitField($order, 'endedPrice'),
             'exprectedState' => $this->paduint(0),
@@ -112,16 +113,18 @@ class AxiePurchaseJob implements ShouldQueue
             'axieAddress' => '32950db2a7164ae833121501c797d79e7b79d74c',
             'assetId' => $this->paduint(Arr::get($axie, 'id')),
             'quantity' => $this->paduint(0),
+            'x_5' => '0000000000000000000000000000000000000041', //hexdec=65
         ];
         $result = '0x95a4ec0000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000e4f524445525f45584348414e47450000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
+        $payType = '34447b3ebf4'; //使用WETH支付
+        $result .= $payType;
 
-        $result .= $orderSig;
-        $result .= Str::repeat('0', 88);
-        $result .= $currentPrice;
-        $result .= $preSig;
+        $result .= $divider . implode($divider, array_values($dataField));
+
+        $signature = $this->getAddressField($order, 'signature');
         $result .= $signature;
-        $result .= $postSig;
-        $result .= implode($divider, array_values($dataField));
+
+        $paddingEnd = Str::repeat('0', 118);
         $result .= $paddingEnd;
         return $result;
     }

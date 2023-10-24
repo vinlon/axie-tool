@@ -54,22 +54,29 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\CharmSoldHistory
+ * App\Models\BattleHistory
  *
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $token_id Charm ID
- * @property string $from 出售人
- * @property string $to 购买人
- * @property string $trans_hash 交易Hash
- * @property string $trans_time 交易时间
- * @property int $price 成交价格
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CharmSoldHistory newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CharmSoldHistory newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CharmSoldHistory query()
+ * @property string $battle_uuid battle ID
+ * @property string $first_fighter_id 玩家1用户ID
+ * @property string $second_fighter_id 玩家2用户ID
+ * @property int $first_fighter_team_id 玩家1阵容ID
+ * @property int $second_fighter_team_id 玩家2阵容ID
+ * @property int|null $first_rank 玩家1战斗前排名
+ * @property int|null $second_rank 玩家2战斗前排名
+ * @property string $winner_id 胜方用户ID
+ * @property string $loser_id 败方用户ID
+ * @property string $battle_type 战斗类型
+ * @property string $battle_start_time 战斗开始
+ * @property string $battle_end_time 战斗结束时间
+ * @property int $is_surrender 是否是投降
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BattleHistory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BattleHistory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BattleHistory query()
  */
-	class IdeHelperCharmSoldHistory {}
+	class IdeHelperBattleHistory {}
 }
 
 namespace App\Models{
@@ -89,7 +96,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Erc1155SoldHistory newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Erc1155SoldHistory newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Erc1155SoldHistory query()
- * @mixin \Eloquent
  */
 	class IdeHelperErc1155SoldHistory {}
 }
@@ -119,6 +125,63 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\FighterAxie
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $user_id 用户ID
+ * @property int $team_id 队伍ID
+ * @property int $axie_id AXIE编号
+ * @property string $axie_type AXIE类型
+ * @property int $position AXIE站位
+ * @property string $class AXIE种族
+ * @property string $rune RuneID
+ * @property string $eyes_part_id
+ * @property string $eyes_part_name
+ * @property string $eyes_charm
+ * @property string $ears_part_id
+ * @property string $ears_part_name
+ * @property string $ears_charm
+ * @property string $horn_part_id
+ * @property string $horn_part_name
+ * @property string $horn_charm
+ * @property string $mouth_part_id
+ * @property string $mouth_part_name
+ * @property string $mouth_charm
+ * @property string $back_part_id
+ * @property string $back_part_name
+ * @property string $back_charm
+ * @property string $tail_part_id
+ * @property string $tail_part_name
+ * @property string $tail_charm
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FighterAxie newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FighterAxie newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FighterAxie query()
+ */
+	class IdeHelperFighterAxie {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\FighterTeam
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $user_id 用户编号
+ * @property string $team_hash 队伍哈希标识
+ * @property string|null $type_label 队伍类型标记
+ * @property string|null $type_sub_label 队伍类型二级标记
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FighterTeam newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FighterTeam newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FighterTeam query()
+ */
+	class IdeHelperFighterTeam {}
+}
+
+namespace App\Models{
+/**
  * App\Models\LandMonitorRecord
  *
  * @property int $id
@@ -133,6 +196,25 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LandMonitorRecord query()
  */
 	class IdeHelperLandMonitorRecord {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Leaderboard
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $user_id 用户ID
+ * @property string $user_name 用户昵称
+ * @property int $vstar 分数
+ * @property int|null $last_team_id 最新使用的队伍ID
+ * @property string|null $last_active_time 最近一次活跃时间
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Leaderboard newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Leaderboard newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Leaderboard query()
+ */
+	class IdeHelperLeaderboard {}
 }
 
 namespace App\Models{
@@ -170,26 +252,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QueryMonitorRecord query()
  */
 	class IdeHelperQueryMonitorRecord {}
-}
-
-namespace App\Models{
-/**
- * App\Models\RuneSoldHistory
- *
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $token_id Rune ID
- * @property string $from 出售人
- * @property string $to 购买人
- * @property string $trans_hash 交易Hash
- * @property string $trans_time 交易时间
- * @property int $price 成交价格
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\RuneSoldHistory newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\RuneSoldHistory newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\RuneSoldHistory query()
- */
-	class IdeHelperRuneSoldHistory {}
 }
 
 namespace App{

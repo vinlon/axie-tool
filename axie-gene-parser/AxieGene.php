@@ -66,7 +66,7 @@ class AxieGene
      * Getter for the class of the Axie.
      * @returns Class of the Axie.
      */
-    public function getCls(): array
+    public function getCls()
     {
         return $this->_genes['cls'];
     }
@@ -220,7 +220,7 @@ class AxieGene
     {
         $genes = [];
         $genes['cls'] = $this->parseClass()->value;
-        $genes['region'] = $this->parseRegion()->value;
+//        $genes['region'] = $this->parseRegion()->value;
         $genes['tag'] = $this->parseTag()->value;
         $genes['bodySkin'] = $this->parseBodySkin()->value;
         $genes['pattern'] = $this->parsePatternGenes();

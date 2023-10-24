@@ -20,15 +20,13 @@ $roninService = app()->get(\App\Services\RoninService::class);
 $gameService = app()->get(\App\Services\GameService::class);
 
 $requirement = [
-//    'back.d' => 'back-garish-worm',
-    'back.r1' => 'back-garish-worm',
-//    'back.r2' => 'back-garish-worm',
-    'tail.d' => 'tail-cottontail',
-    'ears.d' => 'ears-innocent-lamb',
+    'horn.d' => 'horn-scaly-spear',
+    'tail.d' => 'tail-shrimp',
+    'ears.r2' => 'ears-leafy',
 ];
 $maxBreedCount = 1;
 $maxMatchCount = 10;
-$classes = ['Beast', 'Dawn'];
+$classes = [];
 $url = "https://app.axieinfinity.com/marketplace/axies/?auctionTypes=Sale&breedCount=0&breedCount=" . $maxBreedCount;
 foreach ($classes as $class) {
     $url .= '&classes=' . $class;
@@ -43,6 +41,7 @@ $size = 500;
 $totalMatch = 0;
 $done = false;
 $matchResult = [];
+echo '查询链接:' . $url . PHP_EOL;
 while (true) {
     $matchCount = 0;
     echo '查询批次=' . $loop;

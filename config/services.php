@@ -16,6 +16,9 @@ return [
         'private_key' => env('WALLET_PRIVATE_KEY'),
         'public_key' => env('WALLET_PUBLIC_KEY'),
     ],
+    'mavis' => [
+        'api_key' => env('MAVIS_API_KEY'),
+    ],
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),

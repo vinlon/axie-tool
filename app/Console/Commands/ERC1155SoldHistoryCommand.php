@@ -54,10 +54,12 @@ class ERC1155SoldHistoryCommand extends Command
 
     private function batchInsertValues($rows, $type)
     {
+        /** @var Erc1155SoldHistory $latestHistory */
+        $latestHistory = Erc1155SoldHistory::query()->where('type', $type)->orderByDesc('id')->first();
         $batchValues = [];
         foreach ($rows as $row) {
             $transHash = Arr::get($row, 'transferHistory.results.0.txHash');
-            if (Erc1155SoldHistory::query()->where('trans_hash', $transHash)->count() > 0) {
+            if ($latestHistory && $latestHistory->trans_hash == $transHash) {
                 break;
             }
             $batchValues[] = [
@@ -72,7 +74,7 @@ class ERC1155SoldHistoryCommand extends Command
                 'updated_at' => now(),
             ];
         }
-        Erc1155SoldHistory::query()->insert($batchValues);
+        Erc1155SoldHistory::query()->insert(array_reverse($batchValues));
         return count($batchValues);
     }
 }

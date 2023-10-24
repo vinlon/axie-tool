@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('purchase:confirm')->everyMinute(); //确认Axie购买结果
 
         $schedule->command('erc1155:sync_sold_history')->everyMinute(); //Rune&Charm销售记录
+        $schedule->command('leaderboard:sync')->everyFiveMinutes(); //排行榜
 
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }

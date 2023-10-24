@@ -54,12 +54,13 @@
   </div>
 </div>
 <script type="text/html" id="tpl_token">
-  <a class="layui-table-link" href="https://app.axieinfinity.com/marketplace/{{d.type}}s/{{d.token_id}}/all-listing/"
+  <a class="layui-table-link" lay-tips="{{d.description}}"
+     href="https://app.axieinfinity.com/marketplace/{{d.type}}s/{{d.token_id}}/all-listing/"
      target="_blank">
     <img style="height:20px" src="{{d.logo_url}}"/>
-    {{d.token_name}}
     {{# let badge_color = d.rarity==='Rare'?'#2dc661': (d.rarity ==='Epic'?'#27c0ca':'#b04dff') }}
     <span class="layui-badge" style="background-color:{{badge_color}}">{{d.rarity}}</span>
+    {{d.token_name}}
   </a>
 </script>
 <script type="text/html" id="tpl_count">
@@ -84,7 +85,7 @@
 </script>
 <script type="text/html" id="tpl_tool">
   <a class="layui-table-link layui-font-green" lay-href="axie/token_orders/token_id={{d.token_id}}/type={{d.type}}">
-    查看详情
+    查看
   </a>
 </script>
 <script>
@@ -125,12 +126,15 @@
           , url: url
           , page: false
           , cols: [[
-            {title: type.toUpperCase() + '_ID', templet: '#tpl_token', minWidth: 200}
-            , {title: '销量(今日/昨日)', templet: '#tpl_count', width: 150}
-            , {title: '均价(今日/昨日)', templet: '#tpl_avg_price', width: 150}
-            , {title: '最高价(今日/昨日)', templet: '#tpl_max_price', width: 150}
-            , {title: '最低价(今日/昨日)', templet: '#tpl_min_price', width: 150}
-            , {title: '操作', width: 100, align: 'left', fixed: 'right', toolbar: '#tpl_tool'}
+            {title: type.toUpperCase() + '_ID', templet: '#tpl_token', minWidth: 100}
+            , {title: 'ID', field: 'token_id', width: 100, align: "center"}
+            , {title: '当前最低价', field: 'min_price', width: 120, align: "center"}
+            , {title: '在售数量', field: 'qty_for_sale', width: 90, align: "center"}
+            , {title: '销量(今日/昨日)', templet: '#tpl_count', width: 150, align: "center"}
+            , {title: '均价(今日/昨日)', templet: '#tpl_avg_price', width: 150, align: "center"}
+            , {title: '最高价(今日/昨日)', templet: '#tpl_max_price', width: 150, align: "center"}
+            , {title: '最低价(今日/昨日)', templet: '#tpl_min_price', width: 150, align: "center"}
+            , {title: '操作', width: 60, align: 'left', fixed: 'right', toolbar: '#tpl_tool'}
           ]]
         });
       }

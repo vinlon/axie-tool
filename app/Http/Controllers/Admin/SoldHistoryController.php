@@ -24,17 +24,29 @@ class SoldHistoryController extends Controller
 
     public function getSoldSummary()
     {
-        $season = request()->get('season', 4);
+        $seasonId = request()->get('season', 7);
         $type = request()->get('type', 'rune');
         $tokens = Erc1155Token::query()
             ->where('type', $type)
-            ->where('season_id', 4)
+            ->where('season_id', $seasonId)
             ->when(request()->rarity, function ($q) {
                 return $q->where('rarity', request()->rarity);
             })
             ->get()->mapWithKeys(function (Erc1155Token $token) {
-                return [$token->token_id => $token];
+                return [strval($token->token_id) => $token];
             });
+        $tokenStatus = \Cache::remember('min_price_' . $type, 60, function () use ($type, $tokens) {
+            return $this->axieService->getErc1155TokenStatus(ucfirst($type), array_map('strval', $tokens->keys()->toArray()));
+        });
+        $tokenStatusIndexed = [];
+        foreach ($tokenStatus as $item) {
+            $tokenId = Arr::get($item, 'tokenId');
+            $minPrice = Arr::get($item, 'minPrice');
+            $qtyForSale = Arr::get($item, 'orders.total');
+            $tokenStatusIndexed[$tokenId]['min_price'] = toEth($minPrice);
+            $tokenStatusIndexed[$tokenId]['qty_for_sale'] = $qtyForSale;
+        }
+
         $summaryResult = Erc1155SoldHistory::query()
             ->where('trans_time', '>=', now()->subDay()->startOfDay())
             ->whereIn('token_id', $tokens->keys())
@@ -61,18 +73,18 @@ class SoldHistoryController extends Controller
             $today = now()->toDateString();
             $yesterday = now()->subDay()->toDateString();
             $dailySummary = \Arr::get($tokenDailySummary, $tokenId);
-            if (!\Arr::has($dailySummary, $today) && !\Arr::has($dailySummary, $yesterday)) {
-                continue;
-            }
             $sortCol[] = \Arr::get($dailySummary, $today . '.' . request()->get('sort', 'count'), 0);
             $result[] = [
                 'type' => $token->type,
                 'rarity' => $token->rarity,
                 'token_id' => $token->token_id,
                 'token_name' => $token->name,
+                'description' => $token->description,
                 'logo_url' => $token->logo_url,
                 'today' => $this->formatSummary(\Arr::get($dailySummary, $today)),
                 'yesterday' => $this->formatSummary(\Arr::get($dailySummary, $yesterday)),
+                'min_price' => Arr::get($tokenStatusIndexed, $tokenId . '.min_price'),
+                'qty_for_sale' => Arr::get($tokenStatusIndexed, $tokenId . '.qty_for_sale')
             ];
         }
         array_multisort($sortCol, SORT_DESC, SORT_REGULAR, $result);
