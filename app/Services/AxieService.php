@@ -140,7 +140,7 @@ class AxieService
     public function parseCriteriaFromUrl($url)
     {
         $queryString = parse_url($url, PHP_URL_QUERY);
-        $availableKeys = ['classes', 'parts', 'pureness', 'breedCount', 'title', 'bodyShapes','numSummer'];
+        $availableKeys = ['classes', 'parts', 'pureness', 'breedCount', 'title', 'bodyShapes', 'numSummer'];
         $queryPairs = explode('&', $queryString);
         $params = [];
         foreach ($queryPairs as $pair) {
@@ -185,7 +185,7 @@ class AxieService
             'variables' => $variables,
             'query' => $query,
         ];
-        $resp = Http::withHeaders($headers)->post($gateway, $data);
+        $resp = Http::timeout(5)->withHeaders($headers)->post($gateway, $data);
         $result = $resp->json();
         if (Arr::has($result, 'errors') && !Arr::get($result, 'data')) {
             throw new \Exception(Arr::get($result, 'errors.0.message'));

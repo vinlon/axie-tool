@@ -135,25 +135,26 @@ namespace App\Models{
  * @property int $axie_id AXIE编号
  * @property string $axie_type AXIE类型
  * @property int $position AXIE站位
- * @property string $class AXIE种族
+ * @property string $gene AXIE基因
  * @property string $rune RuneID
- * @property string $eyes_part_id
- * @property string $eyes_part_name
+ * @property string|null $class AXIE种族
+ * @property string|null $eyes_part_id
+ * @property string|null $eyes_part_name
  * @property string $eyes_charm
- * @property string $ears_part_id
- * @property string $ears_part_name
+ * @property string|null $ears_part_id
+ * @property string|null $ears_part_name
  * @property string $ears_charm
- * @property string $horn_part_id
- * @property string $horn_part_name
+ * @property string|null $horn_part_id
+ * @property string|null $horn_part_name
  * @property string $horn_charm
- * @property string $mouth_part_id
- * @property string $mouth_part_name
+ * @property string|null $mouth_part_id
+ * @property string|null $mouth_part_name
  * @property string $mouth_charm
- * @property string $back_part_id
- * @property string $back_part_name
+ * @property string|null $back_part_id
+ * @property string|null $back_part_name
  * @property string $back_charm
- * @property string $tail_part_id
- * @property string $tail_part_name
+ * @property string|null $tail_part_id
+ * @property string|null $tail_part_name
  * @property string $tail_charm
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FighterAxie newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FighterAxie newQuery()
@@ -173,6 +174,7 @@ namespace App\Models{
  * @property string $team_hash 队伍哈希标识
  * @property string|null $type_label 队伍类型标记
  * @property string|null $type_sub_label 队伍类型二级标记
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\FighterAxie[] $axies
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FighterTeam newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FighterTeam newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FighterTeam query()
@@ -210,6 +212,7 @@ namespace App\Models{
  * @property int $vstar 分数
  * @property int|null $last_team_id 最新使用的队伍ID
  * @property string|null $last_active_time 最近一次活跃时间
+ * @property-read \App\Models\FighterTeam|null $team
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Leaderboard newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Leaderboard newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Leaderboard query()

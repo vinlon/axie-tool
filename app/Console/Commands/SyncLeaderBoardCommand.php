@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\SyncBattleHistoryJob;
+use App\Models\BattleHistory;
 use App\Models\DailyLeaderboard;
 use App\Models\Leaderboard;
 use App\Services\MavisService;
@@ -62,7 +64,16 @@ class SyncLeaderBoardCommand extends Command
         $this->output->writeln('');
         $this->output->writeln('排行榜同步完成');
 
-        //
+        // 随机选择10个人，添加战斗记录同步任务
+        $this->output->writeln('添加同步任务');
+        $needSyncUserIds = Leaderboard::query()->inRandomOrder()->limit(10)->pluck('user_id');
+        foreach ($needSyncUserIds as $userId) {
+            $syncCacheKey = BattleHistory::getSyncCacheKey($userId);
+            if (!\Cache::has($syncCacheKey)) {
+                SyncBattleHistoryJob::dispatch($userId);
+                \Cache::set($syncCacheKey, now(), 5 * 60);
+            }
+        }
         return 0;
     }
 }

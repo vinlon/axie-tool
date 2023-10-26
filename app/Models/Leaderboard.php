@@ -7,4 +7,8 @@ namespace App\Models;
  */
 class Leaderboard extends BaseModel
 {
+    public function team()
+    {
+        return $this->belongsTo(FighterTeam::class, 'last_team_id');
+    }
 }

@@ -29,6 +29,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('erc1155:sync_sold_history')->everyMinute(); //Rune&Charm销售记录
         $schedule->command('leaderboard:sync')->everyFiveMinutes(); //排行榜
+        $schedule->command('axie:parse_gene')->everyMinute(); //基因提取
+        $schedule->command('axie:query_gene')->everyMinute(); //基因查询
 
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }

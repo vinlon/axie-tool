@@ -45,8 +45,8 @@ class SyncBattleHistoryJob implements ShouldQueue
      */
     public function handle(MavisService $mavisService, AxieService $axieService)
     {
+        \Cache::delete(BattleHistory::getSyncCacheKey($this->userId));
         $this->axieService = $axieService;
-        \Cache::delete($this->getCacheKey($this->userId));
         $histories = $mavisService->listPvpBattleHistories($this->userId, 0, 10);
         //查询已存在的battle
         $existBattleIds = BattleHistory::query()->whereIn('battle_uuid', \Arr::pluck($histories, 'battle_uuid'))->pluck('battle_uuid')->toArray();
@@ -76,7 +76,6 @@ class SyncBattleHistoryJob implements ShouldQueue
             $battle->battle_end_time = Carbon::createFromTimestamp(\Arr::get($history, 'ended_time'));
             $battle->is_surrender = \Arr::get($history, 'did_player_surrender');
             $battle->save();
-
             $defaultLeaderBoardValues = [
                 'user_name' => '',
                 'vstar' => 0,
@@ -121,7 +120,7 @@ class SyncBattleHistoryJob implements ShouldQueue
 
     private function scheduleNextSync($userId)
     {
-        $cacheKey = $this->getCacheKey($userId);
+        $cacheKey = BattleHistory::getSyncCacheKey($userId);
         //查询用户当前是否有执行中的任务
         if (\Cache::has($cacheKey)) {
             return;
@@ -129,11 +128,6 @@ class SyncBattleHistoryJob implements ShouldQueue
         $delay = rand(60 * 3, 60 * 5);
         \Cache::set($cacheKey, now(), $delay);
         self::dispatch($userId)->delay($delay);
-    }
-
-    private function getCacheKey($userId)
-    {
-        return 'battle_history_syncing:' . $userId;
     }
 
     private function parseTeam($userId, array $fighters)

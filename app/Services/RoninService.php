@@ -65,7 +65,7 @@ class RoninService
             'referer' => 'https://app.axieinfinity.com/',
             'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36',
         ];
-        $resp = \Http::withHeaders($headers)->post($this->gateway, $body);
+        $resp = \Http::timeout(5)->withHeaders($headers)->post($this->gateway, $body);
         $result = $resp->json();
         \Log::channel(Constant::LOG_CHANNEL_RONIN)->info($method . '_resp', $result);
         if (\Arr::has($result, 'error')) {
