@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\FighterAxie;
+use App\Models\Leaderboard;
 use App\Services\AxieService;
 use Illuminate\Console\Command;
 
@@ -39,46 +40,33 @@ class QueryGeneCommand extends Command
      */
     public function handle(AxieService $axieService)
     {
+        $lastTeamIds = Leaderboard::query()->pluck('last_team_id')->toArray();
         //每次只处理10条记录
-        $axies = FighterAxie::query()
+        $query = FighterAxie::query()
+            ->whereIn('team_id', $lastTeamIds)
             ->where('class', '') //在axie:parse_gene命令中，处理失败会将class值设为空字符串
             ->orWhere(function ($q) {
                 return $q->where('axie_type', 'starter')->whereNull('class');
-            })
-            ->orderByDesc('id')
-            ->limit(10)->get();
+            });
+        $count = $query->count();
+        $this->output->writeln('待提取基因的axie数量为:' . $count);
+        $axies = $query->orderByDesc('id')->limit(10)->get();
         /** @var FighterAxie $axie */
         foreach ($axies as $axie) {
-            try {
-                $exist = FighterAxie::query()
-                    ->where('axie_id', $axie->axie_id)
-                    ->whereNotNull('class')->where('class', '!=', '')
-                    ->first();
-                if ($exist) {
-                    $axie->class = $exist->class;
-                    foreach (['eyes', 'ears', 'horn', 'mouth', 'back', 'tail'] as $partType) {
-                        $axie->setAttribute($partType . '_part_id', $exist->getAttribute($partType . '_part_id'));
-                        $axie->setAttribute($partType . '_part_name', $exist->getAttribute($partType . '_part_name'));
-                    }
-                    $this->output->write('.');
-                } else {
-                    $axieInfo = $axieService->getAxie($axie->axie_id);
-                    $axie->class = strtolower(\Arr::get($axieInfo, 'class'));
-                    foreach (\Arr::get($axieInfo, 'parts', []) as $part) {
-                        $partType = strtolower(\Arr::get($part, 'type'));
-                        $axie->setAttribute($partType . '_part_id', \Arr::get($part, 'id'));
-                        $axie->setAttribute($partType . '_part_name', \Arr::get($part, 'name'));
-                    }
-                    $this->output->write('o');
-                }
-                $axie->save();
-            } catch (\Exception $e) {
-                $axie->class = 'unknown';
-                $axie->save();
-                $this->output->write('x');
+            if (FighterAxie::parseGeneFromHistory($axie)) {
+                $this->output->write('.');
                 continue;
             }
+            $axieInfo = $axieService->getAxie($axie->axie_id);
+            $axie->class = strtolower(\Arr::get($axieInfo, 'class'));
+            foreach (\Arr::get($axieInfo, 'parts', []) as $part) {
+                $partType = strtolower(\Arr::get($part, 'type'));
+                $axie->setAttribute($partType . '_part_id', \Arr::get($part, 'id'));
+                $axie->setAttribute($partType . '_part_name', \Arr::get($part, 'name'));
+            }
+            $this->output->write('o');
         }
+        $axie->save();
         return 0;
     }
 }

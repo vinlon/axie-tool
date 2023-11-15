@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\FighterAxie;
+use App\Models\Leaderboard;
 use Illuminate\Console\Command;
 use Ndarproj\AxieGeneParser\AxieGene;
 use Ndarproj\AxieGeneParser\HexType;
@@ -40,14 +41,25 @@ class ParseGeneCommand extends Command
      */
     public function handle()
     {
-        //每次只处理100条记录
-        $axies = FighterAxie::query()
+        $lastTeamIds = Leaderboard::query()->pluck('last_team_id')->toArray();
+        $query = FighterAxie::query()
             ->whereNull('class')
-            ->where('axie_type', 'ronin')
-            ->orderByDesc('id')
-            ->limit(100)->get();
+            ->whereIn('team_id', $lastTeamIds);
+        $count = $query->count();
+        $this->output->writeln('待处理的记录数量:' . $count);
+        //每次只处理100条记录
+        $axies = $query->orderByDesc('id')->limit(100)->get();
         /** @var FighterAxie $axie */
         foreach ($axies as $axie) {
+            if ($axie->axie_type === 'starter') {
+                //起始axie通过查询历史数据获取基因数据
+                if (FighterAxie::parseGeneFromHistory($axie)) {
+                    $this->output->write('.');
+                } else {
+                    $this->output->write('x');
+                }
+                continue;
+            }
             try {
                 $geneStr = $axie->gene;
                 $gene = new AxieGene($geneStr, HexType::Bit512);

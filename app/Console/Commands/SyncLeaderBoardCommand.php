@@ -16,7 +16,7 @@ class SyncLeaderBoardCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'leaderboard:sync';
+    protected $signature = 'leaderboard:sync {--page=1}';
 
     /**
      * The console command description.
@@ -43,37 +43,38 @@ class SyncLeaderBoardCommand extends Command
      */
     public function handle(MavisService $mavisService)
     {
-        //同步排行榜前1000名, 每次100,同步10次
-        $limit = 100;
+        $page = $this->option('page');
+        $limit = 10;
         $list = Leaderboard::query()->get()->mapWithKeys(function (Leaderboard $item) {
             return [$item->user_id => $item];
         });
-        $this->output->writeln('开始同步排行榜数据');
-        for ($page = 1; $page <= 10; $page++) {
-            $data = $mavisService->listLeaderBoard($page, $limit);
-            foreach ($data as $row) {
-                $userId = \Arr::get($row, 'userID');
-                $item = \Arr::get($list, $userId, new Leaderboard());
+        $this->output->writeln('开始同步排行榜数据: page=' . $page);
+        $changeCount = 0;
+        $data = $mavisService->listLeaderBoard($page, $limit);
+        foreach ($data as $row) {
+            $userId = \Arr::get($row, 'userID');
+            $vstar = \Arr::get($row, 'vstar');
+            $item = \Arr::get($list, $userId, new Leaderboard());
+            if ($item->vstar != $vstar) {
+                $changeCount++;
+                //如果积分发生变化，则同步战斗记录
+                $syncCacheKey = BattleHistory::getSyncCacheKey($userId);
+                if (!\Cache::has($syncCacheKey)) {
+                    $delay = rand(0, 20);
+                    SyncBattleHistoryJob::dispatch($userId)->delay($delay);
+                }
+                //更新排行榜数据
                 $item->user_id = $userId;
                 $item->user_name = \Arr::get($row, 'name');
-                $item->vstar = \Arr::get($row, 'vstar');
+                $item->vstar = $vstar;
                 $item->save();
+                $this->output->write('-');
+            } else {
                 $this->output->write('.');
             }
         }
         $this->output->writeln('');
-        $this->output->writeln('排行榜同步完成');
-
-        // 随机选择10个人，添加战斗记录同步任务
-        $this->output->writeln('添加同步任务');
-        $needSyncUserIds = Leaderboard::query()->inRandomOrder()->limit(10)->pluck('user_id');
-        foreach ($needSyncUserIds as $userId) {
-            $syncCacheKey = BattleHistory::getSyncCacheKey($userId);
-            if (!\Cache::has($syncCacheKey)) {
-                SyncBattleHistoryJob::dispatch($userId);
-                \Cache::set($syncCacheKey, now(), 5 * 60);
-            }
-        }
+        $this->output->writeln("同步完成, 有{$changeCount}人积分发生变化");
         return 0;
     }
 }

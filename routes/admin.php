@@ -16,4 +16,9 @@ Route::middleware(['auth:lay-admin', AdminResponse::class])->group(function () {
     Route::get('erc1155_sold_summary', 'SoldHistoryController@getSoldSummary');
     Route::get('erc1155_orders', 'SoldHistoryController@getTokenOrders');
     Route::get('erc1155_sold_histories', 'SoldHistoryController@getTokenSoldHistories');
+
+    # Leaderboard
+    Route::get('team_labels', 'LeaderboardController@listTeamLabels');
+    Route::resource('leaderboards', 'LeaderboardController')->only(['index']);
+
 });

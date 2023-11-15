@@ -108,6 +108,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $token_id TokenId
+ * @property int $item_id ItemId
  * @property string $type 装备类型: rune/charm
  * @property int $season_id SeasonId
  * @property string $season_name Season名称
@@ -255,6 +256,21 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QueryMonitorRecord query()
  */
 	class IdeHelperQueryMonitorRecord {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\TeamLabelRule
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TeamLabelRule newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TeamLabelRule newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TeamLabelRule query()
+ * @mixin \Eloquent
+ */
+	class IdeHelperTeamLabelRule {}
 }
 
 namespace App{

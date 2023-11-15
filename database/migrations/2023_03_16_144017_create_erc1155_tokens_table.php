@@ -17,6 +17,7 @@ class CreateErc1155TokensTable extends Migration
             $table->id();
             $table->timestamps();
             $table->integer('token_id')->index()->comment('TokenId');
+            $table->string('item_id', 32)->index()->comment('ItemId');
             $table->string('type', 16)->comment('装备类型: rune/charm');
             $table->integer('season_id')->comment('SeasonId');
             $table->string('season_name')->comment('Season名称');

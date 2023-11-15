@@ -1,0 +1,141 @@
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a><cite>AxieOrigin</cite></a>
+    <a><cite>排行榜</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-card">
+    <div class="layadmin-search">
+      <form class="layui-form" method="post" lay-filter="form_leaderboard_search">
+        <script type="text/html" template lay-done="layui.data.done()">
+          <div class="layui-inline">
+            <div class="layui-form-label">关键字搜索</div>
+            <div class="layui-input-inline">
+              <input type="text" name="keyword" value="{{decodeURIComponent(layui.router().search.keyword || '')}}"
+                     class="layui-input" placeholder="请输入用户名">
+            </div>
+          </div>
+          <div class="layui-inline">
+            <div class="layui-form-label">队伍类型</div>
+            <div class="layui-input-inline">
+              <select name="team_label" lay-filter="opt_team_label">
+                <option value="">全部</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-inline layui-btn-group">
+            <button type="submit" lay-submit class="layui-btn" lay-filter="submit_leaderboard_search">
+              <i class="layui-icon layui-icon-search"></i>查询
+            </button>
+            <button type="submit" lay-submit class="layui-btn layui-btn-warm"
+                    lay-filter="reset_leaderboard_search">
+              <i class="layui-icon layui-icon-close"></i>重置
+            </button>
+          </div>
+        </script>
+      </form>
+    </div>
+    <div class="layui-card-body">
+      <div id="table_leaderboard"></div>
+      <script type="text/html" id="tpl_team_label">
+        {{# if (d.team) { }}
+        {{d.team.type_label || '-' }}
+        {{# } }}
+      </script>
+      <script type="text/html" id="tpl_team">
+        {{# if (d.team && d.team.axies) { }}
+        {{# layui.each(d.team.axies, function(index, axie){  }}
+        <a href="https://app.axieinfinity.com/marketplace/axies/{{axie.axie_id}}" target="_blank">
+          {{# if (axie.axie_type === 'starter') { }}
+          <image src="https://axies.io/images/starter-axies/{{axie.axie_id}}.png"
+                 style="width:70px;" alt="{{axie.axie_id}}"></image>
+          {{# } else { }}
+          <image src="https://axiecdn.axieinfinity.com/axies/{{axie.axie_id}}/axie/axie-full-transparent.png"
+                 style="width:70px;" alt="{{axie.axie_id}}"></image>
+          {{# } }}
+        </a>
+        {{# if (axie.rune_info) { }}
+        <image src="{{axie.rune_info.logo_url}}" style="width: 16px;" lay-tips="{{axie.rune_info.name}}"></image>
+        {{# }else{ }}
+        <image src="https://storage.googleapis.com/origin-production/assets/item/{{axie.rune}}.png" style="width: 16px;"
+               lay-tips="{{axie.rune}}"></image>
+        {{# } }}
+        {{# }) }}
+        {{# } }}
+      </script>
+      <script type="text/html" id="tpl_tool">
+        <a class="layui-table-link layui-font-green" lay-event="edit">
+          <i class="layui-icon layui-icon-edit"></i>编辑
+        </a>
+        <div class="ant-divider"></div>
+        <a class="layui-table-link layui-font-red" lay-event="del">
+          <i class="layui-icon layui-icon-delete"></i>删除
+        </a>
+      </script>
+    </div>
+  </div>
+</div>
+
+<script>
+  layui.data.done = function () {
+    layui.use(['fox_table'], function () {
+      let $ = layui.$
+        , admin = layui.admin
+        , fox_table = layui.fox_table
+        , form = layui.form
+
+      $('select[name="team_label"]').val(layui.router().search.status);
+      let resourceUrl = 'admin/leaderboards'
+
+      admin.get('admin/team_labels', function (res) {
+        console.log(res)
+        res.data.forEach((row) => {
+          let opt = new Option(row.type_label, row.type_label);
+          if (decodeURIComponent(layui.router().search.team_label) == row.type_label) {
+            opt.selected = true;
+          }
+          $('select[name="team_label"]').append(opt)
+        })
+        form.render()
+      })
+
+      // 列表查询
+      fox_table.render({
+        id: 'table_leaderboard'
+        , url: resourceUrl
+        , cols: [[
+          {title: '排名', field: 'top_rank', width: 80, align: "center"}
+          , {title: '玩家昵称', field: 'user_name', minWidth: 200}
+          , {title: '积分', field: 'vstar', width: 100}
+          , {title: '队伍类型', templet: '#tpl_team_label', width: 100}
+          , {title: '队伍', templet: '#tpl_team', width: 400}
+          , {title: '最近活跃时间', field: 'last_active_time', width: 180, align: "center"}
+        ]]
+      })
+      ;
+
+      //搜索
+      form.on('submit(submit_leaderboard_search)', function (d) {
+        fox_table.reload(d.field);
+        return false;
+      });
+      form.on('select(opt_status)', function (d) {
+        fox_table.reload({
+          status: d.value
+        });
+        return false;
+      });
+      //重置
+      form.on('submit(reset_leaderboard_search)', function (d) {
+        $("input[name='keyword']").val('');
+        $("select[name='team_label']").val('');
+        form.render()
+        fox_table.reload({});
+        return false;
+      });
+    })
+  }
+</script>
+
