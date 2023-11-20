@@ -39,6 +39,11 @@
     </div>
     <div class="layui-card-body">
       <div id="table_leaderboard"></div>
+      <script type="text/html" id="tpl_user">
+        <a class="layui-table-link" lay-href="axie/user/user_id={{d.user_id}}">
+          {{d.user_name}}
+        </a>
+      </script>
       <script type="text/html" id="tpl_team_label">
         {{# if (d.team) { }}
         {{d.team.type_label || '-' }}
@@ -50,16 +55,16 @@
         <a href="https://app.axieinfinity.com/marketplace/axies/{{axie.axie_id}}" target="_blank">
           {{# if (axie.axie_type === 'starter') { }}
           <image src="https://axies.io/images/starter-axies/{{axie.axie_id}}.png"
-                 style="width:70px;" alt="{{axie.axie_id}}"></image>
+                 style="width:70px; margin-left: -10px" alt="{{axie.axie_id}}"></image>
           {{# } else { }}
           <image src="https://axiecdn.axieinfinity.com/axies/{{axie.axie_id}}/axie/axie-full-transparent.png"
-                 style="width:70px;" alt="{{axie.axie_id}}"></image>
+                 style="width:70px; margin-left: -10px" alt="{{axie.axie_id}}"></image>
           {{# } }}
         </a>
         {{# if (axie.rune_info) { }}
-        <image src="{{axie.rune_info.logo_url}}" style="width: 16px;" lay-tips="{{axie.rune_info.name}}"></image>
+        <image src="{{axie.rune_info.logo_url}}" style="width: 16px;margin-left: -15px" lay-tips="{{axie.rune_info.name}}"></image>
         {{# }else{ }}
-        <image src="https://storage.googleapis.com/origin-production/assets/item/{{axie.rune}}.png" style="width: 16px;"
+        <image src="https://storage.googleapis.com/origin-production/assets/item/{{axie.rune}}.png" style="width: 16px;margin-left: -15px"
                lay-tips="{{axie.rune}}"></image>
         {{# } }}
         {{# }) }}
@@ -90,7 +95,6 @@
       let resourceUrl = 'admin/leaderboards'
 
       admin.get('admin/team_labels', function (res) {
-        console.log(res)
         res.data.forEach((row) => {
           let opt = new Option(row.type_label, row.type_label);
           if (decodeURIComponent(layui.router().search.team_label) == row.type_label) {
@@ -107,10 +111,11 @@
         , url: resourceUrl
         , cols: [[
           {title: '排名', field: 'top_rank', width: 80, align: "center"}
-          , {title: '玩家昵称', field: 'user_name', minWidth: 200}
+          , {title: '玩家昵称', templet: '#tpl_user', minWidth: 200}
           , {title: '积分', field: 'vstar', width: 100}
           , {title: '队伍类型', templet: '#tpl_team_label', width: 100}
-          , {title: '队伍', templet: '#tpl_team', width: 400}
+          , {title: '队伍', templet: '#tpl_team', width: 300, align: "center"}
+          , {title: '同步时间', field: 'updated_at', width: 180, align: "center"}
           , {title: '最近活跃时间', field: 'last_active_time', width: 180, align: "center"}
         ]]
       })

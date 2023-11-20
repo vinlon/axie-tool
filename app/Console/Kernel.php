@@ -34,34 +34,16 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
 
-        $schedule->command('leaderboard:sync --page=1')->everyMinute()->runInBackground(); //排行榜
-        $schedule->command('leaderboard:sync --page=2')->everyMinute()->before(function () {
-            sleep(5);
-        })->runInBackground(); //排行榜
-        $schedule->command('leaderboard:sync --page=3')->everyMinute()->before(function () {
-            sleep(5);
-        })->runInBackground(); //排行榜
-        $schedule->command('leaderboard:sync --page=4')->everyMinute()->before(function () {
-            sleep(5);
-        })->runInBackground(); //排行榜
-        $schedule->command('leaderboard:sync --page=5')->everyMinute()->before(function () {
-            sleep(5);
-        })->runInBackground(); //排行榜
-        $schedule->command('leaderboard:sync --page=6')->everyMinute()->before(function () {
-            sleep(5);
-        })->runInBackground(); //排行榜
-        $schedule->command('leaderboard:sync --page=7')->everyMinute()->before(function () {
-            sleep(5);
-        })->runInBackground(); //排行榜
-        $schedule->command('leaderboard:sync --page=8')->everyMinute()->before(function () {
-            sleep(5);
-        })->runInBackground(); //排行榜
-        $schedule->command('leaderboard:sync --page=9')->everyMinute()->before(function () {
-            sleep(5);
-        })->runInBackground(); //排行榜
-        $schedule->command('leaderboard:sync --page=10')->everyMinute()->before(function () {
-            sleep(5);
-        })->runInBackground(); //排行榜
+        $schedule->command('leaderboard:sync --page=1')->everyTwoMinutes(); //排行榜
+        $schedule->command('leaderboard:sync --page=2')->everyTwoMinutes();
+        $schedule->command('leaderboard:sync --page=3')->everyTwoMinutes();
+        $schedule->command('leaderboard:sync --page=4')->everyTwoMinutes();
+        $schedule->command('leaderboard:sync --page=5')->everyTwoMinutes();
+        $schedule->command('leaderboard:sync --page=6')->everyTwoMinutes();
+        $schedule->command('leaderboard:sync --page=7')->everyTwoMinutes();
+        $schedule->command('leaderboard:sync --page=8')->everyTwoMinutes();
+        $schedule->command('leaderboard:sync --page=9')->everyTwoMinutes();
+        $schedule->command('leaderboard:sync --page=10')->everyTwoMinutes();
     }
 
     /**

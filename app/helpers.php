@@ -62,3 +62,9 @@ function safe_divide($numerator, $denominator, $precision = null, $defaultValue 
 
     return $divideResult;
 }
+
+function arr_incr(&$arr, $key, $incrValue = 1)
+{
+    $value = Arr::get($arr, $key, 0);
+    Arr::set($arr, $key, $value + $incrValue);
+}

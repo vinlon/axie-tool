@@ -21,4 +21,8 @@ Route::middleware(['auth:lay-admin', AdminResponse::class])->group(function () {
     Route::get('team_labels', 'LeaderboardController@listTeamLabels');
     Route::resource('leaderboards', 'LeaderboardController')->only(['index']);
 
+    # User
+    Route::get('battle_histories', 'UserController@listBattleHistories');
+    Route::get('team_summaries', 'UserController@listTeamSummary');
+
 });

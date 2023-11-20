@@ -65,13 +65,21 @@ namespace App\Models{
  * @property int $first_fighter_team_id 玩家1阵容ID
  * @property int $second_fighter_team_id 玩家2阵容ID
  * @property int|null $first_rank 玩家1战斗前排名
+ * @property int|null $first_old_vstar 玩家1战斗前积分
+ * @property int|null $first_new_vstar 玩家1战斗后积分
  * @property int|null $second_rank 玩家2战斗前排名
+ * @property int|null $second_old_vstar 玩家2战斗前积分
+ * @property int|null $second_new_vstar 玩家2战斗后积分
  * @property string $winner_id 胜方用户ID
  * @property string $loser_id 败方用户ID
  * @property string $battle_type 战斗类型
  * @property string $battle_start_time 战斗开始
  * @property string $battle_end_time 战斗结束时间
  * @property int $is_surrender 是否是投降
+ * @property-read \App\Models\FighterTeam|null $first_team
+ * @property-read \App\Models\Leaderboard|null $first_user
+ * @property-read \App\Models\FighterTeam|null $second_team
+ * @property-read \App\Models\Leaderboard|null $second_user
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BattleHistory newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BattleHistory newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BattleHistory query()
@@ -108,7 +116,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $token_id TokenId
- * @property int $item_id ItemId
+ * @property string $item_id ItemId
  * @property string $type 装备类型: rune/charm
  * @property int $season_id SeasonId
  * @property string $season_name Season名称
@@ -268,7 +276,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TeamLabelRule newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TeamLabelRule newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TeamLabelRule query()
- * @mixin \Eloquent
  */
 	class IdeHelperTeamLabelRule {}
 }

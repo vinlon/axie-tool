@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\BattleHistory;
 use App\Models\Erc1155Token;
 use App\Models\FighterTeam;
 use App\Models\Leaderboard;
@@ -30,22 +31,12 @@ class LeaderboardController extends Controller
 
     public function index()
     {
-        $rank = 1;
-        $rankMap = Leaderboard::query()
-            ->orderByDesc('vstar')
-            ->orderBy('last_active_time')
-            ->limit(1000)
-            ->get()->mapWithKeys(function (Leaderboard $item) use (&$rank) {
-                return [$item->id => $rank++];
-            })->toArray();
-        $runeMap = Erc1155Token::query()
-            ->where('type', 'rune')
-            ->get()->mapWithKeys(function (Erc1155Token $token) {
-                return [$token->item_id => $token];
-            })->toArray();
+        $rankMap = $this->getUserMap();
+        $runeMap = $this->getRuneMap();
+
         $query = Leaderboard::query()
             ->with(['team.axies'])
-            ->whereIn('id', array_keys($rankMap))
+            ->whereIn('user_id', array_keys($rankMap))
             ->when(request()->keyword, function ($q) {
                 return $q->where(function ($q2) {
                     $likeVal = '%' . request()->keyword . '%';
@@ -63,17 +54,47 @@ class LeaderboardController extends Controller
                 });
             })
             ->orderByDesc('vstar')->orderBy('last_active_time');
+
         return paginate_result($query, function (Leaderboard $item) use ($rankMap, $runeMap) {
-            $item->top_rank = \Arr::get($rankMap, $item->id, '-');
-            foreach ($item->team->axies as &$axie) {
-                $runeId = $axie->rune;
-                $runeId = str_replace('_nondec', '_nft', $runeId);
-                if (!\Str::endsWith($runeId, '_nft')) {
-                    $runeId .= '_nft';
-                }
-                $axie['rune_info'] = \Arr::get($runeMap, $runeId);
+            $item->top_rank = \Arr::get($rankMap, $item->user_id . '.top_rank', '-');
+            if ($item->team) {
+                $this->appendRuneInfo($item->team, $runeMap);
             }
             return $item;
         });
+    }
+
+
+    private function appendRuneInfo(FighterTeam &$team, $runeMap)
+    {
+        foreach ($team->axies as &$axie) {
+            $runeId = $axie->rune;
+            $runeId = str_replace('_nondec', '_nft', $runeId);
+            if (!\Str::endsWith($runeId, '_nft')) {
+                $runeId .= '_nft';
+            }
+            $axie['rune_info'] = \Arr::get($runeMap, $runeId);
+        }
+    }
+
+    private function getRuneMap()
+    {
+        return Erc1155Token::query()
+            ->where('type', 'rune')
+            ->get()->mapWithKeys(function (Erc1155Token $token) {
+                return [$token->item_id => $token];
+            })->toArray();
+    }
+
+    private function getUserMap()
+    {
+        $rank = 1;
+        return Leaderboard::query()
+            ->orderByDesc('vstar')
+            ->orderBy('last_active_time')
+            ->limit(1000)
+            ->get()->mapWithKeys(function (Leaderboard $item) use (&$rank) {
+                return [$item->user_id => ['user_name' => $item->user_name, 'top_rank' => $rank++]];
+            })->toArray();
     }
 }

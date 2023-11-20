@@ -22,7 +22,11 @@ class CreateBattleHistoriesTable extends Migration
             $table->bigInteger('first_fighter_team_id')->index()->comment('玩家1阵容ID');
             $table->bigInteger('second_fighter_team_id')->index()->comment('玩家2阵容ID');
             $table->integer('first_rank')->nullable()->comment('玩家1战斗前排名');
+            $table->integer('first_old_vstar')->nullable()->comment('玩家1战斗前积分');
+            $table->integer('first_new_vstar')->nullable()->comment('玩家1战斗后积分');
             $table->integer('second_rank')->nullable()->comment('玩家2战斗前排名');
+            $table->integer('second_old_vstar')->nullable()->comment('玩家2战斗前积分');
+            $table->integer('second_new_vstar')->nullable()->comment('玩家2战斗后积分');
             $table->string('winner_id', 64)->index()->comment('胜方用户ID');
             $table->string('loser_id', 64)->index()->comment('败方用户ID');
             $table->string('battle_type', 32)->index()->comment('战斗类型');

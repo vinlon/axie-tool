@@ -1,0 +1,193 @@
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a><cite>用户详情</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-card">
+    <div class="layui-card-body">
+      <script type="text/html" template
+              lay-done="layui.data.done()"
+              lay-url="admin/team_summaries?user_id={{layui.router().search.user_id}}">
+        <div>
+          <table class="layui-table">
+            {{# var all = d.data.all}}
+            <tr>
+              <td colspan="3"> 总对局 : {{all.total || 0}}</td>
+              <td colspan="3"> 先手 : {{all.first_total || 0}}</td>
+              <td colspan="3"> 后手 : {{all.second_total || 0}}</td>
+            </tr>
+            <tr>
+              <td> 胜 {{all.win||0}}({{all.total > 0 ? (all.win * 100 /all.total).toFixed(1) : '-'}}%)</td>
+              <td> 负 {{all.lose||0}}</td>
+              <td> 平 {{all.draw||0}}</td>
+              <td> 胜 {{all.first_win||0}}({{all.first_total > 0 ? (all.first_win * 100 /all.first_total).toFixed(1) :
+                '-'}}%)
+              </td>
+              <td> 负 {{all.first_lose||0}}</td>
+              <td> 平 {{all.first_draw||0}}</td>
+              <td> 胜 {{all.second_win||0}}({{all.second_total > 0 ? (all.second_win * 100 /all.second_total).toFixed(1)
+                : '-'}}%)
+              </td>
+              <td> 负 {{all.second_lose||0}}</td>
+              <td> 平 {{all.second_draw||0}}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="layui-collapse" lay-filter="component-panel">
+          {{# layui.each(d.data.teams, function(idx1, team){ }}
+          <div class="layui-colla-item">
+            <h2 class="layui-colla-title">
+
+              {{# layui.each(team.info.axies, function(idx2, axie){ }}
+              <a href="https://app.axieinfinity.com/marketplace/axies/{{axie.axie_id}}" target="_blank">
+                {{# if (axie.axie_type === 'starter') { }}
+                <image src="https://axies.io/images/starter-axies/{{axie.axie_id}}.png"
+                       style="width:60px; margin-left: -10px" alt="{{axie.axie_id}}"></image>
+                {{# } else { }}
+                <image src="https://axiecdn.axieinfinity.com/axies/{{axie.axie_id}}/axie/axie-full-transparent.png"
+                       style="width:60px; margin-left: -10px" alt="{{axie.axie_id}}"></image>
+                {{# } }}
+              </a>
+              {{# if (axie.rune_info) { }}
+              <image src="{{axie.rune_info.logo_url}}" style="width: 16px;margin-left: -15px"
+                     lay-tips="{{axie.rune_info.name}}"></image>
+              {{# }else{ }}
+              <image src="https://storage.googleapis.com/origin-production/assets/item/{{axie.rune}}.png"
+                     style="width: 16px;margin-left: -15px"
+                     lay-tips="{{axie.rune}}"></image>
+              {{# } }}
+              {{# layui.each(['eyes', 'ears', 'horn', 'mouth', 'back', 'tail'], function(idx3, part){ }}
+              {{# var charm_url = axie[part+'_charm_url']; }}
+              {{# if (charm_url) { }}
+              <image src="{{charm_url}}" style="width: 12px;height:12px" lay-tips="{{part}}"></image>
+              {{# } else { }}
+              <span class="layui-bg-gray" style="width: 12px">x</span>
+              {{# } }}
+              {{# }) }}
+              {{# }) }}
+              <span class="layui-badge layui-bg-orange">{{team.info.type_label}}</span>
+              <span class="layui-badge layui-bg-cyan">{{team.total}}场</span>
+            </h2>
+            <div class="layui-colla-content">
+              <table class="layui-table">
+                <tr>
+                  <td colspan="3"> 总对局 : {{team.total || 0}}</td>
+                  <td colspan="3"> 先手 : {{team.first_total || 0}}</td>
+                  <td colspan="3"> 后手 : {{team.second_total || 0}}</td>
+                </tr>
+                <tr>
+                  <td> 胜 {{team.win||0}}({{team.total > 0 ? (team.win * 100 /team.total).toFixed(1) : '-'}}%)</td>
+                  <td> 负 {{team.lose||0}}</td>
+                  <td> 平 {{team.draw||0}}</td>
+                  <td> 胜 {{team.first_win||0}}({{team.first_total > 0 ? (team.first_win * 100
+                    /team.first_total).toFixed(1)
+                    : '-'}}%)
+                  </td>
+                  <td> 负 {{team.first_lose||0}}</td>
+                  <td> 平 {{team.first_draw||0}}</td>
+                  <td> 胜 {{team.second_win||0}}({{team.second_total > 0 ? (team.second_win * 100
+                    /team.second_total).toFixed(1) : '-'}}%)
+                  </td>
+                  <td> 负 {{team.second_lose||0}}</td>
+                  <td> 平 {{team.second_draw||0}}</td>
+                </tr>
+              </table>
+            </div>
+            {{# }) }}
+          </div>
+        </div>
+        </div>
+      </script>
+    </div>
+  </div>
+  <div class="layui-card">
+    <div class="layui-card-header">
+      战斗记录
+    </div>
+    <div class="layui-card-body">
+      <div id="table_history"></div>
+      <script type="text/html" id="tpl_enemy">
+        {{# if (d.user_team && d.user_team.axies) { }}
+        {{# layui.each(d.user_team.axies, function(index, axie){  }}
+        <a href="https://app.axieinfinity.com/marketplace/axies/{{axie.axie_id}}" target="_blank">
+          {{# if (axie.axie_type === 'starter') { }}
+          <image src="https://axies.io/images/starter-axies/{{axie.axie_id}}.png"
+                 style="width:70px;margin-left: -10px;" alt="{{axie.axie_id}}"></image>
+          {{# } else { }}
+          <image src="https://axiecdn.axieinfinity.com/axies/{{axie.axie_id}}/axie/axie-full-transparent.png"
+                 style="width:70px;margin-left: -10px;" alt="{{axie.axie_id}}"></image>
+          {{# } }}
+        </a>
+        {{# if (axie.rune_info) { }}
+        <image src="{{axie.rune_info.logo_url}}" style="width: 16px;margin-left: -18px;"
+               lay-tips="{{axie.rune_info.name}}"></image>
+        {{# }else{ }}
+        <image src="https://storage.googleapis.com/origin-production/assets/item/{{axie.rune}}.png"
+               style="width: 16px;margin-left: -18px;"
+               lay-tips="{{axie.rune}}"></image>
+        {{# } }}
+        {{# }) }}
+        {{# } }}
+        <span style="padding: 0 10px">
+        {{# if (d.result === 'win') { }}
+        <span class="layui-badge layui-bg-green">胜</span>
+        {{# } else if (d.result === 'lose') { }}
+        <span class="layui-badge layui-bg-red">负</span>
+        {{# } else { }}
+        <span class="layui-badge layui-bg-orange">平</span>
+        {{# }  }}
+        </span>
+        {{# if (d.enemy_team && d.enemy_team.axies) { }}
+        {{# layui.each(d.enemy_team.axies, function(index, axie){  }}
+        <a href="https://app.axieinfinity.com/marketplace/axies/{{axie.axie_id}}" target="_blank">
+          {{# if (axie.axie_type === 'starter') { }}
+          <image src="https://axies.io/images/starter-axies/{{axie.axie_id}}.png"
+                 style="width:70px;margin-left: -10px;" alt="{{axie.axie_id}}"></image>
+          {{# } else { }}
+          <image src="https://axiecdn.axieinfinity.com/axies/{{axie.axie_id}}/axie/axie-full-transparent.png"
+                 style="width:70px;margin-left: -10px;" alt="{{axie.axie_id}}"></image>
+          {{# } }}
+        </a>
+        {{# if (axie.rune_info) { }}
+        <image src="{{axie.rune_info.logo_url}}" style="width: 16px;margin-left: -18px;"
+               lay-tips="{{axie.rune_info.name}}"></image>
+        {{# }else{ }}
+        <image src="https://storage.googleapis.com/origin-production/assets/item/{{axie.rune}}.png"
+               style="width: 16px;margin-left: -18px;"
+               lay-tips="{{axie.rune}}"></image>
+        {{# } }}
+        {{# }) }}
+        {{# } }}
+      </script>
+    </div>
+  </div>
+</div>
+
+<script>
+  layui.data.done = function () {
+    layui.use(['fox_table', 'element'], function () {
+      let $ = layui.$
+        , fox_table = layui.fox_table
+        , admin = layui.admin
+        , form = layui.form
+        , element = layui.element
+        , user_id = layui.router().search.user_id
+      element.render('collapse');
+      let resourceUrl = 'admin/battle_histories?user_id=' + user_id
+
+      // 列表查询
+      fox_table.render({
+        id: 'table_history'
+        , url: resourceUrl
+        , cols: [[
+          {title: '对战时间', field: 'battle_time', width: 230}
+          , {title: '对战类型', field: 'battle_type', width: 150, align: "center"}
+          , {title: '对战详情', templet: '#tpl_enemy', minWidth: 200, align: "center"}
+        ]]
+      });
+    })
+  }
+</script>
+

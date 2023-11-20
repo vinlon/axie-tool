@@ -73,7 +73,11 @@ class SyncBattleHistoryJob implements ShouldQueue
             $battle->winner_id = $winner == 0 ? $firstFighterId : ($winner == 1 ? $secondFighterId : '');
             $battle->loser_id = $winner == 0 ? $secondFighterId : ($winner == 1 ? $firstFighterId : '');
             $battle->first_rank = $firstRank;
+            $battle->first_old_vstar = \Arr::get($history, 'rewards.0.old_vstar');
+            $battle->first_new_vstar = \Arr::get($history, 'rewards.0.new_vstar');
             $battle->second_rank = $secondRank;
+            $battle->second_old_vstar = \Arr::get($history, 'rewards.1.old_vstar');
+            $battle->second_new_vstar = \Arr::get($history, 'rewards.1.new_vstar');
             $battle->battle_type = $battleType;
             $battle->battle_start_time = Carbon::createFromTimestamp(\Arr::get($history, 'started_time'));
             $battle->battle_end_time = Carbon::createFromTimestamp(\Arr::get($history, 'ended_time'));
