@@ -85,7 +85,6 @@
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
     ],
     "post-update-cmd": [
-      "cghooks update"
     ],
     "cghooks": "vendor/bin/cghooks",
     "check-style": "vendor/bin/php-cs-fixer fix --using-cache=no --diff --dry-run --ansi",
