@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# 拉取代码
+echo "==========================="
+echo ">> git pull"
+git pull
+
+echo "==========================="
+echo ">> git log -1"
+git log -1
+
+# composer install
+echo "==========================="
+echo ">> composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader --no-scripts"
+composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader --no-scripts
+
+# change owner of storage directory
+echo "==========================="
+echo ">> chown -R www.www storage"
+chown -R www.www storage
+
+# optimize
+echo "==========================="
+echo ">> php artisan optimize"
+php artisan optimize
+
+# horizon
+echo "==========================="
+echo ">> php artisan horizon:terminate"
+php artisan horizon:terminate
+
+# database migrate
+echo "==========================="
+echo ">> php artisan migrate --force"
+php artisan migrate --force
