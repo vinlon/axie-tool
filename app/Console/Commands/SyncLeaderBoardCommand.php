@@ -8,6 +8,7 @@ use App\Models\Leaderboard;
 use App\Services\MavisService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Laravel\Horizon\Lock;
 
 class SyncLeaderBoardCommand extends Command
 {
@@ -44,6 +45,7 @@ class SyncLeaderBoardCommand extends Command
     {
         $page = $this->option('page');
         $delay = rand(0, 40);
+
         SyncLeaderboardJob::dispatch($page)->delay($delay);
     }
 }

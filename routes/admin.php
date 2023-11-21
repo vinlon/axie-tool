@@ -23,6 +23,6 @@ Route::middleware(['auth:lay-admin', AdminResponse::class])->group(function () {
 
     # User
     Route::get('battle_histories', 'UserController@listBattleHistories');
-    Route::get('team_summaries', 'UserController@listTeamSummary');
+    Route::get('user_team_summaries', 'UserController@listTeamSummary');
 
 });

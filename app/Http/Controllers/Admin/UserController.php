@@ -15,14 +15,25 @@ class UserController extends Controller
     {
         //查询战斗记录
         $userId = request()->user_id;
+        if (request()->keyword) {
+            $userId = Leaderboard::query()->where('user_name', 'like', '%' . request()->keyword . '%')->value('user_id');
+        }
         $query = BattleHistory::query()
             ->with(['first_user', 'second_user', 'first_team.axies', 'second_team.axies'])
-            ->where(function ($q) use ($userId) {
-                return $q->where('first_fighter_id', $userId)->orWhere('second_fighter_id', $userId);
-            })->orderByDesc('battle_end_time');
+            ->when(request()->battle_type, function ($q) {
+                return $q->where('battle_type', request()->battle_type);
+            })
+            ->when($userId, function ($q) use ($userId) {
+                return $q->where(function ($q1) use ($userId) {
+                    return $q1->where('first_fighter_id', $userId)->orWhere('second_fighter_id', $userId);
+                });
+            })
+            ->orderByDesc('battle_end_time');
         $runeMap = $this->getRuneMap();
         $userMap = $this->getUserMap();
-        return paginate_result($query, function (BattleHistory $history) use ($userId, $runeMap, $userMap) {
+        return paginate_result($query, function (BattleHistory $history) use ($runeMap, $userMap, $userId) {
+            $userId = $userId ?: $history->first_fighter_id;
+
             $isFirstUser = $userId == $history->first_fighter_id;
             $userTeam = $isFirstUser ? $history->first_team : $history->second_team;
             $enemyTeam = $isFirstUser ? $history->second_team : $history->first_team;
@@ -150,7 +161,11 @@ class UserController extends Controller
             ->orderBy('last_active_time')
             ->limit(1000)
             ->get()->mapWithKeys(function (Leaderboard $item) use (&$rank) {
-                return [$item->user_id => ['user_name' => $item->user_name, 'top_rank' => $rank++]];
+                return [$item->user_id => [
+                    'user_id' => $item->user_id,
+                    'user_name' => $item->user_name,
+                    'top_rank' => $rank++
+                ]];
             })->toArray();
     }
 }

@@ -1,5 +1,6 @@
 <div class="layui-card layadmin-header">
   <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a><cite>AxieOrigin</cite></a>
     <a><cite>用户详情</cite></a>
   </div>
 </div>
@@ -9,7 +10,7 @@
     <div class="layui-card-body">
       <script type="text/html" template
               lay-done="layui.data.done()"
-              lay-url="admin/team_summaries?user_id={{layui.router().search.user_id}}">
+              lay-url="admin/user_team_summaries?user_id={{layui.router().search.user_id}}">
         <div>
           <table class="layui-table">
             {{# var all = d.data.all}}
