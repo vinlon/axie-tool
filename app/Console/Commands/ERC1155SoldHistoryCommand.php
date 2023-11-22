@@ -41,13 +41,11 @@ class ERC1155SoldHistoryCommand extends Command
     public function handle(AxieService $axieService)
     {
         $charmResult = $axieService->listRecentlySoldCharms(0, 100);
-        $charmHistory = Arr::get($charmResult, 'results');
-        $insertCount = $this->batchInsertValues($charmHistory, 'charm');
+        $insertCount = $this->batchInsertValues($charmResult, 'charm');
         $this->output->writeln(sprintf('同步Charm销售数据 %s 条', $insertCount));
 
         $runeResult = $axieService->listRecentlySoldRune(0, 100);
-        $runeHistory = Arr::get($runeResult, 'results');
-        $insertCount = $this->batchInsertValues($runeHistory, 'rune');
+        $insertCount = $this->batchInsertValues($runeResult, 'rune');
         $this->output->writeln(sprintf('同步Rune销售数据 %s 条', $insertCount));
         return 0;
     }

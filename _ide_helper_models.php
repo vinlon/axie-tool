@@ -21,10 +21,11 @@ namespace App\Models{
  * @property int $max_purchase_price 最高购买价格
  * @property int $max_purchase_count 最大购买数量
  * @property-read \App\Models\QueryMonitor|null $query_monitor
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\AutoPurchaseRecord[] $records
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AutoPurchaseRecord> $records
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AutoPurchase newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AutoPurchase newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AutoPurchase query()
+ * @mixin \Eloquent
  */
 	class IdeHelperAutoPurchase {}
 }
@@ -41,15 +42,58 @@ namespace App\Models{
  * @property string $owner Axie持有人
  * @property int $price 购买价格
  * @property string $trans_hash 交易HASH
- * @property mixed $status 购买状态
+ * @property \App\Enums\PurchaseStatus $status 购买状态
  * @property string|null $remark 备注信息
  * @property-read \App\Models\AutoPurchase|null $auto_purchase
  * @property-read mixed $display_eth_price
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AutoPurchaseRecord newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AutoPurchaseRecord newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AutoPurchaseRecord query()
+ * @mixin \Eloquent
  */
 	class IdeHelperAutoPurchaseRecord {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\AxieSoldHistory
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $axie_id AXIE ID
+ * @property string $class 品种
+ * @property int $breed_count 繁殖次数
+ * @property int $is_origin 是否是Origin
+ * @property int $is_mystic 是否是神秘
+ * @property int $japan_part_count japan部位数量
+ * @property int $xmas_part_count xmas部位数量
+ * @property int $summer_part_count summer部位数量
+ * @property int $axp_level AXP等级
+ * @property int $price 交易价格
+ * @property string $price_usd 交易USD价格
+ * @property string $trans_hash 交易哈希
+ * @property string $trans_time 交易时间
+ * @property string $from 卖方地址
+ * @property string $to 买方地址
+ * @property string|null $eyes_part_id
+ * @property string|null $eyes_part_name
+ * @property string|null $ears_part_id
+ * @property string|null $ears_part_name
+ * @property string|null $horn_part_id
+ * @property string|null $horn_part_name
+ * @property string|null $mouth_part_id
+ * @property string|null $mouth_part_name
+ * @property string|null $back_part_id
+ * @property string|null $back_part_name
+ * @property string|null $tail_part_id
+ * @property string|null $tail_part_name
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AxieSoldHistory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AxieSoldHistory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AxieSoldHistory query()
+ * @mixin \Eloquent
+ */
+	class IdeHelperAxieSoldHistory {}
 }
 
 namespace App\Models{
@@ -83,6 +127,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BattleHistory newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BattleHistory newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BattleHistory query()
+ * @mixin \Eloquent
  */
 	class IdeHelperBattleHistory {}
 }
@@ -104,6 +149,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Erc1155SoldHistory newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Erc1155SoldHistory newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Erc1155SoldHistory query()
+ * @mixin \Eloquent
  */
 	class IdeHelperErc1155SoldHistory {}
 }
@@ -128,6 +174,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Erc1155Token newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Erc1155Token newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Erc1155Token query()
+ * @mixin \Eloquent
  */
 	class IdeHelperErc1155Token {}
 }
@@ -168,6 +215,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FighterAxie newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FighterAxie newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FighterAxie query()
+ * @mixin \Eloquent
  */
 	class IdeHelperFighterAxie {}
 }
@@ -183,10 +231,11 @@ namespace App\Models{
  * @property string $team_hash 队伍哈希标识
  * @property string|null $type_label 队伍类型标记
  * @property string|null $type_sub_label 队伍类型二级标记
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\FighterAxie[] $axies
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\FighterAxie> $axies
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FighterTeam newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FighterTeam newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\FighterTeam query()
+ * @mixin \Eloquent
  */
 	class IdeHelperFighterTeam {}
 }
@@ -205,6 +254,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LandMonitorRecord newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LandMonitorRecord newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LandMonitorRecord query()
+ * @mixin \Eloquent
  */
 	class IdeHelperLandMonitorRecord {}
 }
@@ -225,6 +275,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Leaderboard newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Leaderboard newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Leaderboard query()
+ * @mixin \Eloquent
  */
 	class IdeHelperLeaderboard {}
 }
@@ -238,11 +289,12 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $query_name 查询名称
  * @property string $mp_query_url MarketPlace查询地址
- * @property mixed $status 状态
+ * @property \App\Enums\AvailableStatus $status 状态
  * @property-read \App\Models\AutoPurchase|null $auto_purchase
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QueryMonitor newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QueryMonitor newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QueryMonitor query()
+ * @mixin \Eloquent
  */
 	class IdeHelperQueryMonitor {}
 }
@@ -262,6 +314,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QueryMonitorRecord newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QueryMonitorRecord newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QueryMonitorRecord query()
+ * @mixin \Eloquent
  */
 	class IdeHelperQueryMonitorRecord {}
 }
@@ -276,6 +329,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TeamLabelRule newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TeamLabelRule newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TeamLabelRule query()
+ * @mixin \Eloquent
  */
 	class IdeHelperTeamLabelRule {}
 }
@@ -284,10 +338,11 @@ namespace App{
 /**
  * App\User
  *
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User query()
+ * @mixin \Eloquent
  */
 	class IdeHelperUser {}
 }

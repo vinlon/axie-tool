@@ -1,0 +1,124 @@
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a><cite>AxieOrigin</cite></a>
+    <a><cite>Axie成交记录</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-card">
+    <div class="layadmin-search">
+      <form class="layui-form" method="post" lay-filter="form_axie_sales_search">
+        <script type="text/html" template lay-done="layui.data.done()">
+          <div class="layui-inline">
+            <div class="layui-form-label">关键字</div>
+            <div class="layui-input-inline">
+              <input type="text" name="keyword" value="{{ decodeURIComponent(layui.router().search.keyword || '')}}"
+                     class="layui-input"
+                     placeholder="买方地址，卖方地址">
+            </div>
+          </div>
+          <div class="layui-inline">
+            <div class="layui-form-label">Class</div>
+            <div class="layui-input-inline">
+              <select name="cls">
+                <option value="">全部</option>
+                <option value="Aquatic">Aquatic</option>
+                <option value="Bug">Bug</option>
+                <option value="Beast">Beast</option>
+                <option value="Reptile">Reptile</option>
+                <option value="Bird">Bird</option>
+                <option value="Mech">Mech</option>
+                <option value="Dusk">Dusk</option>
+              </select>
+            </div>
+          </div>
+          <div class="layui-inline layui-btn-group">
+            <button type="submit" lay-submit class="layui-btn" lay-filter="submit_axie_sales_search">
+              <i class="layui-icon layui-icon-search"></i>查询
+            </button>
+            <button type="submit" lay-submit class="layui-btn layui-btn-warm"
+                    lay-filter="reset_axie_sales_search">
+              <i class="layui-icon layui-icon-close"></i>重置
+            </button>
+          </div>
+        </script>
+      </form>
+    </div>
+    <div class="layui-card-body">
+      <div id="table_axie_sales"></div>
+      <script type="text/html" id="tpl_axie_id">
+        {{# if (d.is_mystic) { }}
+        <span class="layui-badge" style="background-color: #b04dff">Mystic</span>
+        {{# } }}
+        {{# if (d.is_origin) { }}
+        <span class="layui-badge">Origin</span>
+        {{# } }}
+        <a class="layui-table-link" href="https://app.axieinfinity.com/marketplace/axies/{{d.axie_id}}" target="_blank">
+          {{d.axie_id}}
+        </a>
+      </script>
+      <script type="text/html" id="tpl_buyer">
+        <a class="layui-table-link" href="" target="_blank">
+          0x...{{ d.to.substr(-4) }}
+        </a>
+      </script>
+      <script type="text/html" id="tpl_seller">
+        <a class="layui-table-link" href="" target="_blank">
+          0x...{{ d.from.substr(-4) }}
+        </a>
+      </script>
+      <script type="text/html" id="tpl_axie_image">
+        <image src="https://axiecdn.axieinfinity.com/axies/{{d.axie_id}}/axie/axie-full-transparent.png"
+               style="width:70px;margin-left: -10px;" alt="{{d.axie_id}}"></image>
+      </script>
+    </div>
+  </div>
+</div>
+
+<script>
+  layui.data.done = function (obj) {
+    layui.use(['fox_table'], function () {
+      let $ = layui.$
+        , fox_table = layui.fox_table
+        , admin = layui.admin
+        , form = layui.form
+      $("select[name='cls']").val(layui.router().search.class)
+      form.render()
+
+      let resourceUrl = 'admin/axie_sold_histories'
+
+      // 列表查询
+      fox_table.render({
+        id: 'table_axie_sales'
+        , url: resourceUrl
+        , cols: [[
+          {title: '交易时间', field: 'trans_time', width: 180}
+          , {title: 'AxieId', templet: '#tpl_axie_id', width: 140, align: "center"}
+          , {title: 'Axie', templet: '#tpl_axie_image', width: 140, align: "center"}
+          , {title: '种族', field: 'class', width: 140, align: "center"}
+          , {title: 'weth价格', field: 'price', width: 150, align: "left", sort: true}
+          , {title: 'usd价格', field: 'price_usd', width: 150, align: "left"}
+          , {title: 'Buyer', templet: '#tpl_buyer', width: 150, align: "left"}
+          , {title: 'Seller', templet: '#tpl_seller', width: 150, align: "left"}
+        ]]
+      });
+
+
+      //搜索
+      form.on('submit(submit_axie_sales_search)', function (d) {
+        fox_table.reload(d.field);
+        return false;
+      });
+      //重置
+      form.on('submit(reset_axie_sales_search)', function (d) {
+        $("input[name='keyword']").val('');
+        $("select[name='cls']").val('');
+        form.render()
+        fox_table.reload({});
+        return false;
+      });
+    })
+  }
+</script>
+

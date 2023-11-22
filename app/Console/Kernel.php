@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('purchase:confirm')->everyMinute(); //确认Axie购买结果
 
         $schedule->command('erc1155:sync_sold_history')->everyMinute(); //Rune&Charm销售记录
+        $schedule->command('axie:sync_sold_history')->everyMinute(); //同步Axie销售记录
         $schedule->command('axie:parse_gene')->everyMinute(); //基因提取
         $schedule->command('axie:query_gene')->everyMinute(); //基因查询
         $schedule->command('team:label')->everyMinute(); //标记队伍类型

@@ -12,7 +12,9 @@ Route::middleware(['auth:lay-admin', AdminResponse::class])->group(function () {
     # AutoPurchase
     Route::resource('auto_purchases', 'AutoPurchaseController')->only(['index']);
 
-    # SoldHistory
+    # Axie
+    Route::get('axie_sold_histories', 'AxieController@listSoldHistories');
+    # Token SoldHistory
     Route::get('erc1155_sold_summary', 'SoldHistoryController@getSoldSummary');
     Route::get('erc1155_orders', 'SoldHistoryController@getTokenOrders');
     Route::get('erc1155_sold_histories', 'SoldHistoryController@getTokenSoldHistories');

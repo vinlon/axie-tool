@@ -7,6 +7,7 @@ use App\Models\BattleHistory;
 use App\Models\Erc1155Token;
 use App\Models\FighterTeam;
 use App\Models\Leaderboard;
+use Vinlon\Laravel\LayAdmin\PaginateResponse;
 
 class UserController extends Controller
 {
@@ -17,6 +18,9 @@ class UserController extends Controller
         $userId = request()->user_id;
         if (request()->keyword) {
             $userId = Leaderboard::query()->where('user_name', 'like', '%' . request()->keyword . '%')->value('user_id');
+            if (!$userId) {
+                return new PaginateResponse(0, []);
+            }
         }
         $query = BattleHistory::query()
             ->with(['first_user', 'second_user', 'first_team.axies', 'second_team.axies'])

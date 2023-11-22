@@ -73,6 +73,17 @@ class AxieService
         return Arr::get($result, 'erc1155Tokens.results');
     }
 
+    public function listRecentlyAxiesSold($from, $size)
+    {
+        $operationName = 'GetRecentlyAxiesSold';
+        $query = 'query GetRecentlyAxiesSold($from: Int, $size: Int) { settledAuctions { axies(from: $from, size: $size) {  total  results {  ...AxieBrief  transferHistory {   ...TransferHistoryInSettledAuction   __typename  }  __typename  }  __typename } __typename }}fragment AxieBrief on Axie { id name stage class breedCount image title genes newGenes hasMysticSuit axpInfo { ...AxpInfo __typename } battleInfo { banned __typename } order { id currentPrice currentPriceUsd startedAt __typename } parts { id name class type specialGenes __typename } equipmentInstances { ...EquipmentInstance __typename } __typename}fragment EquipmentInstance on EquipmentInstance { id: tokenId tokenId owner equipmentId alias equipmentType slot name rarity collections equippedBy __typename}fragment AxpInfo on AxpInfo { level nextOnchainLevel onchainLevel shouldAscend xp xpToLevelUp __typename}fragment TransferHistoryInSettledAuction on TransferRecords { total results { ...TransferRecordInSettledAuction __typename } __typename}fragment TransferRecordInSettledAuction on TransferRecord { from to txHash timestamp withPrice withPriceUsd fromProfile { name __typename } toProfile { name __typename } __typename}';
+        $variables = [
+            'from' => intval($from),
+            'size' => intval($size),
+        ];
+        $result = $this->graphql($operationName, $query, $variables);
+        return Arr::get($result, 'settledAuctions.axies.results');
+    }
 
     private function getRecentlyErc1155Sold($type, $from, $size)
     {
@@ -84,7 +95,7 @@ class AxieService
             'tokenType' => $type,
         ];
         $result = $this->graphql($operationName, $query, $variables);
-        return Arr::get($result, 'settledAuctions.erc1155Tokens');
+        return Arr::get($result, 'settledAuctions.erc1155Tokens.results');
     }
 
     private function getErc1155TokenOrders($type, $tokenId, $from, $size)
