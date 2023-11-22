@@ -7,6 +7,11 @@ use App\Models\AxieSoldHistory;
 
 class AxieController extends Controller
 {
+    public function listParts()
+    {
+        AxieSoldHistory::query();
+    }
+
     public function listSoldHistories()
     {
         $query = AxieSoldHistory::query()
@@ -17,7 +22,19 @@ class AxieController extends Controller
                 return $q->orderByDesc(request()->order_by_desc);
             })
             ->when(request()->order_by_asc, function ($q) {
-                return $q->orderByDesc(request()->order_by_asc);
+                return $q->orderBy(request()->order_by_asc);
+            })
+            ->when(request()->start_date, function ($q) {
+                return $q->whereDate('trans_time', '>=', request()->start_date);
+            })
+            ->when(request()->end_date, function ($q) {
+                return $q->whereDate('trans_time', '<=', request()->end_date);
+            })
+            ->when(request()->start_price, function ($q) {
+                return $q->where('price', '>=', toWei(request()->start_price));
+            })
+            ->when(request()->end_price, function ($q) {
+                return $q->where('price', '<=', toWei(request()->end_price));
             })
             ->orderByDesc('id');
 

@@ -36,6 +36,12 @@ function toEth($price, $decimals = 5)
     return number_format($ethPrice, $decimals, '.', null);
 }
 
+function toWei($ethPrice)
+{
+    $weiPrice = $ethPrice * bcpow(10, 18);
+    return intval($weiPrice);
+}
+
 /**
  * 除法计算(处理分母为0的情况).
  *
