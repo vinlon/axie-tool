@@ -83,7 +83,7 @@ class AxieSoldHistorySyncCommand extends Command
                 if ($specialGene == 'Japan') {
                     $japanPartCount++;
                 }
-                if ($specialGene == 'Xmas') {
+                if ($specialGene == 'Xmas2019') {
                     $xmasPartCount++;
                 }
                 if ($specialGene == 'Summer2022') {
