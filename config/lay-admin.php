@@ -20,6 +20,16 @@ $sidebars->add(
         ->add(SideBar::create('axie_origin.query_monitor', '价格监控')->jumpTo('land/price_monitor'))
 );
 
+// 默认菜单
+$sidebars->add(
+    SideBar::create('_user', '系统管理员')->iconClass('layui-icon-key')->jumpTo('_base/user/user/')
+);
+$sidebars->add(
+    SideBar::create('_my', '我的')->iconClass('layui-icon-username')
+        ->add(SideBar::create('_my.profile', '基本资料')->jumpTo('_base/user/user/info'))
+        ->add(SideBar::create('_my.password', '修改密码')->jumpTo('_base/user/user/password'))
+);
+
 
 return [
     /*
@@ -47,5 +57,5 @@ return [
     /*
      * 角色定义类
      */
-    'role_class' => \Vinlon\Laravel\LayAdmin\AdminRole::class,
+    'role_class' => \App\AdminRoleExtend::class,
 ];
