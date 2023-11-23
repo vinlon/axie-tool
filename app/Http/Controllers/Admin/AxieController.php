@@ -3,13 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AxieBodyPart;
 use App\Models\AxieSoldHistory;
 
 class AxieController extends Controller
 {
     public function listParts()
     {
-        AxieSoldHistory::query();
+        return AxieBodyPart::query()->get()->map(function (AxieBodyPart $part) {
+            return [
+                'value' => $part->part_id,
+                'name' => $part->part_type . '-' . $part->part_name,
+            ];
+        });
     }
 
     public function listSoldHistories()
@@ -35,6 +41,21 @@ class AxieController extends Controller
             })
             ->when(request()->end_price, function ($q) {
                 return $q->where('price', '<=', toWei(request()->end_price));
+            })
+            ->when(request()->parts, function ($q) {
+                $parts = explode(',', request()->parts);
+                $partsPerType = [];
+                foreach ($parts as $part) {
+                    $type = explode('-', $part)[0];
+                    $partsPerType = \Arr::add($partsPerType, $type, []);
+                    $partsPerType[$type][] = $part;
+                }
+                return $q->where(function ($q1) use ($partsPerType) {
+                    foreach ($partsPerType as $type => $parts) {
+                        $q1->whereIn($type . '_part_id', $parts);
+                    }
+                    return $q1;
+                });
             })
             ->orderByDesc('id');
 

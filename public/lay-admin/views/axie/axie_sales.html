@@ -131,18 +131,30 @@
         , form = layui.form
         , laydate = layui.laydate
         , xmSelect = layui.xmSelect
+        , partsObj = null
       $("select[name='cls']").val(layui.router().search.class)
-
-      admin.get()
-      xmSelect.render({
-        el: '#parts',
-        language: 'zn',
-        filterable: true,
-        tips: '请选择要查询的Axie部位',
-        data: [
-          {name: '暂不支持', value: '暂不支持'}
-        ]
+      admin.get('admin/axie_body_parts', function (res) {
+        partsObj = xmSelect.render({
+          el: '#parts',
+          name: 'parts',
+          language: 'zn',
+          filterable: true,
+          filterMethod: function (val, item, index, prop) {
+            if (item.value.indexOf(val) != -1) {//把value相同的搜索出来
+              return true;
+            }
+            if (item.name.indexOf(val) != -1) {//名称中包含的搜索出来
+              return true;
+            }
+            return false;//不知道的就不管了
+          },
+          tips: '请选择要查询的Axie部位',
+          data: res.data
+        })
+        let selectedParts = layui.router().search.parts.split(',');
+        partsObj.setValue(selectedParts)
       })
+
       //日期时间选择器
       laydate.render({
         elem: '#date_range'
@@ -184,6 +196,7 @@
         $("input[name='start_price']").val('');
         $("input[name='end_price']").val('');
         $("select[name='cls']").val('');
+        partsObj.setValue([])
         form.render()
         fox_table.reload({});
         return false;

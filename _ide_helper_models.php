@@ -56,6 +56,34 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\AxieBodyPart
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $version 版本
+ * @property int $origin_card_id Origin Card ID
+ * @property string $part_id 部位ID
+ * @property string $part_type 部位类型
+ * @property string $cls 种族
+ * @property string $part_name 部位名称
+ * @property string $ability_type 能力类型
+ * @property string $description 能力描述
+ * @property int $energy 能量消耗
+ * @property int $attack 攻击
+ * @property int $defense 护盾
+ * @property int $healing 治疗
+ * @property string $special_genes 特殊基因
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AxieBodyPart newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AxieBodyPart newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AxieBodyPart query()
+ * @mixin \Eloquent
+ */
+	class IdeHelperAxieBodyPart {}
+}
+
+namespace App\Models{
+/**
  * App\Models\AxieSoldHistory
  *
  * @property int $id
