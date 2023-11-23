@@ -21,6 +21,14 @@ class AxieController extends Controller
     public function listSoldHistories()
     {
         $query = AxieSoldHistory::query()
+            ->when(request()->keyword, function ($q) {
+                return $q->where(function ($q1) {
+                    $addressLike = '%' . request()->keyword;
+                    return $q1->where('axie_id', request()->keyword)
+                        ->orWhere('from', 'like', $addressLike)
+                        ->orWhere('to', 'like', $addressLike);
+                });
+            })
             ->when(request()->cls, function ($q) {
                 return $q->where('class', request()->cls);
             })
