@@ -44,7 +44,9 @@
     <div class="layui-card-body">
       <div id="table_history"></div>
       <script type="text/html" id="tpl_user_1">
+        {{# if (d.user_rank > 0) { }}
         <span class="layui-badge layui-bg-green">#{{d.user_rank}}</span>
+        {{# } }}
         {{# if (d.user) { }}
         <a class="layui-table-link" lay-href="/axie/user/user_id={{d.user.user_id}}">
           {{d.user.user_name}}
@@ -52,7 +54,9 @@
         {{# } }}
       </script>
       <script type="text/html" id="tpl_user_2">
+        {{# if (d.enemy_rank) { }}
         <span class="layui-badge layui-bg-green">#{{d.enemy_rank}}</span>
+        {{# } }}
         {{# if (d.enemy) { }}
         <a class="layui-table-link" lay-href="/axie/user/user_id={{d.enemy.user_id}}">
           {{d.enemy.user_name}}

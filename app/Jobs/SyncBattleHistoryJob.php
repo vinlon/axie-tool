@@ -83,41 +83,21 @@ class SyncBattleHistoryJob implements ShouldQueue
             $battle->battle_end_time = Carbon::createFromTimestamp(\Arr::get($history, 'ended_time'));
             $battle->is_surrender = \Arr::get($history, 'did_player_surrender');
             $battle->save();
-            $defaultLeaderBoardValues = [
-                'user_name' => '',
-                'vstar' => 0,
-            ];
-            $first = Leaderboard::query()->firstOrNew([
-                'user_id' => $firstFighterId,
-            ], $defaultLeaderBoardValues);
-            $second = Leaderboard::query()->firstOrNew([
-                'user_id' => $secondFighterId,
-            ], $defaultLeaderBoardValues);
+
+            $first = Leaderboard::query()->where('user_id', $firstFighterId)->first();
+            $second = Leaderboard::query()->where('user_id', $secondFighterId)->first();
 
             if ($battleType == 'ranked_pvp') {
-                //如果是排名模式，则更新leaderboard
-                $firstVstar = \Arr::get($history, 'rewards.0.new_vstar');
-                $secondVstar = \Arr::get($history, 'rewards.1.new_vstar');
-                //只更新前1000
-                if ($firstRank > 0 && $firstRank <= 1000) {
-                    if ($first->last_active_time == null || Carbon::parse($first->last_active_time)->lt($battle->battle_end_time)) {
-                        if ($firstVstar) {
-                            $first->vstar = $firstVstar;
-                        }
-                        $first->last_team_id = $battle->first_fighter_team_id;
-                        $first->last_active_time = $battle->battle_end_time;
-                        $first->save();
-                    }
+                //如果是排名模式，则更新last_team_id和最近活跃时间
+                if ($first && ($first->last_active_time == null || Carbon::parse($first->last_active_time)->lt($battle->battle_end_time))) {
+                    $first->last_team_id = $battle->first_fighter_team_id;
+                    $first->last_active_time = $battle->battle_end_time;
+                    $first->save();
                 }
-                if ($secondRank > 0 && $secondRank <= 1000) {
-                    if ($second->last_active_time == null || Carbon::parse($second->last_active_time)->lt($battle->battle_end_time)) {
-                        if ($secondVstar) {
-                            $second->vstar = $secondVstar;
-                        }
-                        $second->last_team_id = $battle->second_fighter_team_id;
-                        $second->last_active_time = $battle->battle_end_time;
-                        $second->save();
-                    }
+                if ($second && ($second->last_active_time == null || Carbon::parse($second->last_active_time)->lt($battle->battle_end_time))) {
+                    $second->last_team_id = $battle->second_fighter_team_id;
+                    $second->last_active_time = $battle->battle_end_time;
+                    $second->save();
                 }
             }
         }
