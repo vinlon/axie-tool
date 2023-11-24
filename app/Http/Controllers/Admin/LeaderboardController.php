@@ -62,7 +62,6 @@ class LeaderboardController extends Controller
             arr_incr($summary, "top1000.per_type.{$teamType}.all");
             $summary = Arr::add($summary, "top1000.per_type.{$teamType}.type", $teamType);
             if ($activeInFiveMinutes) {
-                dump($item->last_active_time);
                 arr_incr($summary, "top1000.active_5");
                 arr_incr($summary, "top1000.per_type.{$teamType}.active_5");
             }
