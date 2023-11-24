@@ -38,8 +38,8 @@ class LeaderboardController extends Controller
         /** @var Leaderboard $item */
         foreach ($list as $index => $item) {
             $idleMinutes = Carbon::now()->diffInMinutes($item->last_active_time ?: Carbon::now()->subDay());
-            $activeInFiveMinutes = $idleMinutes <= 5;
             $activeInTenMinutes = $idleMinutes <= 10;
+            $activeInTwentyMinutes = $idleMinutes <= 20;
             $isTop100 = $index <= 99;
             $teamType = '未知';
             if ($item->team) {
@@ -49,21 +49,21 @@ class LeaderboardController extends Controller
                 arr_incr($summary, "top100.all");
                 arr_incr($summary, "top100.per_type.{$teamType}.all");
                 $summary = Arr::add($summary, "top100.per_type.{$teamType}.type", $teamType);
-                if ($activeInFiveMinutes) {
-                    arr_incr($summary, "top100.active_5");
-                    arr_incr($summary, "top100.per_type.{$teamType}.active_5");
+                if ($activeInTwentyMinutes) {
+                    arr_incr($summary, "top100.active_20");
+                    arr_incr($summary, "top100.per_type.{$teamType}.active_20");
                 }
                 if ($activeInTenMinutes) {
                     arr_incr($summary, "top100.active_10");
                     arr_incr($summary, "top100.per_type.{$teamType}.active_10");
                 }
             }
-            arr_incr($summary, "top1000.total");
+            arr_incr($summary, "top1000.all");
             arr_incr($summary, "top1000.per_type.{$teamType}.all");
             $summary = Arr::add($summary, "top1000.per_type.{$teamType}.type", $teamType);
-            if ($activeInFiveMinutes) {
-                arr_incr($summary, "top1000.active_5");
-                arr_incr($summary, "top1000.per_type.{$teamType}.active_5");
+            if ($activeInTwentyMinutes) {
+                arr_incr($summary, "top1000.active_20");
+                arr_incr($summary, "top1000.per_type.{$teamType}.active_20");
             }
             if ($activeInTenMinutes) {
                 arr_incr($summary, "top1000.active_10");

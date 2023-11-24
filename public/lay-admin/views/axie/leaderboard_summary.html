@@ -11,53 +11,68 @@
   {{# var data = d.data || {} }}
   <div class="layui-fluid">
     <div class="layui-card">
-      <div class="layui-card-header">
-        TOP100
-      </div>
       <div class="layui-card-body">
-        <table class="layui-table">
-          <thead>
-          <td>队伍类型</td>
-          <td>数量（占比）</td>
-          <td>5分钟内活跃数</td>
-          <td>10分钟内活跃数</td>
-          </thead>
-          <tbody>
-          {{# layui.each(data.top100.per_type, function(index, item){ }}
-          <tr>
-            <td>{{item.type}}</td>
-            <td>{{item.all}}</td>
-            <td>{{item.active_5||0}}</td>
-            <td>{{item.active_10||0}}</td>
-          </tr>
-          {{# }) }}
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="layui-card">
-      <div class="layui-card-header">
-        TOP1000
-      </div>
-      <div class="layui-card-body">
-        <table class="layui-table">
-          <thead>
-          <td>队伍类型</td>
-          <td>数量（占比）</td>
-          <td>5分钟内活跃数</td>
-          <td>10分钟内活跃数</td>
-          </thead>
-          <tbody>
-          {{# layui.each(data.top1000.per_type, function(index, item){ }}
-          <tr>
-            <td>{{item.type}}</td>
-            <td>{{item.all}}</td>
-            <td>{{item.active_5||0}}</td>
-            <td>{{item.active_10||0}}</td>
-          </tr>
-          {{# }) }}
-          </tbody>
-        </table>
+        <div class="layui-tab" lay-filter="summary">
+          <ul class="layui-tab-title">
+            <li class="layui-this" lay-id="top_100">Top100</li>
+            <li lay-id="top_1000">Top1000</li>
+          </ul>
+          <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+              <table class="layui-table">
+                <thead>
+                <td>队伍类型</td>
+                <td>数量（占比）</td>
+                <td>10分钟内活跃数</td>
+                <td>20分钟内活跃数</td>
+                </thead>
+                <tbody>
+                <tr>
+                  <td>全部</td>
+                  <td>{{data.top100.all}}</td>
+                  <td>{{data.top100.active_10||0}}</td>
+                  <td>{{data.top100.active_20||0}}</td>
+                </tr>
+                {{# layui.each(data.top100.per_type, function(index, item){ }}
+                <tr>
+                  <td>{{item.type}}</td>
+                  <td>{{item.all}}</td>
+                  <td>{{item.active_10||0}}</td>
+                  <td>{{item.active_20||0}}</td>
+                </tr>
+                {{# }) }}
+                </tbody>
+              </table>
+            </div>
+            <div class="layui-tab-item">
+              <table class="layui-table">
+                <thead>
+                <td>队伍类型</td>
+                <td>数量（占比）</td>
+                <td>10分钟内活跃数</td>
+                <td>20分钟内活跃数</td>
+                </thead>
+                <tbody>
+
+                <tr>
+                  <td>全部</td>
+                  <td>{{data.top1000.all}}</td>
+                  <td>{{data.top1000.active_10||0}}</td>
+                  <td>{{data.top1000.active_20||0}}</td>
+                </tr>
+                {{# layui.each(data.top1000.per_type, function(index, item){ }}
+                <tr>
+                  <td>{{item.type}}</td>
+                  <td>{{item.all}}</td>
+                  <td>{{item.active_10||0}}</td>
+                  <td>{{item.active_20||0}}</td>
+                </tr>
+                {{# }) }}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
