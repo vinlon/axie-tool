@@ -44,7 +44,9 @@ class TeamLabelCommand extends Command
             [
                 'label' => '红眼',
                 'parts' => [
-                    'eyes-topaz' => 3
+                    'eyes-topaz' => 2,
+                    'tail-nimo' => 2,
+                    'ears-innocent-lamb' => 2,
                 ],
             ],
             [
@@ -129,12 +131,6 @@ class TeamLabelCommand extends Command
             ],
             [
                 'label' => '生存',
-                'parts' => [
-                    'ears-tassels' => 1,
-                ],
-            ],
-            [
-                'label' => '生存',
                 'runes' => [
                     'rune_dawn_3010_s6_nft' => 1,
                 ],
@@ -155,7 +151,8 @@ class TeamLabelCommand extends Command
             [
                 'label' => 'WingHorn鸟',
                 'parts' => [
-                    'horn-wing-horn' => 2,
+                    'horn-wing-horn' => 1,
+                    'back-tri-feather' => 1,
                 ],
             ],
             [
@@ -194,7 +191,8 @@ class TeamLabelCommand extends Command
                 'label' => 'JINX',
                 'parts' => [
                     'mouth-doubletalk' => 2,
-                    'tail-tadpole' => 2,
+                    'tail-tadpole' => 1,
+                    'ears-inkling' => 1,
                 ],
             ],
             [
@@ -219,6 +217,7 @@ class TeamLabelCommand extends Command
         $list = Leaderboard::query()
             ->with(['team.axies'])
             ->whereHas('team')
+//            ->where('user_id', '1ed4bedd-9e0c-66bf-9ac3-ef1724101053')
             ->orderByDesc('vstar')
             ->limit(1000)->get();
         $top100UnMatchCount = 0;
