@@ -1,0 +1,74 @@
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a><cite>AxieOrigin</cite></a>
+    <a layadmin-event="back">返回列表</a>
+  </div>
+</div>
+
+<script type="text/html" template
+        lay-url="admin/leaderboard_summary"
+        lay-done="layui.data.done(d.data)">
+  {{# var data = d.data || {} }}
+  <div class="layui-fluid">
+    <div class="layui-card">
+      <div class="layui-card-header">
+        TOP100
+      </div>
+      <div class="layui-card-body">
+        <table class="layui-table">
+          <thead>
+          <td>队伍类型</td>
+          <td>数量（占比）</td>
+          <td>5分钟内活跃数</td>
+          <td>10分钟内活跃数</td>
+          </thead>
+          <tbody>
+          {{# layui.each(data.top100.per_type, function(index, item){ }}
+          <tr>
+            <td>{{item.type}}</td>
+            <td>{{item.all}}</td>
+            <td>{{item.active_5||0}}</td>
+            <td>{{item.active_10||0}}</td>
+          </tr>
+          {{# }) }}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="layui-card">
+      <div class="layui-card-header">
+        TOP1000
+      </div>
+      <div class="layui-card-body">
+        <table class="layui-table">
+          <thead>
+          <td>队伍类型</td>
+          <td>数量（占比）</td>
+          <td>5分钟内活跃数</td>
+          <td>10分钟内活跃数</td>
+          </thead>
+          <tbody>
+          {{# layui.each(data.top1000.per_type, function(index, item){ }}
+          <tr>
+            <td>{{item.type}}</td>
+            <td>{{item.all}}</td>
+            <td>{{item.active_5||0}}</td>
+            <td>{{item.active_10||0}}</td>
+          </tr>
+          {{# }) }}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script>
+  layui.data.done = function (obj) {
+    console.log(obj)
+    layui.use([], function () {
+      let $ = layui.$
+        , form = layui.form
+    })
+  }
+</script>

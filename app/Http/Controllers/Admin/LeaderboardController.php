@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\BattleHistory;
 use App\Models\Erc1155Token;
 use App\Models\FighterTeam;
 use App\Models\Leaderboard;
+use Arr;
+use Carbon\Carbon;
 
 class LeaderboardController extends Controller
 {
@@ -27,6 +28,57 @@ class LeaderboardController extends Controller
                     'count' => $team->n,
                 ];
             });
+    }
+
+    /** 排行榜队伍类型汇总 */
+    public function getSummary()
+    {
+        $list = Leaderboard::query()->with(['team'])->orderByDesc('vstar')->limit(1000)->get();
+        $summary = [];
+        /** @var Leaderboard $item */
+        foreach ($list as $index => $item) {
+            $idleMinutes = Carbon::now()->diffInMinutes($item->last_active_time ?: Carbon::now()->subDay());
+            $activeInFiveMinutes = $idleMinutes <= 5;
+            $activeInTenMinutes = $idleMinutes <= 10;
+            $isTop100 = $index <= 99;
+            $teamType = '未知';
+            if ($item->team) {
+                $teamType = $item->team->type_label ?: '未知';
+            }
+            if ($isTop100) {
+                arr_incr($summary, "top100.all");
+                arr_incr($summary, "top100.per_type.{$teamType}.all");
+                $summary = Arr::add($summary, "top100.per_type.{$teamType}.type", $teamType);
+                if ($activeInFiveMinutes) {
+                    arr_incr($summary, "top100.active_5");
+                    arr_incr($summary, "top100.per_type.{$teamType}.active_5");
+                }
+                if ($activeInTenMinutes) {
+                    arr_incr($summary, "top100.active_10");
+                    arr_incr($summary, "top100.per_type.{$teamType}.active_10");
+                }
+            }
+            arr_incr($summary, "top1000.total");
+            arr_incr($summary, "top1000.per_type.{$teamType}.all");
+            $summary = Arr::add($summary, "top1000.per_type.{$teamType}.type", $teamType);
+            if ($activeInFiveMinutes) {
+                dump($item->last_active_time);
+                arr_incr($summary, "top1000.active_5");
+                arr_incr($summary, "top1000.per_type.{$teamType}.active_5");
+            }
+            if ($activeInTenMinutes) {
+                arr_incr($summary, "top1000.active_10");
+                arr_incr($summary, "top1000.per_type.{$teamType}.active_10");
+            }
+        }
+        // 对每个 per_type 下的数组按 all 值降序进行排序
+        usort($summary['top100']['per_type'], function ($a, $b) {
+            return $b['all'] - $a['all'];
+        });
+        usort($summary['top1000']['per_type'], function ($a, $b) {
+            return $b['all'] - $a['all'];
+        });
+        return $summary;
     }
 
     public function index()
