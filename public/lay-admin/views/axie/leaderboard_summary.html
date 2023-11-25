@@ -23,22 +23,22 @@
                 <thead>
                 <td>队伍类型</td>
                 <td>数量（占比）</td>
-                <td>10分钟内活跃数</td>
-                <td>20分钟内活跃数</td>
+                <td class="layui-font-green">10分钟内活跃数</td>
+                <td class="layui-font-orange">20分钟内活跃数</td>
                 </thead>
                 <tbody>
                 <tr>
                   <td>全部</td>
                   <td>{{data.top100.all}}</td>
-                  <td>{{data.top100.active_10||0}}</td>
-                  <td>{{data.top100.active_20||0}}</td>
+                  <td class="layui-font-green">{{data.top100.active_10||0}}</td>
+                  <td class="layui-font-orange">{{data.top100.active_20||0}}</td>
                 </tr>
                 {{# layui.each(data.top100.per_type, function(index, item){ }}
                 <tr>
                   <td>{{item.type}}</td>
                   <td>{{item.all}}</td>
-                  <td>{{item.active_10||0}}</td>
-                  <td>{{item.active_20||0}}</td>
+                  <td class="layui-font-green">{{item.active_10||0}}</td>
+                  <td class="layui-font-orange">{{item.active_20||0}}</td>
                 </tr>
                 {{# }) }}
                 </tbody>
@@ -49,23 +49,23 @@
                 <thead>
                 <td>队伍类型</td>
                 <td>数量（占比）</td>
-                <td>10分钟内活跃数</td>
-                <td>20分钟内活跃数</td>
+                <td class="layui-font-green">10分钟内活跃数</td>
+                <td class="layui-font-orange">20分钟内活跃数</td>
                 </thead>
                 <tbody>
 
                 <tr>
                   <td>全部</td>
                   <td>{{data.top1000.all}}</td>
-                  <td>{{data.top1000.active_10||0}}</td>
-                  <td>{{data.top1000.active_20||0}}</td>
+                  <td class="layui-font-green">{{data.top1000.active_10||0}}</td>
+                  <td class="layui-font-orange">{{data.top1000.active_20||0}}</td>
                 </tr>
                 {{# layui.each(data.top1000.per_type, function(index, item){ }}
                 <tr>
                   <td>{{item.type}}</td>
                   <td>{{item.all}}</td>
-                  <td>{{item.active_10||0}}</td>
-                  <td>{{item.active_20||0}}</td>
+                  <td class="layui-font-green">{{item.active_10||0}}</td>
+                  <td class="layui-font-orange">{{item.active_20||0}}</td>
                 </tr>
                 {{# }) }}
                 </tbody>

@@ -53,6 +53,17 @@
         {{d.team.type_label || '-' }}
         {{# } }}
       </script>
+      <script type="text/html" id="tpl_active">
+        {{# if (d.idle_minutes <=10) { }}
+        <span class="layui-badge layui-bg-green" lay-tips="最近10分钟活跃">
+        {{# } else if (d.idle_minutes <=20) { }}
+        <span class="layui-badge layui-bg-orange" lay-tips="最近20分钟活跃">
+        {{# } else { }}
+        <span>
+        {{# } }}
+        {{d.last_active_time}}
+        </span>
+      </script>
       <script type="text/html" id="tpl_team">
         {{# if (d.team && d.team.axies) { }}
         {{# layui.each(d.team.axies, function(index, axie){  }}
@@ -122,7 +133,7 @@
           , {title: '队伍类型', templet: '#tpl_team_label', width: 100}
           , {title: '队伍', templet: '#tpl_team', width: 300, align: "center"}
           , {title: '同步时间', field: 'updated_at', width: 180, align: "center"}
-          , {title: '最近活跃时间', field: 'last_active_time', width: 180, align: "center"}
+          , {title: '最近活跃时间', templet: '#tpl_active', width: 180, align: "center"}
         ]]
       })
       ;

@@ -111,6 +111,7 @@ class LeaderboardController extends Controller
             if ($item->team) {
                 $this->appendRuneInfo($item->team, $runeMap);
             }
+            $item->idle_minutes = Carbon::now()->diffInMinutes($item->last_active_time ?: Carbon::now()->subDay());
             return $item;
         });
     }
