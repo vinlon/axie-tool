@@ -5,9 +5,23 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AxieBodyPart;
 use App\Models\AxieSoldHistory;
+use App\Services\AxieService;
+use Carbon\Carbon;
+use Vinlon\Laravel\LayAdmin\PaginateResponse;
 
 class AxieController extends Controller
 {
+    /** @var AxieService */
+    private $axieService;
+
+    /**
+     * @param AxieService $axieService
+     */
+    public function __construct(AxieService $axieService)
+    {
+        $this->axieService = $axieService;
+    }
+
     public function listParts()
     {
         return AxieBodyPart::query()->get()->map(function (AxieBodyPart $part) {
@@ -16,6 +30,40 @@ class AxieController extends Controller
                 'name' => $part->part_type . '-' . $part->part_name,
             ];
         });
+    }
+
+    /** 查询在售记录 */
+    public function listOrders()
+    {
+        $parts = explode(',', request()->get('parts', ''));
+        $class = request()->get('cls');
+        $page = intval(request()->get('page', 1));
+        $limit = intval(request()->get('limit', 10));
+        $url = 'https://app.axieinfinity.com/marketplace/axies?1=1';
+        if ($class) {
+            $url .= '&classes=' . $class;
+        }
+        foreach ($parts as $part) {
+            $url .= '&parts=' . $part;
+        }
+        $result = $this->axieService->listAxiesByMarketPlaceUrl($url, $page, $limit);
+        $list = [];
+        foreach (\Arr::get($result, 'axies.results') as $item) {
+            $row = [
+                'axie_id' => \Arr::get($item, 'id'),
+                'cls' => \Arr::get($item, 'class'),
+                'breed_count' => \Arr::get($item, 'breedCount'),
+                'current_price' => toEth(\Arr::get($item, 'order.currentPrice')),
+                'started_at' => Carbon::createFromTimestamp(\Arr::get($item, 'order.startedAt'))->toDateTimeString()
+            ];
+            $endedAt = \Arr::get($item, 'order.endedAt', 0);
+            if ($endedAt > 0) {
+                $row['ended_at'] = Carbon::createFromTimestamp($endedAt)->toDateTimeString();
+                $row['ended_price'] = toEth(\Arr::get($item, 'order.endedPrice'));
+            }
+            $list[] = $row;
+        }
+        return new PaginateResponse(\Arr::get($result, 'axies.total'), $list);
     }
 
     public function listSoldHistories()

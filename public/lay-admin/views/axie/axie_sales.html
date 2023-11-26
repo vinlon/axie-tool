@@ -29,6 +29,7 @@
                   <option value="Beast">Beast</option>
                   <option value="Reptile">Reptile</option>
                   <option value="Bird">Bird</option>
+                  <option value="Plant">Plant</option>
                   <option value="Mech">Mech</option>
                   <option value="Dusk">Dusk</option>
                 </select>
@@ -66,7 +67,7 @@
           </div>
           <div class="layui-row" style="padding-top: 10px">
             <div class="layui-form-label">部位</div>
-            <div class="layui-input-inline" style="width: 500px">
+            <div class="layui-input-inline" style="width: 800px">
               <div id="parts" class="xm-select-demo"></div>
             </div>
             <div class="layui-inline layui-btn-group">
@@ -85,17 +86,19 @@
     <div class="layui-card-body">
       <div id="table_axie_sales"></div>
       <script type="text/html" id="tpl_axie_id">
-        <a class="layui-table-link" href="https://app.axieinfinity.com/marketplace/axies/{{d.axie_id}}" target="_blank">
+        <a class="layui-table-link" lay-event="similar" target="_blank">
           {{d.axie_id}}
         </a>
       </script>
       <script type="text/html" id="tpl_buyer">
-        <a class="layui-table-link" href="" target="_blank">
+        <a class="layui-table-link" href="https://app.axieinfinity.com/profile/ronin:{{d.to.substr(2)}}/axies/"
+           target="_blank">
           0x...{{ d.to.substr(-4) }}
         </a>
       </script>
       <script type="text/html" id="tpl_seller">
-        <a class="layui-table-link" href="" target="_blank">
+        <a class="layui-table-link" href="https://app.axieinfinity.com/profile/ronin:{{d.from.substr(2)}}/axies/"
+           target="_blank">
           0x...{{ d.from.substr(-4) }}
         </a>
       </script>
@@ -128,6 +131,7 @@
       let $ = layui.$
         , fox_table = layui.fox_table
         , admin = layui.admin
+        , view = layui.view
         , form = layui.form
         , laydate = layui.laydate
         , xmSelect = layui.xmSelect
@@ -138,6 +142,7 @@
           el: '#parts',
           name: 'parts',
           language: 'zn',
+          autoRow: true,
           filterable: true,
           filterMethod: function (val, item, index, prop) {
             if (item.value.indexOf(val) != -1) {//把value相同的搜索出来
@@ -151,7 +156,7 @@
           tips: '请选择要查询的Axie部位',
           data: res.data
         })
-        let selectedParts = layui.router().search.parts.split(',');
+        let selectedParts = (layui.router().search.parts || '').split(',');
         partsObj.setValue(selectedParts)
       })
 
@@ -175,13 +180,20 @@
           , {title: '等级', field: 'axp_level', width: 80, align: "center", sort: true}
           , {title: 'Axie', templet: '#tpl_axie_image', minWidth: 140, align: "center"}
           , {title: '种族', field: 'class', width: 140, align: "center"}
-          , {title: 'weth价格', field: 'price', width: 100, align: "left", sort: true}
+          , {title: 'weth价格', field: 'price', width: 120, align: "left", sort: true}
           , {title: 'usd价格', field: 'price_usd', width: 100, align: "left"}
           , {title: 'Buyer', templet: '#tpl_buyer', width: 100, align: "left"}
           , {title: 'Seller', templet: '#tpl_seller', width: 100, align: "left"}
         ]]
       });
 
+      //监听操作栏
+      fox_table.toolbar(function (obj) {
+        let data = obj.data;
+        if (obj.event === 'similar') {
+          showSimilarAxies(data)
+        }
+      });
 
       //搜索
       form.on('submit(submit_axie_sales_search)', function (d) {
@@ -201,6 +213,22 @@
         fox_table.reload({});
         return false;
       });
+
+      //显示弹窗
+      function showSimilarAxies(data) {
+        data = data || {};
+        let minWidth = '1000px';
+        let minHeight = '600px';
+        admin.popup({
+          title: '查看相似的Axie'
+          , area: [minWidth, minHeight]
+          , id: 'popup_similar_axies'
+          , success: function (layero, index) {
+            view(this.id).render('axie/similar_axies', data).done(function () {
+            })
+          }
+        })
+      }
     })
   }
 </script>

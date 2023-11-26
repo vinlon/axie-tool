@@ -1,0 +1,152 @@
+<script type="text/html" template lay-done="layui.data.sendParams(d.params)">
+  <form class="layui-form" method="post" lay-filter="form_similar_axie_search">
+    <div class="layui-row">
+      <div class="layui-input-inline" style="width: 950px">
+        <div id="similar_parts" class="xm-select-demo"></div>
+      </div>
+    </div>
+    <div class="layui-row" style="padding-top: 10px">
+      <div class="layui-input-inline" style="width: 100px">
+        <select class="layui-select" name="cls">
+          <option value="">不限种族</option>
+          <option value="Aquatic">Aquatic</option>
+          <option value="Bug">Bug</option>
+          <option value="Beast">Beast</option>
+          <option value="Reptile">Reptile</option>
+          <option value="Bird">Bird</option>
+          <option value="Plant">Plant</option>
+          <option value="Mech">Mech</option>
+          <option value="Dusk">Dusk</option>
+        </select>
+      </div>
+      <div class="layui-inline">
+        <div class="layui-inline layui-btn-group">
+          <button type="submit" lay-submit class="layui-btn" lay-filter="submit_similar_axie_search">
+            <i class="layui-icon layui-icon-search"></i>查询
+          </button>
+          <button type="submit" lay-submit class="layui-btn layui-btn-warm"
+                  lay-filter="reset_similar_axie_search">
+            <i class="layui-icon layui-icon-close"></i>重置
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="layui-tab" lay-filter="sales_and_orders">
+    <ul class="layui-tab-title">
+      <li class="layui-this" lay-id="sales">Sales</li>
+      <li lay-id="orders">Orders</li>
+    </ul>
+    <div class="layui-tab-content">
+      <div class="layui-tab-item layui-show">
+        <div id="table_similar_axie_sales" lay-filter="table_similar_axie_sales"></div>
+      </div>
+      <div class="layui-tab-item">
+        <div id="table_similar_axie_orders" lay-filter="table_similar_axie_orders"></div>
+      </div>
+    </div>
+  </div>
+</script>
+<script type="text/html" id="tpl_similar_axie_id">
+  <a class="layui-table-link" href="https://app.axieinfinity.com/marketplace/axies/{{d.axie_id}}" target="_blank">{{d.axie_id}}</a>
+</script>
+<script type="text/html" id="tpl_similar_axie_image">
+  <image src="https://axiecdn.axieinfinity.com/axies/{{d.axie_id}}/axie/axie-full-transparent.png"
+         style="width:70px;margin-right: -10px;" alt="{{d.axie_id}}"></image>
+</script>
+<script>
+  layui.data.sendParams = function (obj) {
+    layui.use(['xmSelect'], function () {
+      let $ = layui.$
+        , admin = layui.admin
+        , form = layui.form
+        , view = layui.view
+        , table = layui.table
+        , xmSelect = layui.xmSelect
+        , cls = obj.class
+        , parts = []
+        , partsObj = null
+
+      $("select[name='cls']").val(obj.class)
+      form.render()
+      layui.each(['eyes', 'ears', 'horn', 'mouth', 'back', 'tail'], function (idx, part) {
+        parts.push(obj[part + '_part_id'])
+      })
+      admin.get('admin/axie_body_parts', function (res) {
+        partsObj = xmSelect.render({
+          el: '#similar_parts',
+          name: 'parts',
+          language: 'zn',
+          autoRow: true,
+          filterable: true,
+          filterMethod: function (val, item, index, prop) {
+            if (item.value.indexOf(val) != -1) {//把value相同的搜索出来
+              return true;
+            }
+            if (item.name.indexOf(val) != -1) {//名称中包含的搜索出来
+              return true;
+            }
+            return false;//不知道的就不管了
+          },
+          tips: '请选择要查询的Axie部位',
+          data: res.data
+        })
+        partsObj.setValue(parts)
+      })
+
+      loadData(cls, parts)
+
+      function loadData(cls, parts) {
+        let sales_url = 'admin/axie_sold_histories?order_by_desc=price&cls=' + cls + '&parts=' + parts.join(',');
+        let orders_url = 'admin/axie_orders?cls=' + cls + '&parts=' + parts.join(',');
+
+        table.render({
+          elem: '#table_similar_axie_sales'
+          , url: sales_url
+          , page: true
+          , limit: 5
+          , cols: [[
+            {title: '成交时间', field: 'trans_time', minWidth: 180, align: "left"}
+            , {title: '种族', field: 'class', width: 100, align: "center"}
+            , {title: 'AxieId', templet: '#tpl_similar_axie_id', width: 100, align: "left"}
+            , {title: 'Axie', templet: '#tpl_similar_axie_image', width: 100, align: "center"}
+            , {title: '成交价格(weth)', field: 'price', width: 150, align: "left"}
+            , {title: 'Buyer', templet: '#tpl_buyer', width: 100, align: "left"}
+            , {title: 'Seller', templet: '#tpl_seller', width: 100, align: "left"}
+          ]]
+        });
+
+        table.render({
+          elem: '#table_similar_axie_orders'
+          , url: orders_url
+          , page: true
+          , limit: 5
+          , cols: [[
+            {title: '挂单时间', field: 'started_at', minWidth: 180, align: "left"}
+            , {title: '种族', field: 'cls', width: 100, align: "center"}
+            , {title: 'AxieId', templet: '#tpl_similar_axie_id', width: 100, align: "left"}
+            , {title: 'Axie', templet: '#tpl_similar_axie_image', width: 100, align: "center"}
+            , {title: '挂单价格(weth)', field: 'current_price', width: 150, align: "left"}
+            , {title: '最低价格', field: 'ended_price', width: 100, align: "left"}
+            , {title: '截止时间', field: 'ended_at', width: 180, align: "left"}
+          ]]
+        });
+      }
+
+      //搜索
+      form.on('submit(submit_similar_axie_search)', function (d) {
+        loadData(d.field.cls, d.field.parts.split(','))
+        return false;
+      });
+      //重置
+      form.on('submit(reset_similar_axie_search)', function (d) {
+        $("select[name='cls']").val(cls);
+        partsObj.setValue(parts)
+        form.render()
+        loadData(cls, parts)
+        return false;
+      });
+
+    })
+  }
+</script>

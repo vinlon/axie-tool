@@ -8,7 +8,7 @@ use Http;
 
 class AxieService
 {
-    /** 获取Axie列表 */
+    /** 根据市场链接获取Axie列表 */
     public function listAxiesByMarketPlaceUrl($url, $from, $size)
     {
         $operationName = 'GetAxieBriefList';
