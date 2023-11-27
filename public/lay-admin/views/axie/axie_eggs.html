@@ -1,0 +1,97 @@
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a><cite>AxieOrigin</cite></a>
+    <a><cite>繁殖记录</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-card">
+    <div class="layadmin-search">
+      <form class="layui-form" method="post" lay-filter="form_query_monitor_search">
+        <script type="text/html" template lay-done="layui.data.done()">
+          <div class="layui-inline">
+            <div class="layui-form-label">关键字搜索</div>
+            <div class="layui-input-inline">
+              <input type="text" name="keyword" value="{{layui.router().search.keyword || ''}}" class="layui-input"
+                     placeholder="请输入关键字">
+            </div>
+          </div>
+          <div class="layui-inline layui-btn-group">
+            <button type="submit" lay-submit class="layui-btn" lay-filter="submit_query_monitor_search">
+              <i class="layui-icon layui-icon-search"></i>查询
+            </button>
+            <button type="submit" lay-submit class="layui-btn layui-btn-warm"
+                    lay-filter="reset_query_monitor_search">
+              <i class="layui-icon layui-icon-close"></i>重置
+            </button>
+            <button id="btn_add_query_monitor" class="layui-btn layui-btn-normal">
+              <i class="layui-icon layui-icon-add-1"></i>添加
+            </button>
+          </div>
+        </script>
+      </form>
+    </div>
+    <div class="layui-card-body">
+      <div id="table_query_monitor"></div>
+
+      <script type="text/html" id="tpl_matron">
+        <image src="https://axiecdn.axieinfinity.com/axies/{{d.matron_id}}/axie/axie-full-transparent.png"
+               style="width:70px;margin-right: -10px;" alt="{{d.matron_id}}"></image>
+      </script>
+      <script type="text/html" id="tpl_sire">
+        <image src="https://axiecdn.axieinfinity.com/axies/{{d.sire_id}}/axie/axie-full-transparent.png"
+               style="width:70px;margin-right: -10px;" alt="{{d.sire_id}}"></image>
+      </script>
+      <script type="text/html" id="tpl_owner">
+        <a class="layui-table-link" href="https://app.axieinfinity.com/profile/ronin:{{d.owner_address.substr(2)}}/axies/"
+           target="_blank">
+          {{ d.owner_name }}
+        </a>
+      </script>
+    </div>
+  </div>
+</div>
+
+<script>
+  layui.data.done = function () {
+
+    layui.use(['fox_table'], function () {
+      let $ = layui.$
+        , fox_table = layui.fox_table
+        , admin = layui.admin
+        , form = layui.form
+        , view = layui.view
+
+      let resourceUrl = 'admin/axie_eggs'
+
+      // 列表查询
+      fox_table.render({
+        id: 'table_query_monitor'
+        , url: resourceUrl
+        , cols: [[
+          {title: '繁殖时间', field: 'birth_time', width: 180}
+          , {title: '用户', templet: '#tpl_owner', minWidth: 100, align: "left"}
+          , {title: 'Matron种族', field: 'matron_class', width: 120, align: "center"}
+          , {title: 'Matron', templet: '#tpl_matron', width: 100, align: "center"}
+          , {title: 'Sire种族', field: 'sire_class', width: 100, align: "center"}
+          , {title: 'Sire', templet: '#tpl_sire', width: 100, align: "center"}
+          , {title: 'AxieId', field: 'axie_id', width: 100, align: "left"}
+        ]]
+      });
+
+      //搜索
+      form.on('submit(submit_query_monitor_search)', function (d) {
+        fox_table.reload(d.field);
+        return false;
+      });
+      //重置
+      form.on('submit(reset_query_monitor_search)', function (d) {
+        $("input[name='keyword']").val('');
+        fox_table.reload({});
+        return false;
+      });
+    })
+  }
+</script>
+

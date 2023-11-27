@@ -12,6 +12,7 @@ $sidebars->add(
         ->add(SideBar::create('axie_origin.auto_purchase', '自动购买')->jumpTo('axie/auto_purchase'))
         ->add(SideBar::create('axie_origin.tokens', 'Rune&Charm')->jumpTo('axie/tokens'))
         ->add(SideBar::create('axie_origin.axie_sales', 'Axie成交记录')->jumpTo('axie/axie_sales'))
+        ->add(SideBar::create('axie_origin.axie_eggs', '繁殖记录')->jumpTo('axie/axie_eggs'))
         ->add(SideBar::create('axie_origin.leaderboard', '排行榜')->jumpTo('axie/leaderboard'))
         ->add(SideBar::create('axie_origin.battle_history', '战斗记录')->jumpTo('axie/battle_history'))
 );

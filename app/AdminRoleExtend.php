@@ -15,7 +15,13 @@ class AdminRoleExtend extends AdminRole
     public function getMenuIds()
     {
         $roleMenus = [
-            self::TEST => ['axie_origin.tokens', 'axie_origin.axie_sales', 'axie_origin.leaderboard', 'axie_origin.battle_history'],
+            self::TEST => [
+                'axie_origin.tokens',
+                'axie_origin.axie_sales',
+                'axie_origin.leaderboard',
+                'axie_origin.battle_history',
+                'axie_origin.axie_eggs',
+            ],
         ];
 
         return Arr::get($roleMenus, $this->value, []);
