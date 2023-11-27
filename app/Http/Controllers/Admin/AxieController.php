@@ -126,7 +126,14 @@ class AxieController extends Controller
     /** 查询繁殖数据列表 */
     public function listEggs()
     {
-        $query = AxieEggs::query()->orderByDesc('axie_id');
+        $query = AxieEggs::query()
+            ->when(request()->keyword, function ($q) {
+                return $q->where(function ($q1) {
+                    $likeVal = '%' . request()->keyword . '%';
+                    return $q1->where('owner_name', 'like', $likeVal)->orWhere('owner_address', 'like', $likeVal);
+                });
+            })
+            ->orderByDesc('axie_id');
         return paginate_result($query);
     }
 }
