@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('axie:sync_sold_history')->everyMinute(); //同步Axie销售记录
         $schedule->command('axie:parse_gene')->everyMinute(); //基因提取
         $schedule->command('axie:query_gene')->everyMinute(); //基因查询
-        $schedule->command('axie:sync_eggs')->everyFiveMinutes(); //同步AxieEgg数据
+        $schedule->command('axie:sync_eggs')->everyMinute(); //同步AxieEgg数据
         $schedule->command('axie:sync_egg_parents')->everyMinute(); //同步AxieEggParents数据
         $schedule->command('team:label')->everyMinute(); //标记队伍类型
 
