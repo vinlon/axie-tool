@@ -8,6 +8,23 @@ use Http;
 
 class AxieService
 {
+
+    public function listAxieEggs($from, $size)
+    {
+        $operationName = 'GetAxieBriefList';
+        $query = 'query GetAxieBriefList($auctionType: AuctionType, $criteria: AxieSearchCriteria, $from: Int, $sort: SortBy, $size: Int, $owner: String) {axies(auctionType: $auctionType criteria: $criteria from: $from sort: $sort size: $size owner: $owner ) {total results {...AxieBrief } __typename } } fragment AxieBrief on Axie {id owner matronId sireId birthDate ownerProfile {name accountId} }';
+        $variables = [
+            'from' => $from,
+            'size' => $size,
+            'sort' => 'IdDesc',
+            'auctionType' => 'All',
+            'criteria' => [
+                'stages' => [1]
+            ]
+        ];
+        return $this->graphql($operationName, $query, $variables);
+    }
+
     /** 根据市场链接获取Axie列表 */
     public function listAxiesByMarketPlaceUrl($url, $from, $size)
     {
@@ -24,6 +41,31 @@ class AxieService
             $variables['criteria'] = $criteria;
         }
         return $this->graphql($operationName, $query, $variables);
+    }
+
+    /** 根据ID列表批量查询axie详情 */
+    public function listAxies($axieIds)
+    {
+        if (count($axieIds) == 0) {
+            return [];
+        }
+        $axieBriefFragment = 'fragment AxieBrief on Axie { id class breedCount title parts { id name class type specialGenes } }';
+        $idPieces = [];
+        $resultPieces = [];
+        $variables = [];
+        foreach ($axieIds as $axieId) {
+            $idPieces[] = '$p' . $axieId . ':ID!';
+            $resultPieces[] = 'r' . $axieId . ': axie(axieId: $p' . $axieId . ') { ...AxieBrief }';
+            $variables['p' . $axieId] = strval($axieId);
+        }
+        $operationName = 'GetAxieBriefList';
+        $query = 'query ' . $operationName . '(' . implode(',', $idPieces) . ') {' . implode(' ', $resultPieces) . '} ' . $axieBriefFragment;
+        $result = [];
+        $list = $this->graphql($operationName, $query, $variables);
+        foreach ($axieIds as $axieId) {
+            $result[$axieId] = Arr::get($list, 'r' . $axieId);
+        }
+        return $result;
     }
 
     /** 获取单个Axie详情 */

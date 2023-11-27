@@ -20,17 +20,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('query:purchase')->everyMinute()->runInBackground(); //自动购买axie, 买分钟执行一次
-
+//        $schedule->command('query:purchase')->everyMinute()->runInBackground(); //自动购买axie, 买分钟执行一次
         $schedule->command('query:monitor')->everyFiveMinutes(); //监测axie价格及数量
         $schedule->command('land:monitor')->everyThirtyMinutes(); //监测Land价格
-
-        $schedule->command('purchase:confirm')->everyMinute(); //确认Axie购买结果
+//        $schedule->command('purchase:confirm')->everyMinute(); //确认Axie购买结果
 
         $schedule->command('erc1155:sync_sold_history')->everyMinute(); //Rune&Charm销售记录
         $schedule->command('axie:sync_sold_history')->everyMinute(); //同步Axie销售记录
         $schedule->command('axie:parse_gene')->everyMinute(); //基因提取
         $schedule->command('axie:query_gene')->everyMinute(); //基因查询
+        $schedule->command('axie:sync_eggs')->everyFiveMinutes(); //同步AxieEgg数据
+        $schedule->command('axie:sync_egg_parents')->everyMinute(); //同步AxieEggParents数据
         $schedule->command('team:label')->everyMinute(); //标记队伍类型
 
         $schedule->command('horizon:snapshot')->everyFiveMinutes();

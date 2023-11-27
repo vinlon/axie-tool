@@ -84,6 +84,27 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\AxieEggs
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $axie_id
+ * @property string $birth_time 出生时间
+ * @property int $matron_id 母亲ID
+ * @property int $sire_id 父亲ID
+ * @property string $owner_address 所有人地址
+ * @property string $owner_name 所有人昵称
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AxieEggs newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AxieEggs newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AxieEggs query()
+ * @mixin \Eloquent
+ */
+	class IdeHelperAxieEggs {}
+}
+
+namespace App\Models{
+/**
  * App\Models\AxieSoldHistory
  *
  * @property int $id
