@@ -58,7 +58,7 @@ class QueryGeneCommand extends Command
                 continue;
             }
             $axieInfo = $axieService->getAxie($axie->axie_id);
-            $axie->class = strtolower(\Arr::get($axieInfo, 'class'));
+            $axie->class = \Arr::get($axieInfo, 'class');
             foreach (\Arr::get($axieInfo, 'parts', []) as $part) {
                 $partType = strtolower(\Arr::get($part, 'type'));
                 $axie->setAttribute($partType . '_part_id', \Arr::get($part, 'id'));

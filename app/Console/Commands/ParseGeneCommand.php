@@ -63,7 +63,7 @@ class ParseGeneCommand extends Command
             try {
                 $geneStr = $axie->gene;
                 $gene = new AxieGene($geneStr, HexType::Bit512);
-                $axie->class = $gene->getCls();
+                $axie->class = ucfirst($gene->getCls());
                 foreach (['eyes', 'ears', 'horn', 'mouth', 'back', 'tail'] as $partType) {
                     $axie->setAttribute($partType . '_part_id', \Arr::get($gene->getGenes(), $partType . '.d.partId'));
                     $axie->setAttribute($partType . '_part_name', \Arr::get($gene->getGenes(), $partType . '.d.name'));

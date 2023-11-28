@@ -17,6 +17,7 @@
           <option value="Plant">Plant</option>
           <option value="Mech">Mech</option>
           <option value="Dusk">Dusk</option>
+          <option value="Dawn">Dawn</option>
         </select>
       </div>
       <div class="layui-inline">
@@ -34,15 +35,15 @@
   </form>
   <div class="layui-tab" lay-filter="sales_and_orders">
     <ul class="layui-tab-title">
-      <li class="layui-this" lay-id="sales">Sales</li>
-      <li lay-id="orders">Orders</li>
+      <li lay-id="orders">在售</li>
+      <li class="layui-this" lay-id="sales">成交</li>
     </ul>
     <div class="layui-tab-content">
-      <div class="layui-tab-item layui-show">
-        <div id="table_similar_axie_sales" lay-filter="table_similar_axie_sales"></div>
-      </div>
       <div class="layui-tab-item">
         <div id="table_similar_axie_orders" lay-filter="table_similar_axie_orders"></div>
+      </div>
+      <div class="layui-tab-item layui-show">
+        <div id="table_similar_axie_sales" lay-filter="table_similar_axie_sales"></div>
       </div>
     </div>
   </div>
@@ -97,7 +98,7 @@
       loadData(cls, parts)
 
       function loadData(cls, parts) {
-        let sales_url = 'admin/axie_sold_histories?order_by_desc=price&cls=' + cls + '&parts=' + parts.join(',');
+        let sales_url = 'admin/axie_sold_histories?cls=' + cls + '&parts=' + parts.join(',');
         let orders_url = 'admin/axie_orders?cls=' + cls + '&parts=' + parts.join(',');
 
         table.render({

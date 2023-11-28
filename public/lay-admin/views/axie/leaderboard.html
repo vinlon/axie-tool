@@ -67,7 +67,7 @@
       <script type="text/html" id="tpl_team">
         {{# if (d.team && d.team.axies) { }}
         {{# layui.each(d.team.axies, function(index, axie){  }}
-        <a href="https://app.axieinfinity.com/marketplace/axies/{{axie.axie_id}}" target="_blank">
+        <a class="layui-table-link" lay-tips="点击查找相似axie" lay-event="similar_{{index}}" target="_blank">
           {{# if (axie.axie_type === 'starter') { }}
           <image src="https://axies.io/images/starter-axies/{{axie.axie_id}}.png"
                  style="width:70px; margin-left: -10px" alt="{{axie.axie_id}}"></image>
@@ -107,6 +107,7 @@
         , admin = layui.admin
         , fox_table = layui.fox_table
         , form = layui.form
+        , view = layui.view
 
       $('select[name="team_label"]').val(layui.router().search.status);
       let resourceUrl = 'admin/leaderboards'
@@ -136,7 +137,16 @@
           , {title: '最近活跃时间', templet: '#tpl_active', width: 180, align: "center"}
         ]]
       })
-      ;
+
+      //监听操作栏
+      fox_table.toolbar(function (obj) {
+        let data = obj.data;
+        if (obj.event.startsWith('similar')) {
+          let idx = obj.event.replace('similar_', '')
+            , axie = obj.data.team.axies[idx]
+          showSimilarAxies(axie)
+        }
+      })
 
       //搜索
       form.on('submit(submit_leaderboard_search)', function (d) {
@@ -157,6 +167,22 @@
         fox_table.reload({});
         return false;
       });
+
+      //显示弹窗
+      function showSimilarAxies(data) {
+        data = data || {};
+        let minWidth = '1000px';
+        let minHeight = '600px';
+        admin.popup({
+          title: '查看相似的Axie'
+          , area: [minWidth, minHeight]
+          , id: 'popup_similar_axies'
+          , success: function (layero, index) {
+            view(this.id).render('axie/similar_axies', data).done(function () {
+            })
+          }
+        })
+      }
     })
   }
 </script>

@@ -32,6 +32,7 @@
                   <option value="Plant">Plant</option>
                   <option value="Mech">Mech</option>
                   <option value="Dusk">Dusk</option>
+                  <option value="Dawn">Dawn</option>
                 </select>
               </div>
             </div>
@@ -86,7 +87,7 @@
     <div class="layui-card-body">
       <div id="table_axie_sales"></div>
       <script type="text/html" id="tpl_axie_id">
-        <a class="layui-table-link" lay-event="similar" target="_blank">
+        <a class="layui-table-link" lay-tips="点击查找相似axie" lay-event="similar" target="_blank">
           {{d.axie_id}}
         </a>
       </script>
@@ -103,8 +104,10 @@
         </a>
       </script>
       <script type="text/html" id="tpl_axie_image">
+        <a class="layui-table-link" href="https://app.axieinfinity.com/marketplace/axies/{{d.axie_id}}" target="_blank">
         <image src="https://axiecdn.axieinfinity.com/axies/{{d.axie_id}}/axie/axie-full-transparent.png"
                style="width:70px;margin-right: -10px;" alt="{{d.axie_id}}"></image>
+        </a>
         {{# if (d.is_mystic) { }}
         <span class="layui-badge" style="background-color: #b04dff">Mystic</span>
         {{# } }}
