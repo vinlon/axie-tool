@@ -7,7 +7,7 @@
     </div>
     <div class="layui-row" style="padding-top: 10px">
       <div class="layui-input-inline" style="width: 100px">
-        <select class="layui-select" name="cls">
+        <select class="layui-select" name="similar_cls">
           <option value="">不限种族</option>
           <option value="Aquatic">Aquatic</option>
           <option value="Bug">Bug</option>
@@ -68,7 +68,7 @@
         , parts = []
         , partsObj = null
 
-      $("select[name='cls']").val(obj.class)
+      $("select[name='similar_cls']").val(obj.class)
       form.render()
       layui.each(['eyes', 'ears', 'horn', 'mouth', 'back', 'tail'], function (idx, part) {
         parts.push(obj[part + '_part_id'])
@@ -136,12 +136,12 @@
 
       //搜索
       form.on('submit(submit_similar_axie_search)', function (d) {
-        loadData(d.field.cls, d.field.parts.split(','))
+        loadData(d.field.similar_cls, d.field.parts.split(','))
         return false;
       });
       //重置
       form.on('submit(reset_similar_axie_search)', function (d) {
-        $("select[name='cls']").val(cls);
+        $("select[name='similar_cls']").val(cls);
         partsObj.setValue(parts)
         form.render()
         loadData(cls, parts)
