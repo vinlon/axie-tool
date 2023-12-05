@@ -133,7 +133,7 @@ class BreedController extends Controller
 
     private function getAxieEggsQuery()
     {
-        $dayRange = request()->get('day_range', 7);
+        $dayRange = request()->get('day_range', 7) || 7;
         $endTime = Carbon::now()->clone();
         $startTime = Carbon::now()->clone()->subDays($dayRange);
         return AxieEggs::query()
