@@ -1,0 +1,173 @@
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a><cite>AxieOrigin</cite></a>
+    <a layadmin-event="back">返回排行榜</a>
+  </div>
+</div>
+<div class="layui-card">
+  <div class="layadmin-search">
+    <form class="layui-form" method="post" lay-filter="form_breed_summary_search">
+      <script type="text/html" template lay-done="layui.data.done()">
+        <div class="layui-inline">
+          <div class="layui-form-label">关键字搜索</div>
+          <div class="layui-input-inline">
+            <input type="text" name="keyword" value="{{layui.router().search.keyword || ''}}" class="layui-input"
+                   placeholder="请输入关键字">
+          </div>
+        </div>
+        <div class="layui-inline">
+          <div class="layui-form-label" lay-tips="父母的BreedCount之和">时间范围</div>
+          <div class="layui-input-inline" style="width: 70px">
+            <select name="day_range">
+              <option value="">不限</option>
+              <option value="1">1天内</option>
+              <option value="2">2天内</option>
+              <option value="3">3天内</option>
+              <option value="4">4天内</option>
+              <option value="5">5天内</option>
+              <option value="6">6天内</option>
+              <option value="7">7天内</option>
+            </select>
+          </div>
+        </div>
+        <div class="layui-inline">
+          <div class="layui-form-label" lay-tips="父母的繁殖次数之和">繁殖难度</div>
+          <div class="layui-input-inline" style="width: 70px">
+            <select name="min_breed_count">
+              <option value="">不限</option>
+            </select>
+          </div>
+          <div class="layui-input-inline">~</div>
+          <div class="layui-input-inline" style="width: 70px">
+            <select name="max_breed_count">
+              <option value="">不限</option>
+            </select>
+          </div>
+        </div>
+        <div class="layui-inline layui-btn-group">
+          <button type="submit" lay-submit class="layui-btn" lay-filter="submit_breed_summary_search">
+            <i class="layui-icon layui-icon-search"></i>查询
+          </button>
+          <button type="submit" lay-submit class="layui-btn layui-btn-warm"
+                  lay-filter="reset_breed_summary_search">
+            <i class="layui-icon layui-icon-close"></i>重置
+          </button>
+        </div>
+      </script>
+    </form>
+  </div>
+  <div class="layui-card">
+    <div class="layui-card-body">
+      <div class="layui-tab" lay-filter="summary">
+        <ul class="layui-tab-title">
+          <li class="layui-this" lay-id="top_users">按用户统计</li>
+          <li lay-id="top_parts">按部位统计</li>
+          <li lay-id="top_class">按种族统计</li>
+        </ul>
+        <div class="layui-tab-content">
+          <div class="layui-tab-item layui-show">
+            <div id="table_user_summary" lay-filter="table_user_summary"></div>
+          </div>
+          <div class="layui-tab-item">
+            <div id="table_part_summary" lay-filter="table_part_summary"></div>
+          </div>
+          <div class="layui-tab-item">
+            <div id="table_class_summary" lay-filter="table_class_summary"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  layui.data.done = function () {
+
+    layui.use([], function () {
+      let $ = layui.$
+        , table = layui.table
+        , form = layui.form
+      for (let i = 2; i <= 14; i++) {
+        let opt_min = new Option(i, i);
+        let opt_max = new Option(i, i);
+        let search = layui.router().search;
+        if (i == search.min_breed_count) {
+          opt_min.selected = true;
+        }
+        if (i == search.max_breed_count) {
+          opt_max.selected = true;
+        }
+        $('select[name="max_breed_count"]').append(opt_max)
+        $('select[name="min_breed_count"]').append(opt_min)
+      }
+      form.render()
+      loadData()
+
+      //搜索
+      form.on('submit(submit_breed_summary_search)', function (d) {
+        loadData(d.field)
+        return false;
+      });
+      //重置
+      form.on('submit(reset_breed_summary_search)', function (d) {
+        $("input[name='keyword']").val('');
+        $("select[name='min_breed_count']").val('');
+        $("select[name='max_breed_count']").val('');
+        $("select[name='day_range']").val('');
+        form.render()
+        loadData([])
+        return false;
+      });
+
+      function loadData(query) {
+        query = query || {}
+        let query_string = '?1=1';
+        if (query.keyword) {
+          query_string += '&keyword=' + query.keyword
+        }
+        if (query.min_breed_count) {
+          query_string += '&min_breed_count=' + query.min_breed_count
+        }
+        if (query.max_breed_count) {
+          query_string += '&max_breed_count=' + query.max_breed_count
+        }
+        if (query.day_range) {
+          query_string += '&day_range=' + query.day_range
+        }
+        //用户统计
+        table.render({
+          elem: '#table_user_summary'
+          , url: 'admin/breed_user_summary' + query_string
+          , cols: [[
+            {field: 'owner_name', title: '用户名', width: 400},
+            {field: 'owner_address', title: '用户地址', minWidth: 100},
+            {field: 'total', title: '繁殖次数', width: 100},
+            {field: 'percentage', title: '占比', width: 100}
+          ]]
+        });
+        //部位统计
+        table.render({
+          elem: '#table_part_summary'
+          , url: 'admin/breed_part_summary' + query_string
+          , width: 500
+          , cols: [[
+            {field: 'part', title: '部位', minWidth: 200},
+            {field: 'total', title: '繁殖次数', width: 100},
+            {field: 'percentage', title: '占比', width: 100}
+          ]]
+        });
+        //种族统计
+        table.render({
+          elem: '#table_class_summary'
+          , url: 'admin/breed_class_summary' + query_string
+          , width: 500
+          , cols: [[
+            {field: 'class', title: '种族', minWidth: 200},
+            {field: 'total', title: '繁殖次数', width: 100},
+            {field: 'percentage', title: '占比', width: 100}
+          ]]
+        });
+      }
+    })
+  }
+</script>

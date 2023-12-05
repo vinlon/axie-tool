@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AxieBodyPart;
-use App\Models\AxieEggs;
 use App\Models\AxieSoldHistory;
 use App\Services\AxieService;
 use Carbon\Carbon;
@@ -121,19 +120,5 @@ class AxieController extends Controller
             $history->price_usd = number_format($history->price_usd, 2);
             return $history;
         });
-    }
-
-    /** 查询繁殖数据列表 */
-    public function listEggs()
-    {
-        $query = AxieEggs::query()
-            ->when(request()->keyword, function ($q) {
-                return $q->where(function ($q1) {
-                    $likeVal = '%' . request()->keyword . '%';
-                    return $q1->where('owner_name', 'like', $likeVal)->orWhere('owner_address', 'like', $likeVal);
-                });
-            })
-            ->orderByDesc('axie_id');
-        return paginate_result($query);
     }
 }

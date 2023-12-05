@@ -16,7 +16,10 @@ Route::middleware(['auth:lay-admin', AdminResponse::class])->group(function () {
     Route::get('axie_body_parts', 'AxieController@listParts');
     Route::get('axie_sold_histories', 'AxieController@listSoldHistories');
     Route::get('axie_orders', 'AxieController@listOrders');
-    Route::get('axie_eggs', 'AxieController@listEggs');
+    Route::get('axie_eggs', 'BreedController@listEggs');
+    Route::get('breed_user_summary', 'BreedController@breedUserSummary');
+    Route::get('breed_class_summary', 'BreedController@breedClassSummary');
+    Route::get('breed_part_summary', 'BreedController@breedPartSummary');
 
     # Token SoldHistory
     Route::get('erc1155_sold_summary', 'SoldHistoryController@getSoldSummary');
