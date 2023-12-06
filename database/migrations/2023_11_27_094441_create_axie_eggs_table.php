@@ -19,7 +19,7 @@ class CreateAxieEggsTable extends Migration
             $table->integer('axie_id')->index()->comment('AxieId');
             $table->dateTime('birth_time')->comment('出生时间');
             $table->string('owner_address', 64)->index()->comment('所有人地址');
-            $table->string('owner_name', 32)->comment('所有人昵称');
+            $table->string('owner_name', 64)->comment('所有人昵称');
             $table->integer('matron_id')->index()->comment('母亲ID');
             $table->integer('sire_id')->index()->comment('父亲ID');
             $table->string('matron_class')->nullable();
