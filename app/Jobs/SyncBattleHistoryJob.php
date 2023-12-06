@@ -47,7 +47,7 @@ class SyncBattleHistoryJob implements ShouldQueue
     {
         $this->axieService = $axieService;
         try {
-            $histories = $mavisService->listPvpBattleHistories($this->userId, 0, 10);
+            $histories = $mavisService->listPvpBattleHistoriesV1($this->userId, 1, 10);
         } catch (\Exception $e) {
             $this->release(5);
         }

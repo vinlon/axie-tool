@@ -22,15 +22,26 @@ class MavisService
         ])->json('_items');
     }
 
-    /** 查询战斗日志 */
-    public function listPvpBattleHistories($userId, $page = 1, $limit = 5)
+    /** 查询战斗日志(V1) */
+    public function listPvpBattleHistoriesV1($userId, $page = 1, $limit = 5)
     {
-        return $this->get('x/origin/battle-history', [
+        $resp = $this->get("origin/v1/community/users/{$userId}/battle-logs", [
             'page' => $page,
             'limit' => $limit,
             'type' => 'pvp',
-            'client_id' => $userId,
-        ])->json('battles');
+        ]);
+        return $resp->json('battles');
+    }
+
+    /** 查询战斗日志(V2) */
+    public function listPvpBattleHistoriesV2($userId, $page = 1, $limit = 5)
+    {
+        $resp = $this->get("origin/v2/community/users/{$userId}/battle-logs", [
+            'page' => $page,
+            'limit' => $limit,
+            'type' => 'pvp',
+        ]);
+        return $resp->json('_items');
     }
 
     /** 查询所有 runes, charms, crafting materials, free starter Axies, etc */
