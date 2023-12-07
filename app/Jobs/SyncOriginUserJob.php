@@ -54,7 +54,10 @@ class SyncOriginUserJob implements ShouldQueue
         }
         $address = \Arr::get($profile, 'addresses.ronin');
         $rnsName = $roninService->getRnsNameFromAddress($address);
-        $user = new OriginUser();
+        $user = OriginUser::where('ronin_address', $address)->first();
+        if (!$user) {
+            $user = new OriginUser();
+        }
         $user->user_id = \Arr::get($profile, 'accountId');
         $user->profile_name = \Arr::get($profile, 'name');
         $user->rns_name = $rnsName;

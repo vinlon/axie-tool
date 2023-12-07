@@ -74,7 +74,6 @@ class SyncLeaderboardJob implements ShouldQueue
                 $user->nick_name = $userName;
                 $user->save();
             }
-
         }
     }
 }
