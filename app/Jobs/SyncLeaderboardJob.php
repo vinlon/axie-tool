@@ -69,7 +69,7 @@ class SyncLeaderboardJob implements ShouldQueue
             /** @var OriginUser $user */
             $user = OriginUser::query()->where('user_id', $userId)->first();
             if (!$user) {
-                SyncOriginUserJob::dispatch($userId, $userName);
+                SyncOriginUserJob::dispatch($userId, $userName, "");
             }
             $user->nick_name = $userName;
             $user->save();
