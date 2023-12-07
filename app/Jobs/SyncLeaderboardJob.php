@@ -3,10 +3,10 @@
 namespace App\Jobs;
 
 use App\Models\Leaderboard;
+use App\Models\OriginUser;
 use App\Services\MavisService;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -52,19 +52,27 @@ class SyncLeaderboardJob implements ShouldQueue
             $item = \Arr::get($list, $userId, new Leaderboard());
             if ($item->vstar != $vstar) {
                 //如果积分发生变化，则同步战斗记录
-                $delay = rand(0, 100);
                 $cacheKey = 'user_syncing_' . $userId;
                 if (!\Cache::get($cacheKey, false)) {
-                    SyncBattleHistoryJob::dispatch($userId)->delay($delay);
+                    SyncBattleHistoryJob::dispatch($userId);
                     \Cache::set($cacheKey, true, 120);
                 }
             }
             //更新排行榜数据
+            $userName = \Arr::get($row, 'name');
             $item->user_id = $userId;
-            $item->user_name = \Arr::get($row, 'name');
+            $item->user_name = $userName;
             $item->vstar = $vstar;
             $item->updated_at = now();
             $item->save();
+            //同步用户数据
+            /** @var OriginUser $user */
+            $user = OriginUser::query()->where('user_id', $userId)->get();
+            if (!$user) {
+                SyncOriginUserJob::dispatch($userId, $userName);
+            }
+            $user->nick_name = $userName;
+            $user->save();
         }
     }
 }

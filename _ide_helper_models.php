@@ -89,12 +89,28 @@ namespace App\Models{
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $axie_id
+ * @property int $axie_id AxieId
  * @property string $birth_time 出生时间
+ * @property string $owner_address 所有人地址
+ * @property string|null $owner_name
  * @property int $matron_id 母亲ID
  * @property int $sire_id 父亲ID
- * @property string $owner_address 所有人地址
- * @property string $owner_name 所有人昵称
+ * @property string|null $matron_class
+ * @property string|null $matron_breed_count
+ * @property string|null $matron_eyes_part_id
+ * @property string|null $matron_ears_part_id
+ * @property string|null $matron_horn_part_id
+ * @property string|null $matron_mouth_part_id
+ * @property string|null $matron_back_part_id
+ * @property string|null $matron_tail_part_id
+ * @property string|null $sire_class
+ * @property string|null $sire_breed_count
+ * @property string|null $sire_eyes_part_id
+ * @property string|null $sire_ears_part_id
+ * @property string|null $sire_horn_part_id
+ * @property string|null $sire_mouth_part_id
+ * @property string|null $sire_back_part_id
+ * @property string|null $sire_tail_part_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AxieEggs newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AxieEggs newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AxieEggs query()
@@ -327,6 +343,26 @@ namespace App\Models{
  * @mixin \Eloquent
  */
 	class IdeHelperLeaderboard {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\OriginUser
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $user_id Origin游戏ID
+ * @property string $ronin_address RONIN钱包地址
+ * @property string $rns_name RNS域名
+ * @property string|null $nick_name 游戏昵称
+ * @property string $profile_name 账号昵称
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OriginUser newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OriginUser newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\OriginUser query()
+ * @mixin \Eloquent
+ */
+	class IdeHelperOriginUser {}
 }
 
 namespace App\Models{

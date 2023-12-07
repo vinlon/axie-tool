@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Constant;
+use Http;
+use function Sodium\add;
 
 class RoninService
 {
@@ -40,6 +42,13 @@ class RoninService
     public function getTransactionByHash($hash)
     {
         return $this->request('eth_getTransactionByHash', [$hash]);
+    }
+
+    /** 根据地址获取RNS域名（使用第三方接口）**/
+    public function getRnsNameFromAddress($address)
+    {
+        $url = 'https://rns.rest/lookup/' . format_address($address);
+        return Http::get($url)->json("name", "");
     }
 
 

@@ -9,6 +9,28 @@ use Http;
 class AxieService
 {
 
+    public function getProfileByUserId($userId)
+    {
+        $operationName = 'getProfileWithUserId';
+        $query = 'query getProfileWithUserId($id: UUID!) { publicProfile(id: $id) { name accountId addresses { ronin } } }';
+        $variables = [
+            'id' => $userId,
+        ];
+        $resp = $this->graphql($operationName, $query, $variables);
+        return Arr::get($resp, 'publicProfile');
+    }
+
+    public function getProfileByAddress($address)
+    {
+        $operationName = 'getProfileWithAddress';
+        $query = 'query getProfileWithAddress($address: String) {publicProfileWithRoninAddress(roninAddress: $address) {name, accountId addresses {ronin} } }';
+        $variables = [
+            'address' => format_address($address),
+        ];
+        $resp = $this->graphql($operationName, $query, $variables);
+        return Arr::get($resp, 'publicProfileWithRoninAddress');
+    }
+
     public function listAxieEggs($from, $size)
     {
         $operationName = 'GetAxieBriefList';

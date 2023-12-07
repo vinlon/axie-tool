@@ -6,6 +6,7 @@ use App\Models\BattleHistory;
 use App\Models\FighterAxie;
 use App\Models\FighterTeam;
 use App\Models\Leaderboard;
+use App\Models\OriginUser;
 use App\Services\AxieService;
 use App\Services\MavisService;
 use Carbon\Carbon;
@@ -53,7 +54,7 @@ class SyncBattleHistoryJob implements ShouldQueue
         }
         //查询已存在的battle
         $existBattleIds = BattleHistory::query()->whereIn('battle_uuid', \Arr::pluck($histories, 'battle_uuid'))->pluck('battle_uuid')->toArray();
-        foreach (array_reverse($histories) as $index => $history) {
+        foreach (array_reverse($histories) as $history) {
             $uuid = \Arr::get($history, 'battle_uuid');
             if (in_array($uuid, $existBattleIds)) {
                 continue;
@@ -87,8 +88,9 @@ class SyncBattleHistoryJob implements ShouldQueue
             $first = Leaderboard::query()->where('user_id', $firstFighterId)->first();
             $second = Leaderboard::query()->where('user_id', $secondFighterId)->first();
 
+            //如果是排名模式
             if ($battleType == 'ranked_pvp') {
-                //如果是排名模式，则更新last_team_id和最近活跃时间
+                //更新last_team_id和最近活跃时间
                 if ($first && ($first->last_active_time == null || Carbon::parse($first->last_active_time)->lt($battle->battle_end_time))) {
                     $first->last_team_id = $battle->first_fighter_team_id;
                     $first->last_active_time = $battle->battle_end_time;

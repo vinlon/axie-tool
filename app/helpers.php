@@ -42,6 +42,17 @@ function toWei($ethPrice)
     return intval($weiPrice);
 }
 
+function format_address($address)
+{
+    if (\Str::startsWith($address, 'ronin:')) {
+        $address = str_replace('ronin:', '0x', $address);
+    }
+    if (!\Str::startsWith($address, '0x')) {
+        $address = '0x' . $address;
+    }
+    return $address;
+}
+
 /**
  * 除法计算(处理分母为0的情况).
  *
