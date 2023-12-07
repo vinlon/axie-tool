@@ -67,7 +67,7 @@ class SyncLeaderboardJob implements ShouldQueue
             $item->save();
             //同步用户数据
             /** @var OriginUser $user */
-            $user = OriginUser::query()->where('user_id', $userId)->get();
+            $user = OriginUser::query()->where('user_id', $userId)->first();
             if (!$user) {
                 SyncOriginUserJob::dispatch($userId, $userName);
             }
