@@ -48,7 +48,8 @@ class RoninService
     public function getRnsNameFromAddress($address)
     {
         $url = 'https://rns.rest/lookup/' . format_address($address);
-        return Http::withOptions(['verify' => false])->get($url)->json("name", "");
+        $rnsName = Http::withOptions(['verify' => false])->get($url)->json("name", "");
+        return empty($rnsName) ? "" : $rnsName;
     }
 
 
