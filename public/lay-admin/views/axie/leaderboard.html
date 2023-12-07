@@ -12,9 +12,9 @@
         <script type="text/html" template lay-done="layui.data.done()">
           <div class="layui-inline">
             <div class="layui-form-label">关键字搜索</div>
-            <div class="layui-input-inline">
+            <div class="layui-input-inline" style="width: 250px">
               <input type="text" name="keyword" value="{{decodeURIComponent(layui.router().search.keyword || '')}}"
-                     class="layui-input" placeholder="请输入用户名">
+                     class="layui-input" placeholder="支持用户名,ID，地址或RNS域名关键字">
             </div>
           </div>
           <div class="layui-inline">
@@ -44,7 +44,11 @@
     <div class="layui-card-body">
       <div id="table_leaderboard"></div>
       <script type="text/html" id="tpl_user">
-        <a class="layui-table-link" lay-href="axie/user/user_id={{d.user_id}}">
+        {{# if(d.user.rns_name) {}}
+        <span class="layui-badge layui-bg-green">{{d.user.rns_name}}</span>
+        {{# } }}
+        <a class="layui-table-link" lay-href="axie/user/user_id={{d.user_id}}"
+           lay-tips="{{d.user.profile_name}}">
           {{d.user_name}}
         </a>
       </script>
@@ -131,8 +135,8 @@
           {title: '排名', field: 'top_rank', width: 80, align: "center"}
           , {title: '玩家昵称', templet: '#tpl_user', minWidth: 200}
           , {title: '积分', field: 'vstar', width: 100}
-          , {title: '队伍类型', templet: '#tpl_team_label', width: 100}
-          , {title: '队伍', templet: '#tpl_team', width: 300, align: "center"}
+          , {title: '队伍类型', templet: '#tpl_team_label', width: 120}
+          , {title: '队伍', templet: '#tpl_team', width: 250, align: "center"}
           , {title: '同步时间', field: 'updated_at', width: 180, align: "center"}
           , {title: '最近活跃时间', templet: '#tpl_active', width: 180, align: "center"}
         ]]

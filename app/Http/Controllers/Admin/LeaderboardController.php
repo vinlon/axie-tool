@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Erc1155Token;
 use App\Models\FighterTeam;
 use App\Models\Leaderboard;
+use App\Models\OriginUser;
 use Arr;
 use Carbon\Carbon;
 
@@ -86,12 +87,15 @@ class LeaderboardController extends Controller
         $runeMap = $this->getRuneMap();
 
         $query = Leaderboard::query()
-            ->with(['team.axies'])
+            ->with(['team.axies', 'user'])
             ->whereIn('user_id', array_keys($rankMap))
             ->when(request()->keyword, function ($q) {
-                return $q->where(function ($q2) {
+                return $q->whereHas('user', function ($q2) {
                     $likeVal = '%' . request()->keyword . '%';
-                    return $q2->where('user_name', 'like', $likeVal);
+                    return $q2->where('profile_name', 'like', $likeVal)
+                        ->orWhere('nick_name', 'like', $likeVal)
+                        ->orWhere('ronin_address', 'like', $likeVal)
+                        ->orWhere('user_id', 'like', $likeVal);
                 });
             })
             ->when(request()->team_label, function ($q) {

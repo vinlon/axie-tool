@@ -337,6 +337,7 @@ namespace App\Models{
  * @property int|null $last_team_id 最新使用的队伍ID
  * @property string|null $last_active_time 最近一次活跃时间
  * @property-read \App\Models\FighterTeam|null $team
+ * @property-read \App\Models\OriginUser|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Leaderboard newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Leaderboard newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Leaderboard query()
