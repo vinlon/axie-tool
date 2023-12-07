@@ -13,7 +13,8 @@
           <div class="layui-inline">
             <div class="layui-form-label">用户名</div>
             <div class="layui-input-inline">
-              <input type="text" name="keyword" value="{{ decodeURIComponent(layui.router().search.keyword || '')}}" class="layui-input"
+              <input type="text" name="keyword" value="{{ decodeURIComponent(layui.router().search.keyword || '')}}"
+                     class="layui-input"
                      placeholder="用户名关键字">
             </div>
           </div>
@@ -49,7 +50,7 @@
         {{# } }}
         {{# if (d.user) { }}
         <a class="layui-table-link" lay-href="/axie/user/user_id={{d.user.user_id}}">
-          {{d.user.user_name}}
+          {{d.user.nick_name || d.user.profile_name}}
         </a>
         {{# } }}
       </script>
@@ -59,7 +60,7 @@
         {{# } }}
         {{# if (d.enemy) { }}
         <a class="layui-table-link" lay-href="/axie/user/user_id={{d.enemy.user_id}}">
-          {{d.enemy.user_name}}
+          {{d.enemy.nick_name || d.enemy.profile_name}}
         </a>
         {{# } }}
       </script>

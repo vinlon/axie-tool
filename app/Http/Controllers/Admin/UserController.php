@@ -34,8 +34,7 @@ class UserController extends Controller
             })
             ->orderByDesc('battle_end_time');
         $runeMap = $this->getRuneMap();
-        $userMap = $this->getUserMap();
-        return paginate_result($query, function (BattleHistory $history) use ($runeMap, $userMap, $userId) {
+        return paginate_result($query, function (BattleHistory $history) use ($runeMap, $userId) {
             $userId = $userId ?: $history->first_fighter_id;
 
             $isFirstUser = $userId == $history->first_fighter_id;
@@ -50,12 +49,12 @@ class UserController extends Controller
                 'is_surrender' => $history->is_surrender,
                 'battle_type' => $history->battle_type,
                 'is_first' => $isFirstUser,
-                'user' => \Arr::get($userMap, $userId),
+                'user' => $isFirstUser ? $history->first_user : $history->second_user,
                 'user_team' => $userTeam,
                 'user_old_vstar' => $isFirstUser ? $history->first_old_vstar : $history->second_old_vstar,
                 'user_new_vstar' => $isFirstUser ? $history->first_new_vstar : $history->second_new_vstar,
                 'user_rank' => $isFirstUser ? $history->first_rank : $history->second_rank,
-                'enemy' => \Arr::get($userMap, $enemyUserId),
+                'enemy' => $isFirstUser ? $history->second_user : $history->first_user,
                 'enemy_team' => $enemyTeam,
                 'enemy_old_vstar' => $isFirstUser ? $history->second_old_vstar : $history->first_old_vstar,
                 'enemy_new_vstar' => $isFirstUser ? $history->second_new_vstar : $history->first_new_vstar,
@@ -154,22 +153,6 @@ class UserController extends Controller
             ->where('type', 'charm')
             ->get()->mapWithKeys(function (Erc1155Token $token) {
                 return [$token->item_id => $token];
-            })->toArray();
-    }
-
-    private function getUserMap()
-    {
-        $rank = 1;
-        return Leaderboard::query()
-            ->orderByDesc('vstar')
-            ->orderBy('last_active_time')
-            ->limit(1000)
-            ->get()->mapWithKeys(function (Leaderboard $item) use (&$rank) {
-                return [$item->user_id => [
-                    'user_id' => $item->user_id,
-                    'user_name' => $item->user_name,
-                    'top_rank' => $rank++
-                ]];
             })->toArray();
     }
 }

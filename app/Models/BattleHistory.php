@@ -9,12 +9,12 @@ class BattleHistory extends BaseModel
 {
     public function first_user()
     {
-        return $this->belongsTo(Leaderboard::class, 'first_fighter_id', 'user_id');
+        return $this->belongsTo(OriginUser::class, 'first_fighter_id', 'user_id');
     }
 
     public function second_user()
     {
-        return $this->belongsTo(Leaderboard::class, 'second_fighter_id', 'user_id');
+        return $this->belongsTo(OriginUser::class, 'second_fighter_id', 'user_id');
     }
 
     public function first_team()

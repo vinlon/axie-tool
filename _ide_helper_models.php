@@ -186,9 +186,9 @@ namespace App\Models{
  * @property string $battle_end_time 战斗结束时间
  * @property int $is_surrender 是否是投降
  * @property-read \App\Models\FighterTeam|null $first_team
- * @property-read \App\Models\Leaderboard|null $first_user
+ * @property-read \App\Models\OriginUser|null $first_user
  * @property-read \App\Models\FighterTeam|null $second_team
- * @property-read \App\Models\Leaderboard|null $second_user
+ * @property-read \App\Models\OriginUser|null $second_user
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BattleHistory newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BattleHistory newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BattleHistory query()
