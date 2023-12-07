@@ -40,7 +40,6 @@ class UserController extends Controller
             $isFirstUser = $userId == $history->first_fighter_id;
             $userTeam = $isFirstUser ? $history->first_team : $history->second_team;
             $enemyTeam = $isFirstUser ? $history->second_team : $history->first_team;
-            $enemyUserId = $isFirstUser ? $history->second_fighter_id : $history->first_fighter_id;
             $this->appendRuneInfo($userTeam, $runeMap);
             $this->appendRuneInfo($enemyTeam, $runeMap);
             return [

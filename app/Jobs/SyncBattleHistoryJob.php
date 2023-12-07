@@ -51,6 +51,7 @@ class SyncBattleHistoryJob implements ShouldQueue
             $histories = $mavisService->listPvpBattleHistoriesV1($this->userId, 1, 10);
         } catch (\Exception $e) {
             $this->release(5);
+            throw $e;
         }
         //查询已存在的battle
         $existBattleIds = BattleHistory::query()->whereIn('battle_uuid', \Arr::pluck($histories, 'battle_uuid'))->pluck('battle_uuid')->toArray();

@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Exceptions\MavisException;
+use Illuminate\Http\Client\Response;
+
 class MavisService
 {
     private $apiKey;
@@ -16,10 +19,11 @@ class MavisService
     public function listLeaderBoard($page = 1, $limit = 100)
     {
         $offset = ($page - 1) * $limit;
-        return $this->get('origins/v2/leaderboards', [
+        $resp = $this->get('origins/v2/leaderboards', [
             'offset' => $offset,
             'limit' => $limit,
-        ])->json('_items');
+        ]);
+        return $this->parseResult($resp, '_items');
     }
 
     /** 查询战斗日志(V1) */
@@ -30,7 +34,7 @@ class MavisService
             'limit' => $limit,
             'type' => 'pvp',
         ]);
-        return $resp->json('battles');
+        return $this->parseResult($resp, 'battles');
     }
 
     /** 查询战斗日志(V2) */
@@ -41,15 +45,24 @@ class MavisService
             'limit' => $limit,
             'type' => 'pvp',
         ]);
-        return $resp->json('_items');
+        return $this->parseResult($resp, '_items');
     }
 
     /** 查询所有 runes, charms, crafting materials, free starter Axies, etc */
     public function listAllItems()
     {
-        return $this->get('origins/v2/community/items', [])->json('_items');
+        $resp = $this->get('origins/v2/community/items', []);
+        return $this->parseResult($resp, '_items');
     }
 
+    private function parseResult(Response $resp, $key)
+    {
+        $data = $resp->json();
+        if (\Arr::has($data, '_errorMessage')) {
+            throw new MavisException(\Arr::get($data, '_errorMessage'));
+        }
+        return \Arr::get($data, $key);
+    }
 
     private function get($uri, $params)
     {
