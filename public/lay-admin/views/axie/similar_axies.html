@@ -98,7 +98,7 @@
       loadData(cls, parts)
 
       function loadData(cls, parts) {
-        let sales_url = 'admin/axie_sold_histories?order_by_asc=price&cls=' + cls + '&parts=' + parts.join(',');
+        let sales_url = 'admin/axie_sold_histories?cls=' + cls + '&parts=' + parts.join(',');
         let orders_url = 'admin/axie_orders?cls=' + cls + '&parts=' + parts.join(',');
 
         table.render({
