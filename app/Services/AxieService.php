@@ -215,7 +215,7 @@ class AxieService
     public function parseCriteriaFromUrl($url)
     {
         $queryString = parse_url($url, PHP_URL_QUERY);
-        $availableKeys = ['classes', 'parts', 'pureness', 'breedCount', 'title', 'bodyShapes', 'numSummer'];
+        $availableKeys = ['classes', 'parts', 'pureness', 'breedCount', 'title', 'bodyShapes', 'numSummer', 'numStage2Parts'];
         $queryPairs = explode('&', $queryString);
         $params = [];
         foreach ($queryPairs as $pair) {
