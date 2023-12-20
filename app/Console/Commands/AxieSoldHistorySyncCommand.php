@@ -6,6 +6,7 @@ use App\Models\AxieSoldHistory;
 use App\Services\AxieService;
 use Arr;
 use Illuminate\Console\Command;
+use Str;
 
 class AxieSoldHistorySyncCommand extends Command
 {
@@ -56,12 +57,14 @@ class AxieSoldHistorySyncCommand extends Command
             if ($latestHistory && $latestHistory->trans_hash == $transHash) {
                 break;
             }
+            $title = Arr::get($row, 'title', '');
             $insertRow = [
                 'axie_id' => Arr::get($row, 'id'),
                 'class' => Arr::get($row, 'class'),
                 'breed_count' => Arr::get($row, 'breedCount'),
-                'is_origin' => Arr::get($row, 'title', '') == 'Origin',
+                'is_origin' => $title == 'Origin',
                 'is_mystic' => Arr::get($row, 'hasMysticSuit', false),
+                'is_meo' => Str::startsWith($title, 'MEO Corp'),
                 'axp_level' => Arr::get($row, 'axpInfo.level'),
                 'price' => Arr::get($row, 'transferHistory.results.0.withPrice'),
                 'price_usd' => Arr::get($row, 'transferHistory.results.0.withPriceUsd'),
@@ -84,6 +87,9 @@ class AxieSoldHistorySyncCommand extends Command
                     $japanPartCount++;
                 }
                 if ($specialGene == 'Xmas2019') {
+                    $xmasPartCount++;
+                }
+                if ($specialGene == 'Xmas2018') {
                     $xmasPartCount++;
                 }
                 if ($specialGene == 'Summer2022') {
