@@ -46,6 +46,7 @@ layui.define([], function (exports) {
     table.on('sort(' + config.id + ')', function (obj) {
       delete st.where.order_by_asc
       delete st.where.order_by_desc
+      st.sort = obj
       if (obj.type === 'desc' || obj.type === 'asc') {
         st.where['order_by_' + obj.type] = obj.field
       }
@@ -63,7 +64,12 @@ layui.define([], function (exports) {
   st.reload = function (where) {
     where = where || {}
     st.where = where;
-    table.reload(st.id, {where: where, page: {curr: 1}})
+    console.log(st)
+    let sort = st.sort || {}
+    if (sort.type === 'desc' || sort.type === 'asc') {
+      st.where['order_by_' + sort.type] = sort.field
+    }
+    table.reload(st.id, {initSort: st.sort, where: where, page: {curr: 1}})
   }
 
   function prepareSearchParams() {

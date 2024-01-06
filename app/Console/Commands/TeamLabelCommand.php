@@ -50,6 +50,13 @@ class TeamLabelCommand extends Command
                 ],
             ],
             [
+                'label' => 'TinyFan',
+                'parts' => [
+                    'ears-tiny-fan' => 2,
+                    'tail-nimo' => 3,
+                ],
+            ],
+            [
                 'label' => 'Feather鸟',
                 'parts' => [
                     'horn-feather-spear' => 2,
