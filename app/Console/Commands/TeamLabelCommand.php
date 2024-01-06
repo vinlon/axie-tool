@@ -52,7 +52,7 @@ class TeamLabelCommand extends Command
             [
                 'label' => 'TinyFan',
                 'parts' => [
-                    'ears-tiny-fan' => 2,
+                    'ears-tiny-fan' => 1,
                     'tail-nimo' => 3,
                 ],
             ],
