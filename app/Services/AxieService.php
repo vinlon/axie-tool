@@ -260,7 +260,7 @@ class AxieService
             'variables' => $variables,
             'query' => $query,
         ];
-        $resp = Http::timeout(5)->withHeaders($headers)->post($gateway, $data);
+        $resp = Http::timeout(10)->withHeaders($headers)->post($gateway, $data);
         $result = $resp->json();
         if (Arr::has($result, 'errors') && !Arr::get($result, 'data')) {
             throw new \Exception(Arr::get($result, 'errors.0.message'));

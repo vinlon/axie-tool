@@ -71,7 +71,7 @@ class MavisService
             'accept' => 'application/json',
         ];
         $url = $this->apiHost . $uri;
-        return \Http::timeout(5)->withHeaders($headers)->get($url, $params);
+        return \Http::timeout(10)->withHeaders($headers)->get($url, $params);
     }
 
 }
