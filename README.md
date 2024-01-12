@@ -21,6 +21,7 @@ location / {
 ```shell
 
 php artisan erc1155_token:sync
+php scripts/load_body_part.php
 ```
 
 定时任务
