@@ -42,12 +42,12 @@
     "psr-4": {
       "App\\": "app/",
       "Database\\Factories\\": "database/factories/",
-      "Database\\Seeders\\": "database/seeders/"
+      "Database\\Seeders\\": "database/seeders/",
+      "Ndarproj\\AxieGeneParser\\": "axie-gene-parser"
     },
     "classmap": [
       "database/seeders",
-      "database/factories",
-      "axie-gene-parser"
+      "database/factories"
     ],
     "files": [
       "app/helpers.php"

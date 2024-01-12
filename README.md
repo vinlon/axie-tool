@@ -23,6 +23,26 @@ location / {
 php artisan erc1155_token:sync
 ```
 
+定时任务
+
+```shell
+/www/server/php/81/bin/php artisan schedule:run >> /dev/null 2>&1
+```
+
+Horizon
+
+```shell
+[program:axie-tool-horizon]
+process_name=%(program_name)s
+command=/www/server/php/81/bin/php /www/wwwroot/axie-tool/artisan horizon
+autostart=true
+autorestart=true
+user=forge
+redirect_stderr=true
+stdout_logfile=/www/wwwroot/axie-tool/storage/logs/horizon.log
+stopwaitsecs=3600
+```
+
 ## TODO
 - [x] 排行榜队伍类型统计
 - [x] 排行榜在线状态展示，各队伍在线人数展示
