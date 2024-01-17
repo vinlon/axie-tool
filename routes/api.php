@@ -13,4 +13,5 @@
 
 Route::middleware([\App\Http\Middleware\ApiResponse::class])->group(function () {
     Route::get('leaderboard', 'HomeController@leaderboard');
+    Route::get('team_summary/{from}/{to}', 'HomeController@teamSummary');
 });

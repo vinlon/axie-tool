@@ -156,16 +156,29 @@ class TeamLabelCommand extends Command
                 ],
             ],
             [
-                'label' => 'WingHorn鸟',
+                'label' => 'AOE鸟',
                 'parts' => [
-                    'horn-wing-horn' => 1,
-                    'back-tri-feather' => 1,
+                    'horn-wing-horn' => 2,
                 ],
             ],
             [
                 'label' => '生存',
                 'parts' => [
                     'ears-tiny-fan' => 1,
+                    'eyes-tricky' => 1,
+                ],
+            ],
+            [
+                'label' => '生存',
+                'parts' => [
+                    'ears-tassels' => 1,
+                ],
+            ],
+            [
+                'label' => '生存',
+                'parts' => [
+                    'back-indian-star' => 1,
+                    'ears-innocent-lamb' => 1,
                     'eyes-tricky' => 1,
                 ],
             ],
@@ -185,6 +198,12 @@ class TeamLabelCommand extends Command
                 'label' => '毒',
                 'parts' => [
                     'back-green-thorns' => 2,
+                ],
+            ],
+            [
+                'label' => '毒',
+                'parts' => [
+                    'ears-small-frill' => 2,
                 ],
             ],
             [

@@ -53,6 +53,26 @@ function format_address($address)
     return $address;
 }
 
+function to_ronin_address($address)
+{
+    return Str::replace('0x', 'ronin:', $address);
+}
+
+function display_time($time)
+{
+    $diffInMinutes = \Carbon\Carbon::now()->diffInRealMinutes($time);
+    $diffInHours = \Carbon\Carbon::now()->diffInRealHours($time);
+    $diffInDays = \Carbon\Carbon::now()->diffInDays($time);
+    if ($diffInHours >= 24) {
+        return $diffInDays . '天前';
+    } else if ($diffInHours >= 1) {
+        return $diffInHours . '小时前';
+    } else {
+        return $diffInMinutes . '分钟前';
+    }
+}
+
+
 /**
  * 除法计算(处理分母为0的情况).
  *

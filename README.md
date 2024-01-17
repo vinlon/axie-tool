@@ -27,7 +27,7 @@ php scripts/load_body_part.php
 定时任务
 
 ```shell
-/www/server/php/81/bin/php artisan schedule:run >> /dev/null 2>&1
+sudo -H -u www bash -c 'cd /www/wwwroot/axie-tool/ && /www/server/php/81/bin/php artisan schedule:run'
 ```
 
 Horizon
